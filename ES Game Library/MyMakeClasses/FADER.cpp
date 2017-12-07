@@ -40,6 +40,8 @@ ASIGN_KEY_(asign_key)
 	pos.y += INNER_TOP_POS_;
 
 	this->judge_display_ = new JUDGE_DISPLAY(pos, INNER_HEIGHT_);
+
+	this->longjudge_ = NONE;
 	this->have_judge_ = NONE;
 
 }
@@ -62,6 +64,8 @@ FADER::~FADER()
 void FADER::Update(unsigned nowtime, unsigned elapsedtime_, float button_height_rate){
 
 	KeyboardState key_state = Keyboard->GetState();
+
+	this->have_judge_ = NONE;
 
 	auto s_itr = this->notelist_.begin();
 	
@@ -94,20 +98,20 @@ void FADER::SingleNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, unsigne
 		if ((*top_itr)->GetHeightRate() > button_top_rate - ACCEPTABLE_RANGE_ && 
 			(*top_itr)->GetHeightRate() < button_down_rate + ACCEPTABLE_RANGE_){
 
-			NoteErase(top_itr, Judge(pushtime));
+			JUDGELIST judge = Judge(pushtime);
+
+			NoteErase(top_itr, judge);
+			return;
 
 		}
 		else{
 
 			NoteErase(top_itr, OUCH);
+			return;
 
 		}
 
-		return;
-
 	}
-
-	this->have_judge_ = NONE;
 
 }
 
@@ -129,14 +133,14 @@ void FADER::LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, unsigned 
 			if ((*top_itr)->GetHeightRate() > button_top_rate - ACCEPTABLE_RANGE_ &&
 				(*top_itr)->GetHeightRate() < button_down_rate + ACCEPTABLE_RANGE_){
 
-				this->judge_display_->SetBomb(have_judge_, (*top_itr)->GetHeightRate());
+				this->judge_display_->SetBomb(this->longjudge_, (*top_itr)->GetHeightRate());
 
 			}
 			else{
 
 				top_long->DownRight(elapsedtime_);
 
-				if (! top_long->IsHaveRightPower()){
+				if (!top_long->IsHaveRightPower()){
 
 					NoteErase(top_itr, MISSTIME);
 					return;
@@ -146,8 +150,7 @@ void FADER::LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, unsigned 
 
 			if (top_long->GetTimingSlowMostPoint() < nowtime){
 
-				NoteErase(top_itr, have_judge_);
-
+				NoteErase(top_itr, this->longjudge_);
 				return;
 
 			}
@@ -157,7 +160,6 @@ void FADER::LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, unsigned 
 
 
 			NoteErase(top_itr, MISSTIME);
-
 			return;
 
 		}
@@ -166,26 +168,28 @@ void FADER::LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, unsigned 
 	else if (betweentime > -OK && CONTROLL::GetInstance().BufferIsPress(ASIGN_KEY_)){
 
 		int pushtime = abs(betweentime);
-		if ((this->have_judge_ = Judge(pushtime)) != MISSTIME){
 
-			this->judge_display_->SetBomb(this->have_judge_, (*top_itr)->GetHeightRate());
+
+		if ((*top_itr)->GetHeightRate() > button_top_rate - ACCEPTABLE_RANGE_ &&
+			(*top_itr)->GetHeightRate() < button_down_rate + ACCEPTABLE_RANGE_){
+
+			this->longjudge_ = Judge(betweentime);
+
+			this->judge_display_->SetBomb(this->longjudge_, (*top_itr)->GetHeightRate());
 			top_long->Push();
-
-			return;
 
 		}
 		else{
 
-			NoteErase(top_itr, MISSTIME);
-
+			NoteErase(top_itr, OUCH);
 			return;
 
 		}
 
+
 	}else if (betweentime > OK){
 	
 		NoteErase(top_itr,MISSTIME);
-
 		return;
 
 	}
@@ -237,10 +241,6 @@ void FADER::Draw(float button_height_rate, float animetion_rate, unsigned nowtim
 	
 		int betweentime = (int)(*s_itr)->GetTiming() - (int)nowtime;
 
-		if (betweentime < 0) {
-			int a = 191919419;
-		}
-
 		if (betweentime > range_hours_show){
 		
 			break;
@@ -286,25 +286,28 @@ void FADER::NoteErase(std::list<ABSTRUCT_NOTE*>::iterator erase_itr, JUDGELIST j
 
 	this->notelist_.erase(erase_itr);
 
+	this->have_judge_ = judge;
+
 	return;
 }
 
 JUDGELIST FADER::Judge(int pushtime){
 
+	JUDGELIST judge;
+
 	if (UNBELIEVABLE > pushtime){
-
-		return UNBELIEVABLE;
-
+		judge = UNBELIEVABLE;
 	}
 	else if (GREAT > pushtime){
-		return GREAT;
-
+		judge = GREAT;
 	}
 	else if (OK > pushtime){
-		return OK;
-
+		judge = OK;
+	}
+	else{
+		judge = MISSTIME;
 	}
 
-	return MISSTIME;
+	return judge;
 
 }

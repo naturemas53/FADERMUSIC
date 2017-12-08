@@ -18,7 +18,8 @@ INNER_TOP_POS_(20.0f),
 INNER_LEFT_POS_(20.0f),
 BUTTON_SIZE_(84.0f),
 ACCEPTABLE_RANGE_(0.009f),
-ASIGN_KEY_(asign_key)
+ASIGN_KEY_(asign_key),
+DRAW_POS_(draw_pos)
 {
 
 	if (this->normal_sprite_ == nullptr) this->normal_sprite_ = GraphicsDevice.CreateSpriteFromFile(_T("fader/fader_normal.png"));
@@ -34,16 +35,15 @@ ASIGN_KEY_(asign_key)
 
 	}
 
-	this->draw_pos_ = draw_pos;
-
 	Vector3 pos = draw_pos;
 	pos.y += INNER_TOP_POS_;
 
-	this->judge_display_ = new JUDGE_DISPLAY(pos, INNER_HEIGHT_);
+	this->judge_display_ = new JUDGE_DISPLAY(pos,this->INNER_HEIGHT_,this->WIDTH_);
 
 	this->longjudge_ = NONE;
 	this->have_judge_ = NONE;
 
+	this->total_elapsed_ = 0;
 }
 
 
@@ -66,6 +66,8 @@ void FADER::Update(unsigned nowtime, unsigned elapsedtime_, float button_height_
 	KeyboardState key_state = Keyboard->GetState();
 
 	this->have_judge_ = NONE;
+	this->total_elapsed_ += elapsedtime_;
+
 
 	auto s_itr = this->notelist_.begin();
 	
@@ -133,8 +135,12 @@ void FADER::LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, unsigned 
 			if ((*top_itr)->GetHeightRate() > button_top_rate - ACCEPTABLE_RANGE_ &&
 				(*top_itr)->GetHeightRate() < button_down_rate + ACCEPTABLE_RANGE_){
 
-				this->judge_display_->SetBomb(this->longjudge_, (*top_itr)->GetHeightRate());
+				if (this->total_elapsed_ > this->quater_rhythm_ / 8){
 
+					this->judge_display_->SetBomb(this->longjudge_, (*top_itr)->GetHeightRate());
+					this->total_elapsed_ -= this->quater_rhythm_ / 8;
+				
+				}
 			}
 			else{
 
@@ -177,6 +183,7 @@ void FADER::LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, unsigned 
 
 			this->judge_display_->SetBomb(this->longjudge_, (*top_itr)->GetHeightRate());
 			top_long->Push();
+			this->total_elapsed_ = 0;
 
 		}
 		else{
@@ -201,11 +208,11 @@ void FADER::Draw(float button_height_rate, float animetion_rate, unsigned nowtim
 
 	int animenum = (int)(animetion_rate * 90.0f);
 
-	SpriteBatch.Draw(*this->normal_sprite_, draw_pos_, 
+	SpriteBatch.Draw(*this->normal_sprite_, this->DRAW_POS_,
 		RectWH((animenum % 30) * WIDTH_, (animenum / 30) * HEIGHT_, WIDTH_, HEIGHT_), 1.0f);
 
 
-	Vector3 top_pos = draw_pos_;
+	Vector3 top_pos = this->DRAW_POS_;
 	top_pos.y += INNER_TOP_POS_;
 	top_pos.x += INNER_LEFT_POS_;
 	
@@ -267,14 +274,13 @@ void FADER::Draw(float button_height_rate, float animetion_rate, unsigned nowtim
 
 	SpriteBatch.Draw(*this->button_sprite_, button_pos_, 1.0f);
 
-	this->judge_display_->Draw(this->WIDTH_);
+	this->judge_display_->Draw();
 
 }
 
 void FADER::InNote(ABSTRUCT_NOTE* innote){
 	
 		this->notelist_.push_back(innote);
-
 
 }
 

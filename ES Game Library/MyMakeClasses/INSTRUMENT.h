@@ -16,6 +16,8 @@ public:
 	void Update(unsigned nowtime, unsigned elapsedtime_);
 	void Draw(unsigned nowtime,float animation_rate);
 
+	void SetBPM(unsigned bpm, unsigned quater_rhythm);
+
 private:
 
 	//Ç∆ÇËÇ†Ç¶Ç∏Å´
@@ -31,6 +33,9 @@ private:
 	const LONG MAX_MOUSE_Y_;
 
 	float button_height_;
+
+	unsigned songbpm_;
+	unsigned quater_rhythm_;
 
 };
 

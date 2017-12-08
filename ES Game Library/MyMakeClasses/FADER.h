@@ -11,7 +11,7 @@ class FADER
 {
 public:
 
-	FADER(Vector3 draw_pos,Keys asign_key);
+	FADER(Vector3 draw_pos, Keys asign_key);
 	~FADER();
 
 	void Update(unsigned nowtime, unsigned elapsedtime, float button_height_rate);
@@ -19,6 +19,13 @@ public:
 
 	void InNote(ABSTRUCT_NOTE* innote);
 	JUDGELIST GetJudge(){ return this->have_judge_; }
+
+	void SetBPM(unsigned bpm, unsigned quater_rhythm){
+
+		this->songbpm_ = bpm;
+		this->quater_rhythm_ = quater_rhythm;
+
+	}
 
 private:
 
@@ -28,6 +35,8 @@ private:
 	void NoteErase(std::list<ABSTRUCT_NOTE*>::iterator erase_itr,JUDGELIST judge);
 
 	JUDGELIST Judge(int pushtime);
+
+
 
 	static SPRITE normal_sprite_;
 	static SPRITE button_sprite_;
@@ -42,8 +51,7 @@ private:
 	const float BUTTON_SIZE_;
 	const float ACCEPTABLE_RANGE_;
 	const Keys ASIGN_KEY_;
-
-	Vector3 draw_pos_;
+	const Vector3 DRAW_POS_;
 	
 	std::list<ABSTRUCT_NOTE*> notelist_;
 
@@ -51,6 +59,10 @@ private:
 
 	JUDGELIST longjudge_;
 	JUDGELIST have_judge_;
+
+	unsigned total_elapsed_;
+	unsigned songbpm_;
+	unsigned quater_rhythm_;
 
 };
 

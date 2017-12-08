@@ -105,6 +105,15 @@ void INSTRUMENT::RightUp(unsigned nowtime){
 
 }
 
+void INSTRUMENT::SetBPM(unsigned bpm, unsigned quater_rhythm){
+
+	this->songbpm_ = bpm;
+	this->quater_rhythm_ = quater_rhythm;
+
+	for (auto fader : faders_) fader->SetBPM(bpm,quater_rhythm);
+
+}
+
 void INSTRUMENT::SetNote(){
 
 

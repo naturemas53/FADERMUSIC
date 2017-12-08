@@ -8,11 +8,11 @@ enum JUDGELIST;
 class JUDGE_DISPLAY
 {
 public:
-	JUDGE_DISPLAY(Vector3 draw_pos, float fader_height);
+	JUDGE_DISPLAY(Vector3 draw_pos, float fader_height,float fader_width);
 	~JUDGE_DISPLAY();
 
 	void Update();
-	void Draw(float fader_width);
+	void Draw();
 
 	void SetBomb(JUDGELIST judge,float height_rate);
 	
@@ -26,8 +26,12 @@ private:
 
 	}scale_state_;
 
+	void AnimeUpdate();
+	void ViewParameterReset();
+
 	const Vector3 DRAW_POS_;
 	const float FADER_HEIGHT_;
+	const float FADER_WIDTH_;
 	const float SIZE_;
 	const int ZOOM_COUNT_;
 

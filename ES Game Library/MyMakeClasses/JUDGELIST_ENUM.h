@@ -10,3 +10,12 @@ enum JUDGELIST{
 	NONE = 0
 
 };
+
+struct JUDGECOUNT{
+
+	unsigned misstime;
+	unsigned ok;
+	unsigned great;
+	unsigned unbelievable;
+	unsigned ouch;
+};

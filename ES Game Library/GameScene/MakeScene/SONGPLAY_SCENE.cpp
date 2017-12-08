@@ -20,13 +20,13 @@ bool SONGPLAY_SCENE::Initialize()
 	background_ = GraphicsDevice.CreateSpriteFromFile(_T("background/backwall.png"));
 	bgm_ = SoundDevice.CreateSoundFromFile(_T("transtep.wav"));
 
-	instrument_ = new INSTRUMENT(SceneShared().GetLongIntegerForKey("MOUSE_MAX_Y"));
-	SceneShared().RemoveLongIntegerForKey("MOUSE_MAX_Y");
-	ui_ = new UI();
-
 	bpm_ = 136;
 	quater_rhythm_ = (UINT)(60.0f / (float)bpm_ * 1 * 1000.0f);
 	quaver_rhythm_ = quater_rhythm_ / 2;
+
+	instrument_ = new INSTRUMENT(SceneShared().GetLongIntegerForKey("MOUSE_MAX_Y"));
+	SceneShared().RemoveLongIntegerForKey("MOUSE_MAX_Y");
+	ui_ = new UI();
 
 	nowtime_ = 0;
 	animation_rate_ = 0.0f;

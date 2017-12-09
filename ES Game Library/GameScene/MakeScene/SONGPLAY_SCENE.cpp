@@ -28,6 +28,8 @@ bool SONGPLAY_SCENE::Initialize()
 	SceneShared().RemoveLongIntegerForKey("MOUSE_MAX_Y");
 	ui_ = new UI();
 
+	instrument_->SetBPM(136, quater_rhythm_);
+
 	nowtime_ = 0;
 	animation_rate_ = 0.0f;
 	start_ = false;
@@ -35,6 +37,10 @@ bool SONGPLAY_SCENE::Initialize()
 	songlength_ = bgm_->GetLengthMSec();
 
 	prevtime_ = clock();
+
+	accuracy_ = 0;
+	score_ = 0;
+	life_ = 0.5f;
 
 	return true;
 }
@@ -50,7 +56,6 @@ void SONGPLAY_SCENE::Finalize()
 	delete instrument_;
 	delete ui_;
 
-	InputDevice.ReleaseMouse();
 }
 
 /// <summary>
@@ -65,16 +70,8 @@ int SONGPLAY_SCENE::Update()
 	// TODO: Add your update logic here
 
 	CONTROLL::GetInstance().Update();
-	
-	//unsigned elapsedtime;
-
-
 
 	if (start_){
-
-		//elapsedtime = clock() - prevtime_;
-
-		//nowtime_ += elapsedtime;
 
 		prevtime_ = nowtime_;
 
@@ -100,7 +97,14 @@ int SONGPLAY_SCENE::Update()
 
 	instrument_->Update(nowtime_, elapsedtime);
 
-	prevtime_ = clock();
+	score_ += instrument_->GetScoreJudge().GetScore();
+	life_ += instrument_->GetScoreJudge().GetLifePersent();
+	if (life_ > 1.0f) life_ = 1.0f;
+	if (life_ < 0.0f) life_ = 0.0f;
+
+	accuracy_ += instrument_->GetAccuracyJudge().GetAccuracy();
+
+	ui_->SetDisplayData(score_,life_, accuracy_, instrument_->GetNotesCount());
 
 	return 0;
 }
@@ -124,8 +128,9 @@ void SONGPLAY_SCENE::Draw()
 
 	ui_->Draw(animation_rate_);
 
-	SpriteBatch.DrawString(DefaultFont, Vector2_Zero, Color(0, 255, 255), _T("time : %u"), nowtime_);
-	SpriteBatch.DrawString(DefaultFont, Vector2(0.0f,30.0f), Color(0, 255, 255), _T("elapsedtime : %u"), elapsedtime);
+	SpriteBatch.DrawString(DefaultFont, Vector2(0.0f, 100.0f), Color(0, 255, 255), _T("time : %u"), nowtime_);
+	SpriteBatch.DrawString(DefaultFont, Vector2(0.0f, 130), Color(0, 255, 255), _T("elapsedtime : %u"), elapsedtime);
+
 
 	SpriteBatch.End();
 

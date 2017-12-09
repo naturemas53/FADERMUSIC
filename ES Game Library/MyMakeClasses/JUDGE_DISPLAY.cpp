@@ -72,6 +72,8 @@ void JUDGE_DISPLAY::SetBomb(JUDGELIST judge, float height_rate){
 
 	this->draw_height_ = height_rate;
 
+	this->ViewParameterReset();
+
 	this->draw_judge_ = judge;
 
 }

@@ -3,6 +3,7 @@
 #include "SINGLENOTE.h"
 #include "LONGNOTE.h"
 #include "CONTROLL.h"
+#include "JUDGELIST_ENUM.h"
 
 
 INSTRUMENT::INSTRUMENT(LONG max_mouse_y) : MAX_MOUSE_Y_(max_mouse_y)
@@ -76,6 +77,52 @@ void INSTRUMENT::Draw(unsigned nowtime, float animation_rate){
 
 }
 
+JUDGECOUNT INSTRUMENT::GetScoreJudge(){
+
+	JUDGECOUNT judge = JUDGECOUNT();
+
+	for (auto itr = faders_.begin(); itr != faders_.end();itr++){
+
+		switch ((*itr)->GetScoreJudge()){
+
+		case UNBELIEVABLE: judge.unbelievable++; break;
+		case GREAT: judge.great++; break;
+		case OK: judge.ok++; break;
+		case OUCH: 
+		case MISSTIME: judge.misstime++; break;
+		default: break;
+
+		}
+
+	}
+
+	return judge;
+
+}
+
+JUDGECOUNT INSTRUMENT::GetAccuracyJudge(){
+
+	JUDGECOUNT judge = JUDGECOUNT();
+
+	for (auto itr = faders_.begin(); itr != faders_.end(); itr++){
+
+		switch ((*itr)->GetAccuracyJudge()){
+
+		case UNBELIEVABLE: judge.unbelievable++; break;
+		case GREAT: judge.great++; break;
+		case OK: judge.ok++; break;
+		case OUCH:
+		case MISSTIME: judge.misstime++; break;
+		default: break;
+
+		}
+
+	}
+
+	return judge;
+
+}
+
 void INSTRUMENT::RightUp(unsigned nowtime){
 
 	auto itr = notes_.begin();
@@ -109,6 +156,8 @@ void INSTRUMENT::SetBPM(unsigned bpm, unsigned quater_rhythm){
 
 	this->songbpm_ = bpm;
 	this->quater_rhythm_ = quater_rhythm;
+
+	this->range_hours_show = quater_rhythm * 4;
 
 	for (auto fader : faders_) fader->SetBPM(bpm,quater_rhythm);
 

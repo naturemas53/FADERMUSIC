@@ -41,7 +41,8 @@ DRAW_POS_(draw_pos)
 	this->judge_display_ = new JUDGE_DISPLAY(pos,this->INNER_HEIGHT_,this->WIDTH_);
 
 	this->longjudge_ = NONE;
-	this->have_judge_ = NONE;
+	this->score_judge_ = NONE;
+	this->accuracy_judge_ = NONE;
 
 	this->total_elapsed_ = 0;
 }
@@ -65,7 +66,9 @@ void FADER::Update(unsigned nowtime, unsigned elapsedtime_, float button_height_
 
 	KeyboardState key_state = Keyboard->GetState();
 
-	this->have_judge_ = NONE;
+	this->score_judge_ = NONE;
+	this->accuracy_judge_ = NONE;
+
 	this->total_elapsed_ += elapsedtime_;
 
 
@@ -92,15 +95,9 @@ void FADER::SingleNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, unsigne
 	}
 	else if (betweentime > -OK  && CONTROLL::GetInstance().BufferIsPress(ASIGN_KEY_)){
 
-		int pushtime = abs(betweentime);
+		if (this->IsInForButton(top_itr, button_height_rate)){
 
-		float button_top_rate = button_height_rate * ((INNER_HEIGHT_ - BUTTON_SIZE_) / INNER_HEIGHT_);
-		float button_down_rate = button_top_rate + BUTTON_SIZE_ / INNER_HEIGHT_;
-
-		if ((*top_itr)->GetHeightRate() > button_top_rate - ACCEPTABLE_RANGE_ && 
-			(*top_itr)->GetHeightRate() < button_down_rate + ACCEPTABLE_RANGE_){
-
-			JUDGELIST judge = Judge(pushtime);
+			JUDGELIST judge = Judge(abs(betweentime));
 
 			NoteErase(top_itr, judge);
 			return;
@@ -125,22 +122,21 @@ void FADER::LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, unsigned 
 
 	int betweentime = (int)nowtime - (int)(*top_long).GetTiming();
 
-	float button_top_rate = button_height_rate * ((INNER_HEIGHT_ - BUTTON_SIZE_) / INNER_HEIGHT_);
-	float button_down_rate = button_top_rate + (1.0f - (INNER_HEIGHT_ - BUTTON_SIZE_) / INNER_HEIGHT_);
-
 	if (top_long->IsPush()){
 
 		if (CONTROLL::GetInstance().StateIsDown(ASIGN_KEY_)){
 
-			if ((*top_itr)->GetHeightRate() > button_top_rate - ACCEPTABLE_RANGE_ &&
-				(*top_itr)->GetHeightRate() < button_down_rate + ACCEPTABLE_RANGE_){
+			if (this->IsInForButton(top_itr, button_height_rate)){
 
-				if (this->total_elapsed_ > this->quater_rhythm_ / 8){
+				if (this->total_elapsed_ > this->quater_rhythm_ / 4){
 
 					this->judge_display_->SetBomb(this->longjudge_, (*top_itr)->GetHeightRate());
-					this->total_elapsed_ -= this->quater_rhythm_ / 8;
+					this->score_judge_ = this->longjudge_;
+
+					this->total_elapsed_ -= this->quater_rhythm_ / 4;
 				
 				}
+
 			}
 			else{
 
@@ -155,6 +151,7 @@ void FADER::LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, unsigned 
 			}
 
 			if (top_long->GetTimingSlowMostPoint() < nowtime){
+
 
 				NoteErase(top_itr, this->longjudge_);
 				return;
@@ -173,13 +170,9 @@ void FADER::LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, unsigned 
 	}
 	else if (betweentime > -OK && CONTROLL::GetInstance().BufferIsPress(ASIGN_KEY_)){
 
-		int pushtime = abs(betweentime);
+		if (this->IsInForButton(top_itr, button_height_rate)){
 
-
-		if ((*top_itr)->GetHeightRate() > button_top_rate - ACCEPTABLE_RANGE_ &&
-			(*top_itr)->GetHeightRate() < button_down_rate + ACCEPTABLE_RANGE_){
-
-			this->longjudge_ = Judge(betweentime);
+			this->longjudge_ = Judge(abs(betweentime));
 
 			this->judge_display_->SetBomb(this->longjudge_, (*top_itr)->GetHeightRate());
 			top_long->Push();
@@ -208,8 +201,45 @@ void FADER::Draw(float button_height_rate, float animetion_rate, unsigned nowtim
 
 	int animenum = (int)(animetion_rate * 90.0f);
 
-	SpriteBatch.Draw(*this->normal_sprite_, this->DRAW_POS_,
-		RectWH((animenum % 30) * WIDTH_, (animenum / 30) * HEIGHT_, WIDTH_, HEIGHT_), 1.0f);
+	auto s_itr = this->notelist_.begin();
+
+	LONGNOTE* longnote_;
+
+	if (s_itr != this->notelist_.end()){
+
+		if ((*s_itr)->isLong()){
+
+
+			longnote_ = (LONGNOTE*)(*s_itr);
+			if (longnote_->IsPush()){
+
+				SpriteBatch.Draw(*(*this->color_playareas_)[longnote_->GetColor()], this->DRAW_POS_,
+					RectWH((animenum % 30) * WIDTH_, (animenum / 30) * HEIGHT_, WIDTH_, HEIGHT_), 1.0f);
+
+			}
+			else{
+
+				SpriteBatch.Draw(*this->normal_sprite_, this->DRAW_POS_,
+					RectWH((animenum % 30) * WIDTH_, (animenum / 30) * HEIGHT_, WIDTH_, HEIGHT_), 1.0f);
+
+			}
+
+
+		}
+		else{
+
+			SpriteBatch.Draw(*this->normal_sprite_, this->DRAW_POS_,
+				RectWH((animenum % 30) * WIDTH_, (animenum / 30) * HEIGHT_, WIDTH_, HEIGHT_), 1.0f);
+
+		}
+
+	}
+	else{
+
+		SpriteBatch.Draw(*this->normal_sprite_, this->DRAW_POS_,
+			RectWH((animenum % 30) * WIDTH_, (animenum / 30) * HEIGHT_, WIDTH_, HEIGHT_), 1.0f);
+
+	}
 
 
 	Vector3 top_pos = this->DRAW_POS_;
@@ -217,9 +247,8 @@ void FADER::Draw(float button_height_rate, float animetion_rate, unsigned nowtim
 	top_pos.x += INNER_LEFT_POS_;
 	
 	//ノーツの描画　ロング→シングル
-	auto s_itr = this->notelist_.begin();
+	s_itr = this->notelist_.begin();
 
-	LONGNOTE* longnote_;
 	while (s_itr != this->notelist_.end()){
 
 		if ((*s_itr)->isLong()){
@@ -284,6 +313,23 @@ void FADER::InNote(ABSTRUCT_NOTE* innote){
 
 }
 
+bool FADER::IsInForButton(std::list<ABSTRUCT_NOTE*>::iterator top_itr, float button_height_rate){
+
+	float button_top_rate = button_height_rate * ((this->INNER_HEIGHT_ - this->BUTTON_SIZE_) / this->INNER_HEIGHT_);
+	float button_down_rate = button_top_rate + (1.0f - (this->INNER_HEIGHT_ - this->BUTTON_SIZE_) / this->INNER_HEIGHT_);
+
+	if ((*top_itr)->GetHeightRate() > button_top_rate - ACCEPTABLE_RANGE_ &&
+		(*top_itr)->GetHeightRate() < button_down_rate + ACCEPTABLE_RANGE_){
+
+		return true;
+
+	}
+
+	return false;
+
+
+}
+
 void FADER::NoteErase(std::list<ABSTRUCT_NOTE*>::iterator erase_itr, JUDGELIST judge){
 
 	(*erase_itr)->Used();
@@ -292,7 +338,8 @@ void FADER::NoteErase(std::list<ABSTRUCT_NOTE*>::iterator erase_itr, JUDGELIST j
 
 	this->notelist_.erase(erase_itr);
 
-	this->have_judge_ = judge;
+	this->score_judge_ = judge;
+	this->accuracy_judge_ = judge;
 
 	return;
 }

@@ -6,6 +6,7 @@
 
 class FADER;
 class ABSTRUCT_NOTE;
+struct JUDGECOUNT;
 
 class INSTRUMENT
 {
@@ -17,6 +18,11 @@ public:
 	void Draw(unsigned nowtime,float animation_rate);
 
 	void SetBPM(unsigned bpm, unsigned quater_rhythm);
+
+	JUDGECOUNT GetScoreJudge();
+	JUDGECOUNT GetAccuracyJudge();
+
+	unsigned GetNotesCount(){ return notes_.size(); }
 
 private:
 

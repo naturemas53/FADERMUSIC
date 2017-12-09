@@ -18,7 +18,8 @@ public:
 	void Draw(float button_height_rate, float animetion_rate, unsigned nowtime, int range_hours_show);
 
 	void InNote(ABSTRUCT_NOTE* innote);
-	JUDGELIST GetJudge(){ return this->have_judge_; }
+	JUDGELIST GetScoreJudge(){ return this->score_judge_; }
+	JUDGELIST GetAccuracyJudge(){ return this->accuracy_judge_; }
 
 	void SetBPM(unsigned bpm, unsigned quater_rhythm){
 
@@ -31,6 +32,8 @@ private:
 
 	void SingleNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr,unsigned nowtime,float button_height_rate);
 	void LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, unsigned nowtime, unsigned elapsedtime,float button_height_rate);
+
+	bool IsInForButton(std::list<ABSTRUCT_NOTE*>::iterator top_itr, float button_height_rate);
 
 	void NoteErase(std::list<ABSTRUCT_NOTE*>::iterator erase_itr,JUDGELIST judge);
 
@@ -58,7 +61,8 @@ private:
 	JUDGE_DISPLAY* judge_display_;
 
 	JUDGELIST longjudge_;
-	JUDGELIST have_judge_;
+	JUDGELIST score_judge_;
+	JUDGELIST accuracy_judge_;
 
 	unsigned total_elapsed_;
 	unsigned songbpm_;

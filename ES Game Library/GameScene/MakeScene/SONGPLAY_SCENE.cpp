@@ -20,13 +20,15 @@ bool SONGPLAY_SCENE::Initialize()
 	background_ = GraphicsDevice.CreateSpriteFromFile(_T("background/backwall.png"));
 	bgm_ = SoundDevice.CreateSoundFromFile(_T("transtep.wav"));
 
+	bpm_ = 136;
+	quater_rhythm_ = (UINT)(60.0f / (float)bpm_ * 1 * 1000.0f);
+	quaver_rhythm_ = quater_rhythm_ / 2;
+
 	instrument_ = new INSTRUMENT(SceneShared().GetLongIntegerForKey("MOUSE_MAX_Y"));
 	SceneShared().RemoveLongIntegerForKey("MOUSE_MAX_Y");
 	ui_ = new UI();
 
-	bpm_ = 136;
-	quater_rhythm_ = (UINT)(60.0f / (float)bpm_ * 1 * 1000.0f);
-	quaver_rhythm_ = quater_rhythm_ / 2;
+	instrument_->SetBPM(136, quater_rhythm_);
 
 	nowtime_ = 0;
 	animation_rate_ = 0.0f;
@@ -35,6 +37,11 @@ bool SONGPLAY_SCENE::Initialize()
 	songlength_ = bgm_->GetLengthMSec();
 
 	prevtime_ = clock();
+
+	accuracy_ = 0;
+	score_ = 0;
+	life_ = 0.5f;
+	maxcombo_ = 0;
 
 	return true;
 }
@@ -50,7 +57,6 @@ void SONGPLAY_SCENE::Finalize()
 	delete instrument_;
 	delete ui_;
 
-	InputDevice.ReleaseMouse();
 }
 
 /// <summary>
@@ -65,16 +71,8 @@ int SONGPLAY_SCENE::Update()
 	// TODO: Add your update logic here
 
 	CONTROLL::GetInstance().Update();
-	
-	//unsigned elapsedtime;
-
-
 
 	if (start_){
-
-		//elapsedtime = clock() - prevtime_;
-
-		//nowtime_ += elapsedtime;
 
 		prevtime_ = nowtime_;
 
@@ -100,7 +98,18 @@ int SONGPLAY_SCENE::Update()
 
 	instrument_->Update(nowtime_, elapsedtime);
 
-	prevtime_ = clock();
+	unsigned framescore = instrument_->GetScoreJudge().GetScore();
+	float multiplayer_ = 1.0f + (float)instrument_->GetCombo() / 100.0f;
+	score_ += (UINT)((float)framescore * multiplayer_);
+	life_ += instrument_->GetScoreJudge().GetLifePersent();
+	if (life_ > 1.0f) life_ = 1.0f;
+	if (life_ < 0.0f) life_ = 0.0f;
+
+	if (maxcombo_ < instrument_->GetCombo()) maxcombo_ = instrument_->GetCombo();
+
+	accuracy_ += instrument_->GetAccuracyJudge().GetAccuracy();
+
+	ui_->SetDisplayData(score_,life_, accuracy_, instrument_->GetNotesCount(),maxcombo_);
 
 	return 0;
 }
@@ -118,14 +127,16 @@ void SONGPLAY_SCENE::Draw()
 
 	SpriteBatch.Begin();
 
+
 	SpriteBatch.Draw(*background_,Vector3_Zero,0.3f);
 
 	instrument_->Draw(nowtime_,animation_rate_);
 
 	ui_->Draw(animation_rate_);
 
-	SpriteBatch.DrawString(DefaultFont, Vector2_Zero, Color(0, 255, 255), _T("time : %u"), nowtime_);
-	SpriteBatch.DrawString(DefaultFont, Vector2(0.0f,30.0f), Color(0, 255, 255), _T("elapsedtime : %u"), elapsedtime);
+	SpriteBatch.DrawString(DefaultFont, Vector2(0.0f, 100.0f), Color(0, 255, 255), _T("time : %u"), nowtime_);
+	SpriteBatch.DrawString(DefaultFont, Vector2(0.0f, 130), Color(0, 255, 255), _T("elapsedtime : %u"), elapsedtime);
+
 
 	SpriteBatch.End();
 

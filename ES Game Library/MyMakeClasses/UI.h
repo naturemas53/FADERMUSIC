@@ -1,6 +1,8 @@
 #pragma once
 #include "../ESGLib.h"
 
+struct JUDGECOUNT;
+
 class UI
 {
 public:
@@ -10,7 +12,7 @@ public:
 	void Update();
 	void Draw(float animation_rate);
 
-	void SetDisplayData(float lifepersent){ this->draw_lifepersent_ = lifepersent; }
+	void SetDisplayData(int score,float life,int accuracy,int allnotes,int maxcombo);
 
 private:
 
@@ -21,11 +23,14 @@ private:
 	const float GAUGE_WIDTH_;
 
 	float draw_lifepersent_;
-	//float draw_score_;
-	//float draw_stage_;
-	//float draw_difficulty_;
-	//float draw__;
+	int draw_score_;
+	int draw_accuracy_;
+	int draw_maxcombo_;
 
+
+	//Ç∆ÇËÇ†Ç¶Ç∏Å´
+	FONT score_font_;
+	FONT accuracy_font_;
 
 
 };

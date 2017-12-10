@@ -3,6 +3,7 @@
 #include "../../ESGLib.h"
 #include "../GameScene.hpp"
 #include <vector>
+#include "../../MyMakeClasses/JUDGELIST_ENUM.h"
 
 class INSTRUMENT;
 class UI;
@@ -69,11 +70,16 @@ private:
 
 	unsigned nowtime_;
 	unsigned songlength_;
-	DWORD filesize_;
+
+	unsigned score_;
+	float life_;
+	unsigned accuracy_;
+	unsigned maxcombo_;
+
 	unsigned prevtime_;
 	float animation_rate_;
 	unsigned elapsedtime;
-
+	
 	UINT bpm_;
 	UINT quater_rhythm_;
 	UINT quaver_rhythm_;

@@ -14,6 +14,7 @@ accuracy_font_(GraphicsDevice.CreateSpriteFont(_T("Voyager Grotesque Light"), 20
 	this->draw_lifepersent_ = 0.5f;
 	this->draw_score_ = 0;
 	this->draw_accuracy_ = 0;
+	this->draw_maxcombo_ = 0;
 
 }
 
@@ -35,6 +36,7 @@ void UI::Draw(float animation_rate){
 
 	SpriteBatch.DrawString(this->score_font_, Vector2(10.0f, 10.0f), Color(0, 255, 0), _T("SCORE : %08d"),this->draw_score_);
 	SpriteBatch.DrawString(this->accuracy_font_, Vector2(10.0f, 70.0f), Color(0, 255, 0), _T("ACCURACY : %06d"), this->draw_accuracy_);
+	SpriteBatch.DrawString(this->accuracy_font_, Vector2(210.0f, 70.0f), Color(0, 255, 0), _T("MAXCOMBO : %04d"), this->draw_maxcombo_);
 
 	Vector3 pos = Vector3_Zero;
 	pos.x += 1280.0f / 2.0f;
@@ -49,12 +51,12 @@ void UI::Draw(float animation_rate){
 
 }
 
-void UI::SetDisplayData(int score, float life, int accuracy, int allnotes){
+void UI::SetDisplayData(int score, float life, int accuracy, int allnotes, int maxcombo){
 
 	this->draw_lifepersent_ = life;
 	this->draw_score_ = score;
 
 	this->draw_accuracy_ = (int)(100000.0f * ((float)accuracy / (float)(allnotes * 100)) );
-
+	this->draw_maxcombo_ = maxcombo;
 
 }

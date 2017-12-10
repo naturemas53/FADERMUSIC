@@ -41,6 +41,7 @@ bool SONGPLAY_SCENE::Initialize()
 	accuracy_ = 0;
 	score_ = 0;
 	life_ = 0.5f;
+	maxcombo_ = 0;
 
 	return true;
 }
@@ -97,14 +98,18 @@ int SONGPLAY_SCENE::Update()
 
 	instrument_->Update(nowtime_, elapsedtime);
 
-	score_ += instrument_->GetScoreJudge().GetScore();
+	unsigned framescore = instrument_->GetScoreJudge().GetScore();
+	float multiplayer_ = 1.0f + (float)instrument_->GetCombo() / 100.0f;
+	score_ += (UINT)((float)framescore * multiplayer_);
 	life_ += instrument_->GetScoreJudge().GetLifePersent();
 	if (life_ > 1.0f) life_ = 1.0f;
 	if (life_ < 0.0f) life_ = 0.0f;
 
+	if (maxcombo_ < instrument_->GetCombo()) maxcombo_ = instrument_->GetCombo();
+
 	accuracy_ += instrument_->GetAccuracyJudge().GetAccuracy();
 
-	ui_->SetDisplayData(score_,life_, accuracy_, instrument_->GetNotesCount());
+	ui_->SetDisplayData(score_,life_, accuracy_, instrument_->GetNotesCount(),maxcombo_);
 
 	return 0;
 }
@@ -121,6 +126,7 @@ void SONGPLAY_SCENE::Draw()
 
 
 	SpriteBatch.Begin();
+
 
 	SpriteBatch.Draw(*background_,Vector3_Zero,0.3f);
 

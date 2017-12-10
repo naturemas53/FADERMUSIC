@@ -74,6 +74,7 @@ private:
 	unsigned score_;
 	float life_;
 	unsigned accuracy_;
+	unsigned maxcombo_;
 
 	unsigned prevtime_;
 	float animation_rate_;

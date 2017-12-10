@@ -12,7 +12,7 @@ public:
 	void Update();
 	void Draw(float animation_rate);
 
-	void SetDisplayData(int score,float life,int accuracy,int allnotes);
+	void SetDisplayData(int score,float life,int accuracy,int allnotes,int maxcombo);
 
 private:
 
@@ -25,6 +25,7 @@ private:
 	float draw_lifepersent_;
 	int draw_score_;
 	int draw_accuracy_;
+	int draw_maxcombo_;
 
 
 	//Ç∆ÇËÇ†Ç¶Ç∏Å´

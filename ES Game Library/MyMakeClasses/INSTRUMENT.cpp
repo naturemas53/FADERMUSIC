@@ -20,6 +20,10 @@ INSTRUMENT::INSTRUMENT(LONG max_mouse_y) : MAX_MOUSE_Y_(max_mouse_y)
 	(*(notes_.begin())) -> RightUp();
 
 	range_hours_show = 1000;
+
+	this->font_ = GraphicsDevice.CreateSpriteFont(_T("Voyager Grotesque Bold"),114);
+
+	this->havecombo_ = 0;
 	
 
 }
@@ -69,11 +73,48 @@ void INSTRUMENT::Update(unsigned nowtime, unsigned elapsedtime_){
 
 	for (auto f_itr : faders_)f_itr->Update(nowtime, elapsedtime_, button_height_);
 
+	this->ComboCheck();
+
 }
 
 void INSTRUMENT::Draw(unsigned nowtime, float animation_rate){
 
 	for (auto f_itr : faders_) f_itr->Draw(button_height_, animation_rate, nowtime,range_hours_show);
+
+	if (this->havecombo_ > 0){
+
+		SpriteBatch.DrawString(font_,Vector2(1270.0f,120.0f + 10.0f + 20.0f),Color(0,255,0),
+			Vector2_One, Vector3(0.0f, 0.0f, 90.0f), Vector3(1270.0f, 120.0f + 10.0f + 20.0f,0.0f), _T("%dcombo"), this->havecombo_);
+
+	}
+
+}
+
+void INSTRUMENT::ComboCheck(){
+
+	JUDGELIST judge;
+
+	for (auto f_itr = faders_.begin(); f_itr != faders_.end();f_itr++){
+
+		judge = (*f_itr)->GetScoreJudge();
+
+		if (judge != NONE){
+
+			if (judge == MISSTIME || judge == OUCH){
+
+				havecombo_ = 0;
+				break;
+
+			}
+			else{
+
+				havecombo_++;
+
+			}
+
+		}
+
+	}
 
 }
 

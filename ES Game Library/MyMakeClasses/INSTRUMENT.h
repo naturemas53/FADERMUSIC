@@ -23,12 +23,18 @@ public:
 	JUDGECOUNT GetAccuracyJudge();
 
 	unsigned GetNotesCount(){ return notes_.size(); }
+	unsigned GetCombo(){ return havecombo_; }
 
 private:
 
 	//Ç∆ÇËÇ†Ç¶Ç∏Å´
 	void SetNote();
 	void RightUp(unsigned nowtime);
+
+	FONT font_;
+	//Ç∆ÇËÇ†Ç¶Ç∏Å™
+
+	void ComboCheck();
 
 	int range_hours_show;
 
@@ -42,6 +48,7 @@ private:
 
 	unsigned songbpm_;
 	unsigned quater_rhythm_;
+	unsigned havecombo_;
 
 };
 

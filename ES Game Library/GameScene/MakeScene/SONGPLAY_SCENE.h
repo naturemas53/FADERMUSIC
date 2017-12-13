@@ -4,6 +4,7 @@
 #include "../GameScene.hpp"
 #include <vector>
 #include "../../MyMakeClasses/JUDGELIST_ENUM.h"
+#include "../../MyMakeClasses/BPM_DATA_STRUCT.h"
 
 class INSTRUMENT;
 class UI;
@@ -84,11 +85,14 @@ private:
 	UINT quater_rhythm_;
 	UINT quaver_rhythm_;
 
+	std::vector<BPM_DATA> bpmlist_;
+
 	//Ç∆ÇËÇ†Ç¶Ç∏Ç≈Å´
 	bool start_;
 
 	SOUND bgm_;
 
 	// ä÷êîêÈåæ
+	void ChangeBpm(unsigned nowtime);
 
 };

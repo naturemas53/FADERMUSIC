@@ -20,15 +20,14 @@ bool SONGPLAY_SCENE::Initialize()
 	background_ = GraphicsDevice.CreateSpriteFromFile(_T("background/backwall.png"));
 	bgm_ = SoundDevice.CreateSoundFromFile(_T("transtep.wav"));
 
-	bpm_ = 136;
-	quater_rhythm_ = (UINT)(60.0f / (float)bpm_ * 1 * 1000.0f);
-	quaver_rhythm_ = quater_rhythm_ / 2;
-
-	instrument_ = new INSTRUMENT(SceneShared().GetLongIntegerForKey("MOUSE_MAX_Y"));
+	instrument_ = new INSTRUMENT(SceneShared().GetLongIntegerForKey("MOUSE_MAX_Y"), bpmlist_, "test.txt");
 	SceneShared().RemoveLongIntegerForKey("MOUSE_MAX_Y");
 	ui_ = new UI();
-
-	instrument_->SetBPM(136, quater_rhythm_);
+	
+	auto itr = bpmlist_.begin();
+	this->bpm_ = itr->bpm;
+	this->quater_rhythm_ = (UINT)(60.0f / (float)bpm_ * 1 * 1000.0f);
+	instrument_->SetBPM(this->bpm_, this->quater_rhythm_);
 
 	nowtime_ = 0;
 	animation_rate_ = 0.0f;
@@ -98,6 +97,8 @@ int SONGPLAY_SCENE::Update()
 
 	instrument_->Update(nowtime_, elapsedtime);
 
+	this->ChangeBpm(this->nowtime_);
+
 	unsigned framescore = instrument_->GetScoreJudge().GetScore();
 	float multiplayer_ = 1.0f + (float)instrument_->GetCombo() / 100.0f;
 	score_ += (UINT)((float)framescore * multiplayer_);
@@ -141,4 +142,26 @@ void SONGPLAY_SCENE::Draw()
 	SpriteBatch.End();
 
 	GraphicsDevice.EndScene();
+}
+
+void SONGPLAY_SCENE::ChangeBpm(unsigned nowtime){
+
+	auto bpm_itr = bpmlist_.begin();
+	auto bpm_fitr = bpmlist_.end();
+	bpm_fitr--;
+
+	if (bpm_itr != bpm_fitr){
+
+		if ((bpm_itr + 1)->timing < nowtime){
+
+			bpm_itr = bpmlist_.erase(bpm_itr);
+			this->bpm_ = (bpm_itr)->bpm;
+			this->quater_rhythm_ = (UINT)(60.0f / (float)bpm_ * 1 * 1000.0f);
+
+			instrument_->SetBPM(this->bpm_,this->quater_rhythm_);
+
+		}
+
+	}
+
 }

@@ -3,15 +3,17 @@
 #include "../ESGLib.h"
 
 #include <vector>
+#include <fstream>
 
 class FADER;
 class ABSTRUCT_NOTE;
 struct JUDGECOUNT;
+struct BPM_DATA;
 
 class INSTRUMENT
 {
 public:
-	INSTRUMENT(LONG max_mouse_y);
+	INSTRUMENT(LONG max_mouse_y, std::vector<BPM_DATA>& bpmlist, const char* filename);
 	~INSTRUMENT();
 
 	void Update(unsigned nowtime, unsigned elapsedtime_);
@@ -27,8 +29,11 @@ public:
 
 private:
 
+	void Setting(const char* filename, std::vector<BPM_DATA>& bpmlist);
+	void ReadBpm(FILE* file, std::vector<BPM_DATA>& bpmlist);
+	void ReadNote(FILE* file, std::vector<BPM_DATA>& bpmlist);
+
 	//Ç∆ÇËÇ†Ç¶Ç∏Å´
-	void SetNote();
 	void RightUp(unsigned nowtime);
 
 	FONT font_;

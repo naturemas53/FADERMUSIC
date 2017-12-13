@@ -4,9 +4,11 @@
 #include "LONGNOTE.h"
 #include "CONTROLL.h"
 #include "JUDGELIST_ENUM.h"
+#include "BPM_DATA_STRUCT.h"
 
+#include <string>
 
-INSTRUMENT::INSTRUMENT(LONG max_mouse_y) : MAX_MOUSE_Y_(max_mouse_y)
+INSTRUMENT::INSTRUMENT(LONG max_mouse_y,  std::vector<BPM_DATA>& bpmlist, const char* filename) : MAX_MOUSE_Y_(max_mouse_y)
 {
 
 	mouse_y_ = 0;
@@ -14,8 +16,8 @@ INSTRUMENT::INSTRUMENT(LONG max_mouse_y) : MAX_MOUSE_Y_(max_mouse_y)
 	faders_.push_back(new FADER(Vector3(1280.0f / 2.0f +12.0f+ 10.0f, 120.0f + 10.0f, 0.0f), Keys_S));
 	faders_.push_back(new FADER(Vector3(1280.0f / 2.0f + 12.0f + 10.0f + 160.0f, 120.0f + 10.0f, 0.0f), Keys_D));
 	faders_.push_back(new FADER(Vector3(1280.0f / 2.0f + 12.0f + 10.0f + 320.0f, 120.0f + 10.0f, 0.0f), Keys_F));
-	
-	SetNote();
+
+	this->Setting(filename,bpmlist);
 
 	(*(notes_.begin())) -> RightUp();
 
@@ -204,361 +206,540 @@ void INSTRUMENT::SetBPM(unsigned bpm, unsigned quater_rhythm){
 
 }
 
-void INSTRUMENT::SetNote(){
+void INSTRUMENT::Setting(const char* filename, std::vector<BPM_DATA>& bpmlist){
 
+	FILE* file;
+	
+	char buffer[256] = {};
+	std::string str;
 
-	SINGLENOTE* newsingle;
-	LONGNOTE* newlong;
+	file = fopen(filename,"r");
 
-	newsingle = new SINGLENOTE(8535, 0.5f, Color_Red);
-	notes_.push_back(newsingle);
-	faders_[0]->InNote(newsingle);
+	do{
+/*
+		if (!std::getline(file, str)){
 
-	newsingle = new SINGLENOTE(9652, 0.5f, Color_Green);
-	notes_.push_back(newsingle);
-	faders_[0]->InNote(newsingle);
+			::OutputDebugString(_T("\n\n\nBPM‚ðŒ©‚Â‚¯‚ç‚ê‚Ü‚¹‚ñ‚Å‚µ‚½\n\n\n"));
 
+			return;
 
-	newsingle = new SINGLENOTE(9968, 0.5f, Color_Blue);
-	notes_.push_back(newsingle);
-	faders_[2]->InNote(newsingle);
+		}*/
 
-	//-------------------------
+		if (fscanf(file,"%s",buffer) == EOF){
 
-	newsingle = new SINGLENOTE(10285, 0.5f, Color_Red);
-	notes_.push_back(newsingle);
-	faders_[0]->InNote(newsingle);
+			return;
 
+		}
 
-	newsingle = new SINGLENOTE(11368, 0.5f, Color_Green);
-	notes_.push_back(newsingle);
-	faders_[0]->InNote(newsingle);
+		str = buffer;
 
 
-	newsingle = new SINGLENOTE(11668, 0.5f, Color_Blue);
-	notes_.push_back(newsingle);
-	faders_[2]->InNote(newsingle);
+	} while (str != "BPM");
 
-	//-------------------------
+	//std::getline(file, str);
+	this->ReadBpm(file, bpmlist);
 
-	newsingle = new SINGLENOTE(12050, 0.45f, Color_Red);
-	notes_.push_back(newsingle);
-	faders_[0]->InNote(newsingle);
+	do{
 
+		//if (!std::getline(file, str)){
 
-	newsingle = new SINGLENOTE(12368, 0.45f, Color_Green);
-	notes_.push_back(newsingle);
-	faders_[1]->InNote(newsingle);
+		//	::OutputDebugString(_T("\n\n\nNOTES‚ðŒ©‚Â‚¯‚ç‚ê‚Ü‚¹‚ñ‚Å‚µ‚½\n\n\n"));
 
+		//	return;
 
-	newsingle = new SINGLENOTE(12685, 0.45f, Color_Blue);
-	notes_.push_back(newsingle);
-	faders_[2]->InNote(newsingle);
+		//}
 
 
-	newsingle = new SINGLENOTE(13184, 0.45f, Color_Red);
-	notes_.push_back(newsingle);
-	faders_[1]->InNote(newsingle);
+		if (fscanf(file, "%s", buffer) == EOF){
 
-	newsingle = new SINGLENOTE(13483, 0.45f, Color_Green);
-	notes_.push_back(newsingle);
-	faders_[2]->InNote(newsingle);
+			return;
 
-	//-------------------------
+		}
 
-	newsingle = new SINGLENOTE(13850, 0.5f, Color_Blue);
-	notes_.push_back(newsingle);
-	faders_[0]->InNote(newsingle);
+		str = buffer;
 
-	newsingle = new SINGLENOTE(14167, 0.5f, Color_Red);
-	notes_.push_back(newsingle);
-	faders_[1]->InNote(newsingle);
+	} while (str != "NOTES");
 
-	newsingle = new SINGLENOTE(14467, 0.5f, Color_Green);
-	notes_.push_back(newsingle);
-	faders_[2]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(14883, 0.5f, Color_Blue);
-	notes_.push_back(newsingle);
-	faders_[1]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(15200, 0.5f, Color_Red);
-	notes_.push_back(newsingle);
-	faders_[2]->InNote(newsingle);
-
-	//-------------------------
-
-	newsingle = new SINGLENOTE(15636, 0.9f, Color_Green);
-	notes_.push_back(newsingle);
-	faders_[0]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(15949, 0.88f, Color_Blue);
-	notes_.push_back(newsingle);
-	faders_[1]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(16265, 0.86f, Color_Red);
-	notes_.push_back(newsingle);
-	faders_[2]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(16714, 0.84f, Color_Green);
-	notes_.push_back(newsingle);
-	faders_[0]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(17008, 0.82f, Color_Blue);
-	notes_.push_back(newsingle);
-	faders_[2]->InNote(newsingle);
-
-	//
-
-	newsingle = new SINGLENOTE(17357, 0.8f, Color_Red);
-	notes_.push_back(newsingle);
-	faders_[0]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(17674, 0.78f, Color_Green);
-	notes_.push_back(newsingle);
-	faders_[1]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(18007, 0.76f, Color_Blue);
-	notes_.push_back(newsingle);
-	faders_[2]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(18441, 0.74f, Color_Red);
-	notes_.push_back(newsingle);
-	faders_[1]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(18791, 0.72f, Color_Green);
-	notes_.push_back(newsingle);
-	faders_[2]->InNote(newsingle);
-
-	//
-
-	newsingle = new SINGLENOTE(19139, 0.7f, Color_Blue);
-	notes_.push_back(newsingle);
-	faders_[0]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(19454, 0.68f, Color_Red);
-	notes_.push_back(newsingle);
-	faders_[1]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(19769, 0.66f, Color_Green);
-	notes_.push_back(newsingle);
-	faders_[2]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(20202, 0.64f, Color_Blue);
-	notes_.push_back(newsingle);
-	faders_[0]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(20419, 0.62f, Color_Red);
-	notes_.push_back(newsingle);
-	faders_[2]->InNote(newsingle);
-
-	//
-
-	newsingle = new SINGLENOTE(20869, 0.6f, Color_Green);
-	notes_.push_back(newsingle);
-	faders_[0]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(21185, 0.58f, Color_Blue);
-	notes_.push_back(newsingle);
-	faders_[1]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(21502, 0.56f, Color_Red);
-	notes_.push_back(newsingle);
-	faders_[2]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(21935, 0.54f, Color_Green);
-	notes_.push_back(newsingle);
-	faders_[1]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(22285, 0.52f, Color_Blue);
-	notes_.push_back(newsingle);
-	faders_[2]->InNote(newsingle);
-
-	//
-
-	newsingle = new SINGLENOTE(22635, 0.5f, Color_Red);
-	notes_.push_back(newsingle);
-	faders_[0]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(22969, 0.48f, Color_Green);
-	notes_.push_back(newsingle);
-	faders_[1]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(23297, 0.46f, Color_Blue);
-	notes_.push_back(newsingle);
-	faders_[2]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(23710, 0.44f, Color_Red);
-	notes_.push_back(newsingle);
-	faders_[0]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(23927, 0.42f, Color_Green);
-	notes_.push_back(newsingle);
-	faders_[2]->InNote(newsingle);
-
-	//
-
-	newsingle = new SINGLENOTE(24377, 0.4f, Color_Blue);
-	notes_.push_back(newsingle);
-	faders_[0]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(24694, 0.38f, Color_Red);
-	notes_.push_back(newsingle);
-	faders_[1]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(24994, 0.36f, Color_Green);
-	notes_.push_back(newsingle);
-	faders_[2]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(25410, 0.34f, Color_Blue);
-	notes_.push_back(newsingle);
-	faders_[1]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(25777, 0.32f, Color_Red);
-	notes_.push_back(newsingle);
-	faders_[2]->InNote(newsingle);
-
-	//
-
-	newsingle = new SINGLENOTE(26127, 0.3f, Color_Green);
-	notes_.push_back(newsingle);
-	faders_[0]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(26459, 0.28f, Color_Blue);
-	notes_.push_back(newsingle);
-	faders_[1]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(26791, 0.26f, Color_Red);
-	notes_.push_back(newsingle);
-	faders_[2]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(27224, 0.24f, Color_Green);
-	notes_.push_back(newsingle);
-	faders_[0]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(27457, 0.22f, Color_Blue);
-	notes_.push_back(newsingle);
-	faders_[2]->InNote(newsingle);
-
-	//
-
-	newsingle = new SINGLENOTE(27889, 0.2f, Color_Red);
-	notes_.push_back(newsingle);
-	faders_[0]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(28222, 0.18f, Color_Green);
-	notes_.push_back(newsingle);
-	faders_[1]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(28555, 0.16f, Color_Blue);
-	notes_.push_back(newsingle);
-	faders_[2]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(28988, 0.14f, Color_Red);
-	notes_.push_back(newsingle);
-	faders_[1]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(29338, 0.12f, Color_Green);
-	notes_.push_back(newsingle);
-	faders_[2]->InNote(newsingle);
-
-	//-------------------------
-
-	newlong = new LONGNOTE(29687, 0.5f, Color_Blue);
-	newlong->AddPoint(30318,0.3f);
-	notes_.push_back(newlong);
-	faders_[1]->InNote(newlong);
-
-	newsingle = new SINGLENOTE(30784, 0.3f, Color_Red);
-	notes_.push_back(newsingle);
-	faders_[2]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(31017, 0.3f, Color_Green);
-	notes_.push_back(newsingle);
-	faders_[0]->InNote(newsingle);
-
-	//
-
-	newlong = new LONGNOTE(31450, 0.45f, Color_Blue);
-	newlong->AddPoint(32101, 0.25f);
-	notes_.push_back(newlong);
-	faders_[0]->InNote(newlong);
-
-	newsingle = new SINGLENOTE(32551, 0.25f, Color_Red);
-	notes_.push_back(newsingle);
-	faders_[2]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(32767, 0.25f, Color_Green);
-	notes_.push_back(newsingle);
-	faders_[1]->InNote(newsingle);
-
-	//
-
-	newlong = new LONGNOTE(33184, 0.4f, Color_Blue);
-	newlong->AddPoint(33850, 0.2f);
-	notes_.push_back(newlong);
-	faders_[1]->InNote(newlong);
-
-	newsingle = new SINGLENOTE(34297, 0.2f, Color_Red);
-	notes_.push_back(newsingle);
-	faders_[2]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(34514, 0.2f, Color_Green);
-	notes_.push_back(newsingle);
-	faders_[0]->InNote(newsingle);
-
-	//
-
-	//newsingle = new SINGLENOTE(48614, 0.1f, Color_Red);
-	//notes_.push_back(newsingle);
-	//faders_[0]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(49063, 0.1f, Color_Blue);
-	notes_.push_back(newsingle);
-	faders_[0]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(49438, 0.1f, Color_Red);
-	notes_.push_back(newsingle);
-	faders_[1]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(49752, 0.1f, Color_Green);
-	notes_.push_back(newsingle);
-	faders_[2]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(49985, 0.2f, Color_Blue);
-	notes_.push_back(newsingle);
-	faders_[0]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(49985, 0.2f, Color_Blue);
-	notes_.push_back(newsingle);
-	faders_[2]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(50401, 0.15f, Color_Red);
-	notes_.push_back(newsingle);
-	faders_[0]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(50401, 0.15f, Color_Red);
-	notes_.push_back(newsingle);
-	faders_[1]->InNote(newsingle);
-
-	newsingle = new SINGLENOTE(50401, 0.15f, Color_Red);
-	notes_.push_back(newsingle);
-	faders_[2]->InNote(newsingle);
-
-	//
-
-	newlong = new LONGNOTE(50850, 0.0f, Color_Green);
-	newlong->AddPoint(52648,1.0f);
-	notes_.push_back(newlong);
-	faders_[1]->InNote(newlong);
-
-	newlong = new LONGNOTE(58000, 0.7f, Color_Blue);
-	newlong->AddPoint(59836, 0.4f);
-	newlong->AddPoint(61549, 0.4f);
-	newlong->AddPoint(63314, 0.3f);
-	newlong->AddPoint(65000, 0.7f);
-	notes_.push_back(newlong);
-	faders_[0]->InNote(newlong);
-
+	this->ReadNote(file, bpmlist);
 
 }
+
+void INSTRUMENT::ReadBpm(FILE* file, std::vector<BPM_DATA>& bpmlist){
+
+	//std::string str;
+	//std::string timing;
+	//std::string bpm;
+
+	unsigned timing;
+	unsigned bpm;
+
+	int i = 0;
+
+	char buffer[256] = {};
+
+	do{
+
+		//if (!std::getline(*file, str)) break;
+
+		//fgets(buffer, sizeof(buffer), file);
+
+		timing = 0;
+		bpm = 0;
+
+		fscanf(file, "%u %u", &timing, &bpm);
+
+		if (timing != 0 || bpm != 0){
+
+			/*timing = str.substr(0, 6);
+			bpm = str.substr(7, 3);
+
+			bpmlist.push_back(BPM_DATA(std::stoi(timing), std::stoi(bpm)));*/
+
+			bpmlist.push_back(BPM_DATA(timing,bpm));
+
+		}
+		else{
+			break;
+		}
+
+	} while (true);
+
+}
+
+void INSTRUMENT::ReadNote(FILE* file, std::vector<BPM_DATA>& bpmlist){
+
+	/*std::string str;
+	int number = 0;
+	std::string timing;
+	std::string height_rate;
+	char type;*/
+
+	int number = 0;
+	unsigned timing;
+	float height_rate;
+	char type;
+
+	LONGNOTE* newlong;
+	SINGLENOTE* newsingle;
+
+	int prevtiming = -1;
+
+	int colorstep = 0;
+	Color_by_Name color;
+
+	bool nowlong = false;
+
+	char buffer[256] = {};
+
+	do{
+
+		if (fscanf(file, "%d %u %f %c", &number,&timing,&height_rate,&type) != EOF){
+
+			if (nowlong){
+
+				newlong->AddPoint(timing,height_rate);
+
+				if (type == 'E'){
+					
+					faders_[number]->InNote(newlong);
+					notes_.push_back(newlong);
+					nowlong = false;
+
+				}
+
+			}
+			else{
+
+				if (prevtiming != timing ) colorstep++;
+
+				switch (colorstep % 3)
+				{
+				case 0: color = Color_Red; break;
+				case 1: color = Color_Blue; break;
+				case 2: color = Color_Green; break;
+				}
+
+				if (type == 'S'){
+
+					newsingle = new SINGLENOTE(timing,height_rate,color);
+					faders_[number]->InNote(newsingle);
+					notes_.push_back(newsingle);
+
+				}
+				else{
+
+					newlong = new LONGNOTE(timing, height_rate, color);
+					nowlong = true;
+
+				}
+
+				prevtiming = timing;
+
+			}
+			
+
+		}
+		else{ break; }
+
+	} while (true);
+
+}
+
+//void INSTRUMENT::SetNote(){
+//
+//
+//	SINGLENOTE* newsingle;
+//	LONGNOTE* newlong;
+//
+//	newsingle = new SINGLENOTE(8535, 0.5f, Color_Red);
+//	notes_.push_back(newsingle);
+//	faders_[0]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(9652, 0.5f, Color_Green);
+//	notes_.push_back(newsingle);
+//	faders_[0]->InNote(newsingle);
+//
+//
+//	newsingle = new SINGLENOTE(9968, 0.5f, Color_Blue);
+//	notes_.push_back(newsingle);
+//	faders_[2]->InNote(newsingle);
+//
+//	//-------------------------
+//
+//	newsingle = new SINGLENOTE(10285, 0.5f, Color_Red);
+//	notes_.push_back(newsingle);
+//	faders_[0]->InNote(newsingle);
+//
+//
+//	newsingle = new SINGLENOTE(11368, 0.5f, Color_Green);
+//	notes_.push_back(newsingle);
+//	faders_[0]->InNote(newsingle);
+//
+//
+//	newsingle = new SINGLENOTE(11668, 0.5f, Color_Blue);
+//	notes_.push_back(newsingle);
+//	faders_[2]->InNote(newsingle);
+//
+//	//-------------------------
+//
+//	newsingle = new SINGLENOTE(12050, 0.45f, Color_Red);
+//	notes_.push_back(newsingle);
+//	faders_[0]->InNote(newsingle);
+//
+//
+//	newsingle = new SINGLENOTE(12368, 0.45f, Color_Green);
+//	notes_.push_back(newsingle);
+//	faders_[1]->InNote(newsingle);
+//
+//
+//	newsingle = new SINGLENOTE(12685, 0.45f, Color_Blue);
+//	notes_.push_back(newsingle);
+//	faders_[2]->InNote(newsingle);
+//
+//
+//	newsingle = new SINGLENOTE(13184, 0.45f, Color_Red);
+//	notes_.push_back(newsingle);
+//	faders_[1]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(13483, 0.45f, Color_Green);
+//	notes_.push_back(newsingle);
+//	faders_[2]->InNote(newsingle);
+//
+//	//-------------------------
+//
+//	newsingle = new SINGLENOTE(13850, 0.5f, Color_Blue);
+//	notes_.push_back(newsingle);
+//	faders_[0]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(14167, 0.5f, Color_Red);
+//	notes_.push_back(newsingle);
+//	faders_[1]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(14467, 0.5f, Color_Green);
+//	notes_.push_back(newsingle);
+//	faders_[2]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(14883, 0.5f, Color_Blue);
+//	notes_.push_back(newsingle);
+//	faders_[1]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(15200, 0.5f, Color_Red);
+//	notes_.push_back(newsingle);
+//	faders_[2]->InNote(newsingle);
+//
+//	//-------------------------
+//
+//	newsingle = new SINGLENOTE(15636, 0.9f, Color_Green);
+//	notes_.push_back(newsingle);
+//	faders_[0]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(15949, 0.88f, Color_Blue);
+//	notes_.push_back(newsingle);
+//	faders_[1]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(16265, 0.86f, Color_Red);
+//	notes_.push_back(newsingle);
+//	faders_[2]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(16714, 0.84f, Color_Green);
+//	notes_.push_back(newsingle);
+//	faders_[0]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(17008, 0.82f, Color_Blue);
+//	notes_.push_back(newsingle);
+//	faders_[2]->InNote(newsingle);
+//
+//	//
+//
+//	newsingle = new SINGLENOTE(17357, 0.8f, Color_Red);
+//	notes_.push_back(newsingle);
+//	faders_[0]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(17674, 0.78f, Color_Green);
+//	notes_.push_back(newsingle);
+//	faders_[1]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(18007, 0.76f, Color_Blue);
+//	notes_.push_back(newsingle);
+//	faders_[2]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(18441, 0.74f, Color_Red);
+//	notes_.push_back(newsingle);
+//	faders_[1]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(18791, 0.72f, Color_Green);
+//	notes_.push_back(newsingle);
+//	faders_[2]->InNote(newsingle);
+//
+//	//
+//
+//	newsingle = new SINGLENOTE(19139, 0.7f, Color_Blue);
+//	notes_.push_back(newsingle);
+//	faders_[0]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(19454, 0.68f, Color_Red);
+//	notes_.push_back(newsingle);
+//	faders_[1]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(19769, 0.66f, Color_Green);
+//	notes_.push_back(newsingle);
+//	faders_[2]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(20202, 0.64f, Color_Blue);
+//	notes_.push_back(newsingle);
+//	faders_[0]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(20419, 0.62f, Color_Red);
+//	notes_.push_back(newsingle);
+//	faders_[2]->InNote(newsingle);
+//
+//	//
+//
+//	newsingle = new SINGLENOTE(20869, 0.6f, Color_Green);
+//	notes_.push_back(newsingle);
+//	faders_[0]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(21185, 0.58f, Color_Blue);
+//	notes_.push_back(newsingle);
+//	faders_[1]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(21502, 0.56f, Color_Red);
+//	notes_.push_back(newsingle);
+//	faders_[2]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(21935, 0.54f, Color_Green);
+//	notes_.push_back(newsingle);
+//	faders_[1]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(22285, 0.52f, Color_Blue);
+//	notes_.push_back(newsingle);
+//	faders_[2]->InNote(newsingle);
+//
+//	//
+//
+//	newsingle = new SINGLENOTE(22635, 0.5f, Color_Red);
+//	notes_.push_back(newsingle);
+//	faders_[0]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(22969, 0.48f, Color_Green);
+//	notes_.push_back(newsingle);
+//	faders_[1]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(23297, 0.46f, Color_Blue);
+//	notes_.push_back(newsingle);
+//	faders_[2]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(23710, 0.44f, Color_Red);
+//	notes_.push_back(newsingle);
+//	faders_[0]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(23927, 0.42f, Color_Green);
+//	notes_.push_back(newsingle);
+//	faders_[2]->InNote(newsingle);
+//
+//	//
+//
+//	newsingle = new SINGLENOTE(24377, 0.4f, Color_Blue);
+//	notes_.push_back(newsingle);
+//	faders_[0]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(24694, 0.38f, Color_Red);
+//	notes_.push_back(newsingle);
+//	faders_[1]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(24994, 0.36f, Color_Green);
+//	notes_.push_back(newsingle);
+//	faders_[2]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(25410, 0.34f, Color_Blue);
+//	notes_.push_back(newsingle);
+//	faders_[1]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(25777, 0.32f, Color_Red);
+//	notes_.push_back(newsingle);
+//	faders_[2]->InNote(newsingle);
+//
+//	//
+//
+//	newsingle = new SINGLENOTE(26127, 0.3f, Color_Green);
+//	notes_.push_back(newsingle);
+//	faders_[0]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(26459, 0.28f, Color_Blue);
+//	notes_.push_back(newsingle);
+//	faders_[1]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(26791, 0.26f, Color_Red);
+//	notes_.push_back(newsingle);
+//	faders_[2]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(27224, 0.24f, Color_Green);
+//	notes_.push_back(newsingle);
+//	faders_[0]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(27457, 0.22f, Color_Blue);
+//	notes_.push_back(newsingle);
+//	faders_[2]->InNote(newsingle);
+//
+//	//
+//
+//	newsingle = new SINGLENOTE(27889, 0.2f, Color_Red);
+//	notes_.push_back(newsingle);
+//	faders_[0]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(28222, 0.18f, Color_Green);
+//	notes_.push_back(newsingle);
+//	faders_[1]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(28555, 0.16f, Color_Blue);
+//	notes_.push_back(newsingle);
+//	faders_[2]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(28988, 0.14f, Color_Red);
+//	notes_.push_back(newsingle);
+//	faders_[1]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(29338, 0.12f, Color_Green);
+//	notes_.push_back(newsingle);
+//	faders_[2]->InNote(newsingle);
+//
+//	//-------------------------
+//
+//	newlong = new LONGNOTE(29687, 0.5f, Color_Blue);
+//	newlong->AddPoint(30318,0.3f);
+//	notes_.push_back(newlong);
+//	faders_[1]->InNote(newlong);
+//
+//	newsingle = new SINGLENOTE(30784, 0.3f, Color_Red);
+//	notes_.push_back(newsingle);
+//	faders_[2]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(31017, 0.3f, Color_Green);
+//	notes_.push_back(newsingle);
+//	faders_[0]->InNote(newsingle);
+//
+//	//
+//
+//	newlong = new LONGNOTE(31450, 0.45f, Color_Blue);
+//	newlong->AddPoint(32101, 0.25f);
+//	notes_.push_back(newlong);
+//	faders_[0]->InNote(newlong);
+//
+//	newsingle = new SINGLENOTE(32551, 0.25f, Color_Red);
+//	notes_.push_back(newsingle);
+//	faders_[2]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(32767, 0.25f, Color_Green);
+//	notes_.push_back(newsingle);
+//	faders_[1]->InNote(newsingle);
+//
+//	//
+//
+//	newlong = new LONGNOTE(33184, 0.4f, Color_Blue);
+//	newlong->AddPoint(33850, 0.2f);
+//	notes_.push_back(newlong);
+//	faders_[1]->InNote(newlong);
+//
+//	newsingle = new SINGLENOTE(34297, 0.2f, Color_Red);
+//	notes_.push_back(newsingle);
+//	faders_[2]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(34514, 0.2f, Color_Green);
+//	notes_.push_back(newsingle);
+//	faders_[0]->InNote(newsingle);
+//
+//	//
+//
+//	//newsingle = new SINGLENOTE(48614, 0.1f, Color_Red);
+//	//notes_.push_back(newsingle);
+//	//faders_[0]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(49063, 0.1f, Color_Blue);
+//	notes_.push_back(newsingle);
+//	faders_[0]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(49438, 0.1f, Color_Red);
+//	notes_.push_back(newsingle);
+//	faders_[1]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(49752, 0.1f, Color_Green);
+//	notes_.push_back(newsingle);
+//	faders_[2]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(49985, 0.2f, Color_Blue);
+//	notes_.push_back(newsingle);
+//	faders_[0]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(49985, 0.2f, Color_Blue);
+//	notes_.push_back(newsingle);
+//	faders_[2]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(50401, 0.15f, Color_Red);
+//	notes_.push_back(newsingle);
+//	faders_[0]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(50401, 0.15f, Color_Red);
+//	notes_.push_back(newsingle);
+//	faders_[1]->InNote(newsingle);
+//
+//	newsingle = new SINGLENOTE(50401, 0.15f, Color_Red);
+//	notes_.push_back(newsingle);
+//	faders_[2]->InNote(newsingle);
+//
+//	//
+//
+//	newlong = new LONGNOTE(50850, 0.0f, Color_Green);
+//	newlong->AddPoint(52648,1.0f);
+//	notes_.push_back(newlong);
+//	faders_[1]->InNote(newlong);
+//
+//	newlong = new LONGNOTE(58000, 0.7f, Color_Blue);
+//	newlong->AddPoint(59836, 0.4f);
+//	newlong->AddPoint(61549, 0.4f);
+//	newlong->AddPoint(63314, 0.3f);
+//	newlong->AddPoint(65000, 0.7f);
+//	notes_.push_back(newlong);
+//	faders_[0]->InNote(newlong);
+//
+//
+//}

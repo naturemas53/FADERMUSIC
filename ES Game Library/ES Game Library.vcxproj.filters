@@ -475,6 +475,9 @@
     <ClInclude Include="MyMakeClasses\UI.h">
       <Filter>ヘッダー ファイル\MyMakeClasses</Filter>
     </ClInclude>
+    <ClInclude Include="MyMakeClasses\BPM_DATA_STRUCT.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resource\DirectX.ico">

@@ -227,6 +227,7 @@
     <ClInclude Include="GameScene\SceneShared.hpp" />
     <ClInclude Include="GameScene\TemplateScene.hpp" />
     <ClInclude Include="MyMakeClasses\ABSTRUCT_NOTE.h" />
+    <ClInclude Include="MyMakeClasses\BPM_DATA_STRUCT.h" />
     <ClInclude Include="MyMakeClasses\CONTROLL.h" />
     <ClInclude Include="MyMakeClasses\FADER.h" />
     <ClInclude Include="MyMakeClasses\INSTRUMENT.h" />

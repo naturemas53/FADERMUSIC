@@ -62,7 +62,7 @@ FADER::~FADER()
 
 }
 
-void FADER::Update(unsigned nowtime, unsigned elapsedtime_, float button_height_rate){
+void FADER::Update(unsigned nowtime, unsigned elapsedtime_, float button_height_rate,long elapsedcount){
 
 	KeyboardState key_state = Keyboard->GetState();
 
@@ -79,6 +79,7 @@ void FADER::Update(unsigned nowtime, unsigned elapsedtime_, float button_height_
 
 	this->judge_display_->Update();
 	
+	this->ScaleUpdate(nowtime,elapsedcount);
 
 }
 
@@ -197,6 +198,15 @@ void FADER::LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, unsigned 
 
 }
 
+void FADER::ScaleUpdate(unsigned nowtime,long elapsedcount){
+
+	auto itr = this->notelist_.begin();
+	while (itr != notelist_.end()){ 
+		if (!(*itr)->CountUpdate(nowtime, elapsedcount)) break;
+		itr++; }
+
+}
+
 void FADER::Draw(float button_height_rate, float animetion_rate, unsigned nowtime, int range_hours_show){
 
 	int animenum = (int)(animetion_rate * 90.0f);
@@ -248,22 +258,13 @@ void FADER::Draw(float button_height_rate, float animetion_rate, unsigned nowtim
 	
 	//ノーツの描画　ロング→シングル
 	s_itr = this->notelist_.begin();
-
+	bool next;
 	while (s_itr != this->notelist_.end()){
 
 		if ((*s_itr)->isLong()){
 
-			longnote_ = (LONGNOTE*)(*s_itr);
-
-			int betweentime = (int)(*s_itr)->GetTiming() - (int)nowtime;
-
-			if (betweentime > range_hours_show){
-
-				break;
-
-			}
-
-			(*s_itr)->Draw(top_pos, INNER_HEIGHT_, animetion_rate, nowtime, range_hours_show);
+			if (!(*s_itr)->Is4BeatinTiming(nowtime))break;
+			(*s_itr)->Draw(top_pos, this->INNER_HEIGHT_, animetion_rate, nowtime);
 
 		}
 
@@ -274,22 +275,13 @@ void FADER::Draw(float button_height_rate, float animetion_rate, unsigned nowtim
 	s_itr = this->notelist_.begin();
 
 	while (s_itr != this->notelist_.end()){
-	
-		int betweentime = (int)(*s_itr)->GetTiming() - (int)nowtime;
 
-		if (betweentime > range_hours_show){
-		
-			break;
-		
-		}
-		else if ((*s_itr)->isLong()){
+		if (!(*s_itr)->isLong()){
 
-			s_itr++;
-			continue;
+			if (!(*s_itr)->Is4BeatinTiming(nowtime))break;
+			(*s_itr)->Draw(top_pos, INNER_HEIGHT_, animetion_rate, nowtime);
 
 		}
-
-		(*s_itr)->Draw(top_pos, INNER_HEIGHT_, animetion_rate, nowtime, range_hours_show);
 	
 		s_itr++;
 
@@ -331,8 +323,6 @@ bool FADER::IsInForButton(std::list<ABSTRUCT_NOTE*>::iterator top_itr, float but
 }
 
 void FADER::NoteErase(std::list<ABSTRUCT_NOTE*>::iterator erase_itr, JUDGELIST judge){
-
-	(*erase_itr)->Used();
 
 	this->judge_display_->SetBomb(judge, (*erase_itr)->GetHeightRate());
 

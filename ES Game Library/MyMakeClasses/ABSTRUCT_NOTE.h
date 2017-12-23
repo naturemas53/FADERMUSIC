@@ -6,13 +6,16 @@
 class ABSTRUCT_NOTE
 {
 public:
-	ABSTRUCT_NOTE():
+	ABSTRUCT_NOTE(long range_count, int range_time) :
 		WIDTH_(74.0f),
 		HEIGHT_(30.0f),
-		LINE_HEIGHT_(10.0f)
+		LINE_HEIGHT_(10.0f),
+		RANGE_COUNT_(range_count),
+		RANGE_TIME_(range_time)
 	{
-		use_flag_ = true;
+
 		rightup_flag_ = false;
+		have_count_ = 1;
 
 		if (this->normal_sprite_ == nullptr) this->normal_sprite_ = GraphicsDevice.CreateSpriteFromFile(_T("notes/rhythm/note_normal.png"));
 		if (this->colornote_sprites_ == nullptr){
@@ -38,31 +41,61 @@ public:
 	};
 
 	virtual void Update(unsigned nowtime) = 0;
-	virtual void Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, unsigned nowtime, int timeup_to_timing) = 0;
+	virtual bool Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, unsigned nowtime) = 0;
 	
 	virtual unsigned GetTiming(){ return this->timing_; }
+
+	bool CountUpdate(unsigned nowtime, long elapsedcount){
+
+		int betweentime = ((int)this->timing_ - (int)nowtime);
+
+		if (betweentime > this->RANGE_TIME_) return false;
+
+		this->have_count_ += elapsedcount;
+		return true;
+
+	}
+
 	float GetHeightRate(){ return this->height_rate_; }
 	Color_by_Name GetColor(){ return mycolor_; }
-
+	
 	bool isLong(){ return this->longnotes_flag_; }
-	bool isUsing(){ return this->use_flag_; }
 	bool isRightUp(){ return this->rightup_flag_; }
+	bool Is4BeatinTiming(unsigned nowtime){
+
+		int betweentime = (int)this->timing_ - (int)nowtime;
+
+		return (betweentime < this->RANGE_TIME_);
+
+	}
+
 
 	void RightUp(){ this->rightup_flag_ = true; }
-	void Used(){ this->use_flag_ = false; }
 
 protected:
+
+	float GetXScale(){
+
+		float x_scale = (float)this->have_count_ / (float)this->RANGE_COUNT_;
+
+		//x_scale = (x_scale < 0.01f) ? 0.01f : x_scale;
+
+		return x_scale;
+
+	}
 
 	const float WIDTH_;
 	const float HEIGHT_;
 	const float LINE_HEIGHT_;
+	const long RANGE_COUNT_;
+	const int RANGE_TIME_;
 
-	bool use_flag_;
 	bool longnotes_flag_;
 	bool rightup_flag_;
 
 	float height_rate_;
 	unsigned timing_;
+	long have_count_;
 
 	Color_by_Name mycolor_;
 

@@ -92,12 +92,10 @@ int SONGPLAY_SCENE::Update()
 
 	}
 
-
 	animation_rate_ = (float)((quater_rhythm_ - 1) - nowtime_ % quater_rhythm_) / (float)quater_rhythm_;
+	
 
-	instrument_->Update(nowtime_, elapsedtime);
-
-	this->ChangeBpm(this->nowtime_);
+	instrument_->Update(nowtime_, elapsedtime, GetElapsedCount(elapsedtime));
 
 	unsigned framescore = instrument_->GetScoreJudge().GetScore();
 	float multiplayer_ = 1.0f + (float)instrument_->GetCombo() / 100.0f;
@@ -105,6 +103,7 @@ int SONGPLAY_SCENE::Update()
 	life_ += instrument_->GetScoreJudge().GetLifePersent();
 	if (life_ > 1.0f) life_ = 1.0f;
 	if (life_ < 0.0f) life_ = 0.0f;
+
 
 	if (maxcombo_ < instrument_->GetCombo()) maxcombo_ = instrument_->GetCombo();
 
@@ -144,24 +143,32 @@ void SONGPLAY_SCENE::Draw()
 	GraphicsDevice.EndScene();
 }
 
-void SONGPLAY_SCENE::ChangeBpm(unsigned nowtime){
+long SONGPLAY_SCENE::GetElapsedCount(unsigned elapsedtime){
 
 	auto bpm_itr = bpmlist_.begin();
-	auto bpm_fitr = bpmlist_.end();
-	bpm_fitr--;
 
-	if (bpm_itr != bpm_fitr){
+	long count = 0;
 
-		if ((bpm_itr + 1)->timing < nowtime){
+	if (bpmlist_.size() > 1){
+
+		if ((bpm_itr + 1)->timing < this->nowtime_){
+
+			unsigned overtime = this->nowtime_ - (bpm_itr + 1)->timing;
+			count += (bpm_itr + 1)->bpm * overtime;
+			count += (elapsedtime - overtime) * bpm_itr->bpm;
 
 			bpm_itr = bpmlist_.erase(bpm_itr);
 			this->bpm_ = (bpm_itr)->bpm;
 			this->quater_rhythm_ = (UINT)(60.0f / (float)bpm_ * 1 * 1000.0f);
 
-			instrument_->SetBPM(this->bpm_,this->quater_rhythm_);
+			instrument_->SetBPM(this->bpm_, this->quater_rhythm_);
+
+			return count;
 
 		}
 
 	}
+
+	return count += elapsedtime * bpm_itr->bpm;
 
 }

@@ -1,7 +1,8 @@
 #include "SINGLENOTE.h"
 
 
-SINGLENOTE::SINGLENOTE(unsigned timing, float height_rate,Color_by_Name color)
+SINGLENOTE::SINGLENOTE(unsigned timing, float height_rate, Color_by_Name color, long range_count, int range_time) :
+ABSTRUCT_NOTE(range_count,range_time)
 {
 
 	this->longnotes_flag_ = false;
@@ -22,7 +23,7 @@ void SINGLENOTE::Init(unsigned timing, float height_rate){
 
 }
 
-void SINGLENOTE::Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, unsigned nowtime, int timeup_to_timing){
+bool SINGLENOTE::Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, unsigned nowtime){
 
 	//数字は全部エフェクトのそれ
 
@@ -30,8 +31,7 @@ void SINGLENOTE::Draw(Vector3 fader_top_pos, float fader_height, float animation
 	note_displaypos.y += (fader_height - this->LINE_HEIGHT_) * this->height_rate_ - (this->HEIGHT_ - this->LINE_HEIGHT_) / 2.0f; 
 	int animenum = (int)(animation_rate * 90.0f);
 
-	float x_scale_rate = 1.0f - ( ((float)this->timing_ - (float)nowtime) / (float)timeup_to_timing);
-
+	float x_scale_rate = this->GetXScale();
 
 	SPRITE draw_sprite;
 
@@ -50,4 +50,5 @@ void SINGLENOTE::Draw(Vector3 fader_top_pos, float fader_height, float animation
 		RectWH((animenum % 10) * this->WIDTH_, (animenum / 10) * this->HEIGHT_, this->WIDTH_, this->HEIGHT_), 1.0f,
 		Vector3_Zero, Vector3(this->WIDTH_ / 2.0f, 0.0f, 0.0f), Vector2(x_scale_rate, 1.0f));
 
+	return true;
 }

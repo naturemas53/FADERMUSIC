@@ -6,11 +6,11 @@
 class LONGNOTE : public ABSTRUCT_NOTE
 {
 public:
-	LONGNOTE(unsigned timing, float height_rate, Color_by_Name color);
+	LONGNOTE(unsigned timing, float height_rate, Color_by_Name color, long range_count, int range_time);
 	~LONGNOTE();
 
 	virtual void Update(unsigned nowtime);
-	virtual void Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, unsigned nowtime, int timeup_to_timing);
+	virtual bool Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, unsigned nowtime);
 
 	struct LONG_POINT{
 
@@ -49,7 +49,7 @@ private:
 	void LongXScale(unsigned nowtime);
 
 	void DrawTriangle(Vector3 fader_top_pos,float fader_height,unsigned nowtime,unsigned longtime,float long_x_scale);
-	void DrawNote(Vector3 fader_top_pos, float fader_height, unsigned nowtime,float animation_rate,int timeup_to_timing,unsigned longtime);
+	void DrawNote(Vector3 fader_top_pos, float fader_height, unsigned nowtime, float animation_rate, float x_scale_rate);
 
 	bool ispush_;
 	float long_xscale_;

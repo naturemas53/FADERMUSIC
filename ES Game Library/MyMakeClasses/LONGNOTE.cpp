@@ -4,7 +4,8 @@
 std::map<Color_by_Name, SPRITE>* LONGNOTE::longnote_sprites_ = nullptr;
 std::map<Color_by_Name, SPRITE>* LONGNOTE::triangle_sprites_ = nullptr;
 
-LONGNOTE::LONGNOTE(unsigned timing, float height_rate, Color_by_Name color):
+LONGNOTE::LONGNOTE(unsigned timing, float height_rate, Color_by_Name color, long range_count, int range_time) :
+ABSTRUCT_NOTE(range_count,range_time),
 RIGHT_POWER_MAX_(2000.0f)
 {
 
@@ -14,7 +15,6 @@ RIGHT_POWER_MAX_(2000.0f)
 	this->height_rate_ = height_rate;
 	this->mycolor_ = color;
 
-	this->use_flag_ = true;
 	this->ispush_ = false;
 
 	this->long_xscale_ = 1.0f;
@@ -77,9 +77,10 @@ void LONGNOTE::Update(unsigned nowtime){
 
 }
 
-void LONGNOTE::Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, unsigned nowtime, int timeup_to_timing){
+bool LONGNOTE::Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, unsigned nowtime){
 
-	float x_scale_rate = 1.0f - (((float) this->timing_ - (float)nowtime) / (float)timeup_to_timing);
+	float x_scale_rate = this->GetXScale();
+
 	float triangle_x_scale = x_scale_rate;
 	if (triangle_x_scale > 1.0f) triangle_x_scale = 1.0f;
 
@@ -91,17 +92,18 @@ void LONGNOTE::Draw(Vector3 fader_top_pos, float fader_height, float animation_r
 
 	DrawTriangle(fader_top_pos, fader_height, nowtime, longtime, triangle_x_scale);
 
-	DrawNote(fader_top_pos,fader_height,nowtime,animation_rate,timeup_to_timing,longtime);
+	DrawNote(fader_top_pos, fader_height, nowtime, animation_rate, x_scale_rate);
+
+	return true;
 
 }
 
-void LONGNOTE::DrawNote(Vector3 fader_top_pos, float fader_height, unsigned nowtime, float animation_rate, int timeup_to_timing, unsigned longtime){
+void LONGNOTE::DrawNote(Vector3 fader_top_pos, float fader_height, unsigned nowtime, float animation_rate, float x_scale_rate){
 
 	Vector3 note_displaypos = fader_top_pos;
 	note_displaypos.y += (fader_height - this->LINE_HEIGHT_) * this->height_rate_ - (this->HEIGHT_ - this->LINE_HEIGHT_) / 2.0f;
 	int animenum = (int)(animation_rate * 90.0f);
 
-	float x_scale_rate;
 	float pal;
 	SPRITE draw_sprite_;
 
@@ -115,8 +117,6 @@ void LONGNOTE::DrawNote(Vector3 fader_top_pos, float fader_height, unsigned nowt
 
 	}
 	else{
-
-		x_scale_rate = 1.0f - (((float)timing_ - (float)nowtime) / (float)timeup_to_timing);
 
 		if (this->rightup_flag_){
 			

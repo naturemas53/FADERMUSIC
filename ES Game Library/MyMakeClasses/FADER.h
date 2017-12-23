@@ -14,7 +14,7 @@ public:
 	FADER(Vector3 draw_pos, Keys asign_key);
 	~FADER();
 
-	void Update(unsigned nowtime, unsigned elapsedtime, float button_height_rate);
+	void Update(unsigned nowtime, unsigned elapsedtime, float button_height_rate,long elapsedcount);
 	void Draw(float button_height_rate, float animetion_rate, unsigned nowtime, int range_hours_show);
 
 	void InNote(ABSTRUCT_NOTE* innote);
@@ -32,6 +32,7 @@ private:
 
 	void SingleNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr,unsigned nowtime,float button_height_rate);
 	void LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, unsigned nowtime, unsigned elapsedtime,float button_height_rate);
+	void ScaleUpdate(unsigned nowtime,long elapsedcount);
 
 	bool IsInForButton(std::list<ABSTRUCT_NOTE*>::iterator top_itr, float button_height_rate);
 

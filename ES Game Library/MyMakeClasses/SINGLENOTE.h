@@ -4,12 +4,12 @@
 class SINGLENOTE:public ABSTRUCT_NOTE
 {
 public:
-	SINGLENOTE(unsigned timing, float height_rate,Color_by_Name color);
+	SINGLENOTE(unsigned timing, float height_rate, Color_by_Name color, long range_count, int range_time);
 	virtual ~SINGLENOTE() = default;
 
 	void Init(unsigned timing, float height_rate);
 	virtual void Update(unsigned nowtime){/*ç°ÇÃÇ∆Ç±ÇÎâΩÇ‡Ç»Ç¢Ç≈Ç∑*/}
-	virtual void Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, unsigned nowtime, int timeup_to_timing);
+	virtual bool Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, unsigned nowtime);
 
 
 };

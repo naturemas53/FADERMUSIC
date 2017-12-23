@@ -93,6 +93,6 @@ private:
 	SOUND bgm_;
 
 	// ŠÖ”éŒ¾
-	void ChangeBpm(unsigned nowtime);
+	long GetElapsedCount(unsigned elapsedtime);
 
 };

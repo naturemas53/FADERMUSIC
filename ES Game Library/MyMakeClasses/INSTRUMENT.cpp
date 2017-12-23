@@ -8,6 +8,16 @@
 
 #include <string>
 
+namespace{
+
+	int MillisecondPerQuaterRhythm(int bpm){
+
+		return (int)(60.0f / (float)bpm * 1 * 1000.0f);
+
+	}
+
+}
+
 INSTRUMENT::INSTRUMENT(LONG max_mouse_y,  std::vector<BPM_DATA>& bpmlist, const char* filename) : MAX_MOUSE_Y_(max_mouse_y)
 {
 
@@ -38,7 +48,7 @@ INSTRUMENT::~INSTRUMENT()
 
 }
 
-void INSTRUMENT::Update(unsigned nowtime, unsigned elapsedtime_){
+void INSTRUMENT::Update(unsigned nowtime, unsigned elapsedtime, long elapsedcount){
 
 	RightUp(nowtime);
 
@@ -73,7 +83,7 @@ void INSTRUMENT::Update(unsigned nowtime, unsigned elapsedtime_){
 
 	}
 
-	for (auto f_itr : faders_)f_itr->Update(nowtime, elapsedtime_, button_height_);
+	for (auto f_itr : faders_)f_itr->Update(nowtime, elapsedtime, button_height_,elapsedcount);
 
 	this->ComboCheck();
 
@@ -308,12 +318,6 @@ void INSTRUMENT::ReadBpm(FILE* file, std::vector<BPM_DATA>& bpmlist){
 
 void INSTRUMENT::ReadNote(FILE* file, std::vector<BPM_DATA>& bpmlist){
 
-	/*std::string str;
-	int number = 0;
-	std::string timing;
-	std::string height_rate;
-	char type;*/
-
 	int number = 0;
 	unsigned timing;
 	float height_rate;
@@ -331,7 +335,14 @@ void INSTRUMENT::ReadNote(FILE* file, std::vector<BPM_DATA>& bpmlist){
 
 	char buffer[256] = {};
 
+
+
+	long range_count;
+	int range_time;
+
 	do{
+
+		range_count = 0;
 
 		if (fscanf(file, "%d %u %f %c", &number,&timing,&height_rate,&type) != EOF){
 
@@ -358,17 +369,19 @@ void INSTRUMENT::ReadNote(FILE* file, std::vector<BPM_DATA>& bpmlist){
 				case 1: color = Color_Blue; break;
 				case 2: color = Color_Green; break;
 				}
+				
+				this->RangeCalculation(timing,&range_time,&range_count,bpmlist);				
 
 				if (type == 'S'){
 
-					newsingle = new SINGLENOTE(timing,height_rate,color);
+					newsingle = new SINGLENOTE(timing,height_rate,color,range_count,range_time);
 					faders_[number]->InNote(newsingle);
 					notes_.push_back(newsingle);
 
 				}
 				else{
 
-					newlong = new LONGNOTE(timing, height_rate, color);
+					newlong = new LONGNOTE(timing, height_rate, color,range_count, range_time);
 					nowlong = true;
 
 				}
@@ -382,6 +395,57 @@ void INSTRUMENT::ReadNote(FILE* file, std::vector<BPM_DATA>& bpmlist){
 		else{ break; }
 
 	} while (true);
+
+}
+
+void INSTRUMENT::RangeCalculation(unsigned timing,int* range_time, long* range_count, std::vector<BPM_DATA>& bpmlist){
+
+	auto itr = bpmlist.begin();
+	auto fitr = bpmlist.end();
+	fitr--;
+
+	int fourbeattime;
+
+	fourbeattime = MillisecondPerQuaterRhythm((itr)->bpm) * 4;
+
+	if (timing == 17357){
+
+		int a = 191919419;
+
+	}
+
+	while (itr != fitr){
+
+
+		if ((itr + 1)->timing + fourbeattime >= timing){
+
+			if ((itr + 1)->timing <= timing)itr++;
+
+			break;
+
+		}
+
+		itr++;
+
+		fourbeattime = MillisecondPerQuaterRhythm((itr)->bpm) * 4;
+
+	}
+
+
+	*range_time = fourbeattime;
+
+	for (int i = 0; i < fourbeattime; i++){
+
+		if ((timing - i) < itr->timing && itr != bpmlist.begin()){
+
+			itr--;
+
+		}
+
+		*range_count += itr->bpm;
+
+	}
+
 
 }
 

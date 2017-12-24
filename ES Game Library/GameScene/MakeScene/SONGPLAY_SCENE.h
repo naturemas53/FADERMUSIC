@@ -94,5 +94,6 @@ private:
 
 	// ŠÖ”éŒ¾
 	long GetElapsedCount(unsigned elapsedtime);
+	void ToUITellValue();
 
 };

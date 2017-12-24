@@ -343,6 +343,7 @@ void INSTRUMENT::ReadNote(FILE* file, std::vector<BPM_DATA>& bpmlist){
 	do{
 
 		range_count = 0;
+		range_time = 0;
 
 		if (fscanf(file, "%d %u %f %c", &number,&timing,&height_rate,&type) != EOF){
 
@@ -404,48 +405,26 @@ void INSTRUMENT::RangeCalculation(unsigned timing,int* range_time, long* range_c
 	auto fitr = bpmlist.end();
 	fitr--;
 
-	int fourbeattime;
-
-	fourbeattime = MillisecondPerQuaterRhythm((itr)->bpm) * 4;
-
-	if (timing == 17357){
-
-		int a = 191919419;
-
-	}
-
-	while (itr != fitr){
-
-
-		if ((itr + 1)->timing + fourbeattime >= timing){
-
-			if ((itr + 1)->timing <= timing)itr++;
-
-			break;
-
-		}
-
+	while (itr != fitr){ 
+	
+		if ((itr + 1)->timing > timing) break;
 		itr++;
 
-		fourbeattime = MillisecondPerQuaterRhythm((itr)->bpm) * 4;
-
 	}
 
+	long totalcount = 0;
 
-	*range_time = fourbeattime;
+	*range_count = 240000;
 
-	for (int i = 0; i < fourbeattime; i++){
+	for ( (*range_time) = 0; totalcount < (*range_count); (*range_time)++){
 
-		if ((timing - i) < itr->timing && itr != bpmlist.begin()){
-
+		if ((timing - *range_time) < itr->timing && itr != bpmlist.begin()){
 			itr--;
-
 		}
 
-		*range_count += itr->bpm;
+		totalcount += itr->bpm;
 
 	}
-
 
 }
 

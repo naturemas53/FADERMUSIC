@@ -202,7 +202,7 @@ void FADER::ScaleUpdate(unsigned nowtime,long elapsedcount){
 
 	auto itr = this->notelist_.begin();
 	while (itr != notelist_.end()){ 
-		if (!(*itr)->CountUpdate(nowtime, elapsedcount)) break;
+		(*itr)->CountUpdate(nowtime, elapsedcount);
 		itr++; }
 
 }

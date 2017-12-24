@@ -97,19 +97,7 @@ int SONGPLAY_SCENE::Update()
 
 	instrument_->Update(nowtime_, elapsedtime, GetElapsedCount(elapsedtime));
 
-	unsigned framescore = instrument_->GetScoreJudge().GetScore();
-	float multiplayer_ = 1.0f + (float)instrument_->GetCombo() / 100.0f;
-	score_ += (UINT)((float)framescore * multiplayer_);
-	life_ += instrument_->GetScoreJudge().GetLifePersent();
-	if (life_ > 1.0f) life_ = 1.0f;
-	if (life_ < 0.0f) life_ = 0.0f;
-
-
-	if (maxcombo_ < instrument_->GetCombo()) maxcombo_ = instrument_->GetCombo();
-
-	accuracy_ += instrument_->GetAccuracyJudge().GetAccuracy();
-
-	ui_->SetDisplayData(score_,life_, accuracy_, instrument_->GetNotesCount(),maxcombo_);
+	this->ToUITellValue();
 
 	return 0;
 }
@@ -141,6 +129,24 @@ void SONGPLAY_SCENE::Draw()
 	SpriteBatch.End();
 
 	GraphicsDevice.EndScene();
+}
+
+void SONGPLAY_SCENE::ToUITellValue(){
+
+	unsigned framescore = instrument_->GetScoreJudge().GetScore();
+	float multiplayer_ = 1.0f + (float)instrument_->GetCombo() / 100.0f;
+	score_ += (UINT)((float)framescore * multiplayer_);
+	life_ += instrument_->GetScoreJudge().GetLifePersent();
+	if (life_ > 1.0f) life_ = 1.0f;
+	if (life_ < 0.0f) life_ = 0.0f;
+
+
+	if (maxcombo_ < instrument_->GetCombo()) maxcombo_ = instrument_->GetCombo();
+
+	accuracy_ += instrument_->GetAccuracyJudge().GetAccuracy();
+
+	ui_->SetDisplayData(score_, life_, accuracy_, instrument_->GetNotesCount(), maxcombo_);
+
 }
 
 long SONGPLAY_SCENE::GetElapsedCount(unsigned elapsedtime){

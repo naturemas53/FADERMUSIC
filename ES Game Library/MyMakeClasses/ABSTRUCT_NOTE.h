@@ -41,7 +41,7 @@ public:
 	};
 
 	virtual void Update(unsigned nowtime) = 0;
-	virtual bool Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, unsigned nowtime) = 0;
+	virtual bool Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, unsigned nowtime,float highspeed) = 0;
 	
 	virtual unsigned GetTiming(){ return this->timing_; }
 

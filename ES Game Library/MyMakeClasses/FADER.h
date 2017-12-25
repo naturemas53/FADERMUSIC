@@ -15,7 +15,7 @@ public:
 	~FADER();
 
 	void Update(unsigned nowtime, unsigned elapsedtime, float button_height_rate,long elapsedcount);
-	void Draw(float button_height_rate, float animetion_rate, unsigned nowtime, int range_hours_show);
+	void Draw(float button_height_rate, float animetion_rate, unsigned nowtime,float highspeed);
 
 	void InNote(ABSTRUCT_NOTE* innote);
 	JUDGELIST GetScoreJudge(){ return this->score_judge_; }

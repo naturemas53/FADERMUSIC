@@ -9,7 +9,7 @@ public:
 
 	void Init(unsigned timing, float height_rate);
 	virtual void Update(unsigned nowtime){/*ç°ÇÃÇ∆Ç±ÇÎâΩÇ‡Ç»Ç¢Ç≈Ç∑*/}
-	virtual bool Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, unsigned nowtime);
+	virtual bool Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, unsigned nowtime, float highspeed);
 
 
 };

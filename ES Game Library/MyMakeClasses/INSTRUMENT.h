@@ -34,6 +34,7 @@ private:
 	void ReadNote(FILE* file, std::vector<BPM_DATA>& bpmlist);
 	void RangeCalculation(unsigned timing, int* range_time, long* range_count, long* firsthave_count, std::vector<BPM_DATA>& bpmlist);
 
+	void HighSpeedUpdate(LONG ScrollWheelValue);
 	//Ç∆ÇËÇ†Ç¶Ç∏Å´
 	void RightUp(unsigned nowtime);
 
@@ -55,6 +56,8 @@ private:
 	unsigned songbpm_;
 	unsigned quater_rhythm_;
 	unsigned havecombo_;
+
+	float high_speed;
 
 };
 

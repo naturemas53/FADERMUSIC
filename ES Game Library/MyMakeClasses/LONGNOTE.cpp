@@ -77,9 +77,9 @@ void LONGNOTE::Update(unsigned nowtime){
 
 }
 
-bool LONGNOTE::Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, unsigned nowtime){
+bool LONGNOTE::Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, unsigned nowtime, float highspeed){
 
-	float x_scale_rate = this->GetXScale();
+	float x_scale_rate = this->GetXScale(highspeed);
 
 	if (x_scale_rate <= 0.0f)return false;
 

@@ -23,7 +23,7 @@ void SINGLENOTE::Init(unsigned timing, float height_rate){
 
 }
 
-bool SINGLENOTE::Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, unsigned nowtime){
+bool SINGLENOTE::Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, unsigned nowtime, float highspeed){
 
 	//数字は全部エフェクトのそれ
 
@@ -31,7 +31,7 @@ bool SINGLENOTE::Draw(Vector3 fader_top_pos, float fader_height, float animation
 	note_displaypos.y += (fader_height - this->LINE_HEIGHT_) * this->height_rate_ - (this->HEIGHT_ - this->LINE_HEIGHT_) / 2.0f; 
 	int animenum = (int)(animation_rate * 90.0f);
 
-	float x_scale_rate = this->GetXScale();
+	float x_scale_rate = this->GetXScale(highspeed);
 	if (x_scale_rate <= 0.0f) return false;
 
 	SPRITE draw_sprite;

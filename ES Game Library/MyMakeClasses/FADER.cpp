@@ -163,7 +163,9 @@ void FADER::LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, unsigned 
 		else{
 
 
-			NoteErase(top_itr, MISSTIME);
+			JUDGELIST releasejudge;
+			releasejudge = Judge(top_long->GetTimingSlowMostPoint() - nowtime);
+			NoteErase(top_itr, releasejudge);
 			return;
 
 		}
@@ -207,7 +209,7 @@ void FADER::ScaleUpdate(unsigned nowtime,long elapsedcount){
 
 }
 
-void FADER::Draw(float button_height_rate, float animetion_rate, unsigned nowtime, int range_hours_show){
+void FADER::Draw(float button_height_rate, float animetion_rate, unsigned nowtime, float highspeed){
 
 	int animenum = (int)(animetion_rate * 90.0f);
 
@@ -264,7 +266,7 @@ void FADER::Draw(float button_height_rate, float animetion_rate, unsigned nowtim
 		if ((*s_itr)->isLong()){
 
 			
-			if (!(*s_itr)->Draw(top_pos, this->INNER_HEIGHT_, animetion_rate, nowtime))break;
+			if (!(*s_itr)->Draw(top_pos, this->INNER_HEIGHT_, animetion_rate, nowtime, highspeed))break;
 
 		}
 
@@ -278,7 +280,7 @@ void FADER::Draw(float button_height_rate, float animetion_rate, unsigned nowtim
 
 		if (!(*s_itr)->isLong()){
 
-			if (!(*s_itr)->Draw(top_pos, this->INNER_HEIGHT_, animetion_rate, nowtime))break;
+			if (!(*s_itr)->Draw(top_pos, this->INNER_HEIGHT_, animetion_rate, nowtime, highspeed))break;
 
 		}
 	

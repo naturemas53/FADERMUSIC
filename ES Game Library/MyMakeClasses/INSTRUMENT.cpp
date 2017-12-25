@@ -36,6 +36,8 @@ INSTRUMENT::INSTRUMENT(LONG max_mouse_y,  std::vector<BPM_DATA>& bpmlist, const 
 	this->font_ = GraphicsDevice.CreateSpriteFont(_T("Voyager Grotesque Bold"),114);
 
 	this->havecombo_ = 0;
+
+	this->high_speed = 0.5f;
 	
 
 }
@@ -86,12 +88,13 @@ void INSTRUMENT::Update(unsigned nowtime, unsigned elapsedtime, long elapsedcoun
 	for (auto f_itr : faders_)f_itr->Update(nowtime, elapsedtime, button_height_,elapsedcount);
 
 	this->ComboCheck();
+	this->HighSpeedUpdate(mouse.ScrollWheelValue);
 
 }
 
 void INSTRUMENT::Draw(unsigned nowtime, float animation_rate){
 
-	for (auto f_itr : faders_) f_itr->Draw(button_height_, animation_rate, nowtime,range_hours_show);
+	for (auto f_itr : faders_) f_itr->Draw(button_height_, animation_rate, nowtime,this->high_speed);
 
 	if (this->havecombo_ > 0){
 
@@ -99,6 +102,8 @@ void INSTRUMENT::Draw(unsigned nowtime, float animation_rate){
 			Vector2_One, Vector3(0.0f, 0.0f, 90.0f), Vector3(1270.0f, 120.0f + 10.0f + 20.0f,0.0f), _T("%dcombo"), this->havecombo_);
 
 	}
+
+	SpriteBatch.DrawString(font_,Vector2(0.0f,500.0f),Color(0,255,0),_T("%.1f"),this->high_speed);
 
 }
 
@@ -127,6 +132,29 @@ void INSTRUMENT::ComboCheck(){
 		}
 
 	}
+
+}
+
+void INSTRUMENT::HighSpeedUpdate(LONG ScrollWheelValue){
+
+	//CONTROLL& keyboard = CONTROLL::GetInstance();
+
+	//if (keyboard.BufferIsPress(Keys_Up)){
+
+	//	this->high_speed += 0.1f;
+
+	//}
+
+	//if (keyboard.BufferIsPress(Keys_Down)){
+	//	
+	//	this->high_speed -= 0.1f;
+
+	//}
+
+	this->high_speed += (float)(ScrollWheelValue / 120) * 0.1f;
+
+	if (high_speed <= 0.1f) high_speed = 0.1f;
+	if (high_speed >= 0.9f) high_speed = 0.9f;
 
 }
 

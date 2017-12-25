@@ -10,7 +10,7 @@ public:
 	~LONGNOTE();
 
 	virtual void Update(unsigned nowtime);
-	virtual bool Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, unsigned nowtime);
+	virtual bool Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, unsigned nowtime, float highspeed);
 
 	struct LONG_POINT{
 

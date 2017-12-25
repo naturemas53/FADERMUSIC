@@ -32,6 +32,7 @@ bool SINGLENOTE::Draw(Vector3 fader_top_pos, float fader_height, float animation
 	int animenum = (int)(animation_rate * 90.0f);
 
 	float x_scale_rate = this->GetXScale();
+	if (x_scale_rate <= 0.0f) return false;
 
 	SPRITE draw_sprite;
 

@@ -74,11 +74,22 @@ public:
 
 protected:
 
-	float GetXScale(){
+	float GetXScale(float highspeed = 0.5f){
 
 		float x_scale = (float)this->have_count_ / (float)this->RANGE_COUNT_;
 
-		//x_scale = (x_scale < 0.01f) ? 0.01f : x_scale;
+		x_scale -= (1.0f - highspeed);
+
+		if ( x_scale > 0.0f){
+
+			x_scale /= highspeed;
+
+		}
+		else{
+
+			x_scale = 0.0f;
+
+		}
 
 		return x_scale;
 

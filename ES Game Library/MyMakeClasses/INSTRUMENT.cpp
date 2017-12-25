@@ -416,7 +416,7 @@ void INSTRUMENT::RangeCalculation(unsigned timing, int* range_time, long* range_
 
 	long totalcount = 0;
 
-	*range_count = 1340000;
+	*range_count = 480000;
 
 	int i_timing = (int)timing;
 

@@ -263,8 +263,8 @@ void FADER::Draw(float button_height_rate, float animetion_rate, unsigned nowtim
 
 		if ((*s_itr)->isLong()){
 
-			if (!(*s_itr)->IsMyDraw(nowtime))break;
-			(*s_itr)->Draw(top_pos, this->INNER_HEIGHT_, animetion_rate, nowtime);
+			
+			if (!(*s_itr)->Draw(top_pos, this->INNER_HEIGHT_, animetion_rate, nowtime))break;
 
 		}
 
@@ -278,8 +278,7 @@ void FADER::Draw(float button_height_rate, float animetion_rate, unsigned nowtim
 
 		if (!(*s_itr)->isLong()){
 
-			if (!(*s_itr)->IsMyDraw(nowtime))break;
-			(*s_itr)->Draw(top_pos, INNER_HEIGHT_, animetion_rate, nowtime);
+			if (!(*s_itr)->Draw(top_pos, this->INNER_HEIGHT_, animetion_rate, nowtime))break;
 
 		}
 	

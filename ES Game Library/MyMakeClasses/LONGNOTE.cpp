@@ -4,8 +4,8 @@
 std::map<Color_by_Name, SPRITE>* LONGNOTE::longnote_sprites_ = nullptr;
 std::map<Color_by_Name, SPRITE>* LONGNOTE::triangle_sprites_ = nullptr;
 
-LONGNOTE::LONGNOTE(unsigned timing, float height_rate, Color_by_Name color, long range_count, int range_time) :
-ABSTRUCT_NOTE(range_count,range_time),
+LONGNOTE::LONGNOTE(unsigned timing, float height_rate, Color_by_Name color, long range_count, int range_time, long firsthave_count) :
+ABSTRUCT_NOTE(range_count, range_time,firsthave_count),
 RIGHT_POWER_MAX_(2000.0f)
 {
 

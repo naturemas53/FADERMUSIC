@@ -6,7 +6,7 @@
 class ABSTRUCT_NOTE
 {
 public:
-	ABSTRUCT_NOTE(long range_count, int range_time) :
+	ABSTRUCT_NOTE(long range_count, int range_time, long firsthave_count) :
 		WIDTH_(74.0f),
 		HEIGHT_(30.0f),
 		LINE_HEIGHT_(10.0f),
@@ -15,7 +15,7 @@ public:
 	{
 
 		rightup_flag_ = false;
-		have_count_ = 1;
+		this->have_count_ = firsthave_count;
 
 		if (this->normal_sprite_ == nullptr) this->normal_sprite_ = GraphicsDevice.CreateSpriteFromFile(_T("notes/rhythm/note_normal.png"));
 		if (this->colornote_sprites_ == nullptr){
@@ -61,11 +61,11 @@ public:
 	
 	bool isLong(){ return this->longnotes_flag_; }
 	bool isRightUp(){ return this->rightup_flag_; }
-	bool Is4BeatinTiming(unsigned nowtime){
+	bool IsMyDraw(unsigned nowtime){
 
 		int betweentime = (int)this->timing_ - (int)nowtime;
 
-		return (betweentime < this->RANGE_TIME_);
+		return (betweentime <= this->RANGE_TIME_);
 
 	}
 

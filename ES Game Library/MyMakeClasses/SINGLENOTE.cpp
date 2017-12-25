@@ -1,8 +1,8 @@
 #include "SINGLENOTE.h"
 
 
-SINGLENOTE::SINGLENOTE(unsigned timing, float height_rate, Color_by_Name color, long range_count, int range_time) :
-ABSTRUCT_NOTE(range_count,range_time)
+SINGLENOTE::SINGLENOTE(unsigned timing, float height_rate, Color_by_Name color, long range_count, int range_time, long firsthave_count) :
+ABSTRUCT_NOTE(range_count, range_time,firsthave_count)
 {
 
 	this->longnotes_flag_ = false;

@@ -339,11 +339,13 @@ void INSTRUMENT::ReadNote(FILE* file, std::vector<BPM_DATA>& bpmlist){
 
 	long range_count;
 	int range_time;
+	long firsthave_count;
 
 	do{
 
 		range_count = 0;
 		range_time = 0;
+		firsthave_count = 1;
 
 		if (fscanf(file, "%d %u %f %c", &number,&timing,&height_rate,&type) != EOF){
 
@@ -371,18 +373,18 @@ void INSTRUMENT::ReadNote(FILE* file, std::vector<BPM_DATA>& bpmlist){
 				case 2: color = Color_Green; break;
 				}
 				
-				this->RangeCalculation(timing,&range_time,&range_count,bpmlist);				
+				this->RangeCalculation(timing, &range_time, &range_count, &firsthave_count, bpmlist);
 
 				if (type == 'S'){
 
-					newsingle = new SINGLENOTE(timing,height_rate,color,range_count,range_time);
+					newsingle = new SINGLENOTE(timing, height_rate, color, range_count, range_time, firsthave_count);
 					faders_[number]->InNote(newsingle);
 					notes_.push_back(newsingle);
 
 				}
 				else{
 
-					newlong = new LONGNOTE(timing, height_rate, color,range_count, range_time);
+					newlong = new LONGNOTE(timing, height_rate, color, range_count, range_time, firsthave_count);
 					nowlong = true;
 
 				}
@@ -399,7 +401,7 @@ void INSTRUMENT::ReadNote(FILE* file, std::vector<BPM_DATA>& bpmlist){
 
 }
 
-void INSTRUMENT::RangeCalculation(unsigned timing,int* range_time, long* range_count, std::vector<BPM_DATA>& bpmlist){
+void INSTRUMENT::RangeCalculation(unsigned timing, int* range_time, long* range_count, long* firsthave_count, std::vector<BPM_DATA>& bpmlist){
 
 	auto itr = bpmlist.begin();
 	auto fitr = bpmlist.end();
@@ -414,11 +416,21 @@ void INSTRUMENT::RangeCalculation(unsigned timing,int* range_time, long* range_c
 
 	long totalcount = 0;
 
-	*range_count = 240000;
+	*range_count = 1340000;
+
+	int i_timing = (int)timing;
 
 	for ( (*range_time) = 0; totalcount < (*range_count); (*range_time)++){
 
-		if ((timing - *range_time) < itr->timing && itr != bpmlist.begin()){
+		if ((i_timing - *range_time) <= 0){
+
+			//(*range_time) += ((*range_count) - totalcount) / itr->bpm;
+			(*firsthave_count) += ((*range_count) - totalcount);
+			break;
+
+		}
+
+		if ((i_timing - *range_time) < (int)itr->timing && itr != bpmlist.begin()){
 			itr--;
 		}
 

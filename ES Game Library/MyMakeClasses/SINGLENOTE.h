@@ -4,7 +4,7 @@
 class SINGLENOTE:public ABSTRUCT_NOTE
 {
 public:
-	SINGLENOTE(unsigned timing, float height_rate, Color_by_Name color, long range_count, int range_time);
+	SINGLENOTE(unsigned timing, float height_rate, Color_by_Name color, long range_count, int range_time, long firsthave_count);
 	virtual ~SINGLENOTE() = default;
 
 	void Init(unsigned timing, float height_rate);

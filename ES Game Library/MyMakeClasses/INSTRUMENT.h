@@ -32,7 +32,7 @@ private:
 	void Setting(const char* filename, std::vector<BPM_DATA>& bpmlist);
 	void ReadBpm(FILE* file, std::vector<BPM_DATA>& bpmlist);
 	void ReadNote(FILE* file, std::vector<BPM_DATA>& bpmlist);
-	void RangeCalculation(unsigned timing,int* range_time, long* range_count, std::vector<BPM_DATA>& bpmlist);
+	void RangeCalculation(unsigned timing, int* range_time, long* range_count, long* firsthave_count, std::vector<BPM_DATA>& bpmlist);
 
 	//Ç∆ÇËÇ†Ç¶Ç∏Å´
 	void RightUp(unsigned nowtime);

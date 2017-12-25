@@ -6,7 +6,7 @@
 class LONGNOTE : public ABSTRUCT_NOTE
 {
 public:
-	LONGNOTE(unsigned timing, float height_rate, Color_by_Name color, long range_count, int range_time);
+	LONGNOTE(unsigned timing, float height_rate, Color_by_Name color, long range_count, int range_time, long firsthave_count);
 	~LONGNOTE();
 
 	virtual void Update(unsigned nowtime);

@@ -13,10 +13,10 @@ enum JUDGELIST{
 
 struct JUDGECOUNT{
 
-	unsigned misstime;
-	unsigned ok;
-	unsigned great;
-	unsigned unbelievable;
+	int misstime;
+	int ok;
+	int great;
+	int unbelievable;
 
 	JUDGECOUNT(){
 

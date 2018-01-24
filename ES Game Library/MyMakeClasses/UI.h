@@ -17,7 +17,6 @@ public:
 private:
 
 	SPRITE lifegauge_sprite_;
-	SPRITE uiline_sprite_;
 
 	const float GAUGE_HEIGHT_;
 	const float GAUGE_WIDTH_;

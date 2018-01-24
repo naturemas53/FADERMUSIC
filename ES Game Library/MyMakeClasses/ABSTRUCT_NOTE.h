@@ -40,14 +40,14 @@ public:
 	
 	};
 
-	virtual void Update(unsigned nowtime) = 0;
-	virtual bool Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, unsigned nowtime,float highspeed) = 0;
+	virtual void Update(int nowtime) = 0;
+	virtual bool Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, int nowtime, float highspeed) = 0;
 	
-	virtual unsigned GetTiming(){ return this->timing_; }
+	virtual int GetTiming(){ return this->timing_; }
 
-	bool CountUpdate(unsigned nowtime, long elapsedcount){
+	bool CountUpdate(int nowtime, long elapsedcount){
 
-		int betweentime = ((int)this->timing_ - (int)nowtime);
+		int betweentime = (this->timing_ - nowtime);
 
 		if (betweentime > this->RANGE_TIME_) return false;
 
@@ -61,13 +61,6 @@ public:
 	
 	bool isLong(){ return this->longnotes_flag_; }
 	bool isRightUp(){ return this->rightup_flag_; }
-	bool IsMyDraw(unsigned nowtime){
-
-		int betweentime = (int)this->timing_ - (int)nowtime;
-
-		return (betweentime <= this->RANGE_TIME_);
-
-	}
 
 
 	void RightUp(){ this->rightup_flag_ = true; }
@@ -105,7 +98,7 @@ protected:
 	bool rightup_flag_;
 
 	float height_rate_;
-	unsigned timing_;
+	int timing_;
 	long have_count_;
 
 	Color_by_Name mycolor_;

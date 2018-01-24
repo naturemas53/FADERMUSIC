@@ -69,21 +69,21 @@ private:
 
 	SPRITE background_;
 
-	unsigned nowtime_;
-	unsigned songlength_;
+	int nowtime_;
+	int songlength_;
 
-	unsigned score_;
+	int score_;
 	float life_;
-	unsigned accuracy_;
-	unsigned maxcombo_;
+	int accuracy_;
+	int maxcombo_;
 
-	unsigned prevtime_;
+	int prevtime_;
 	float animation_rate_;
-	unsigned elapsedtime;
+	int elapsedtime;
 	
-	UINT bpm_;
-	UINT quater_rhythm_;
-	UINT quaver_rhythm_;
+	int bpm_;
+	int quater_rhythm_;
+	int quaver_rhythm_;
 
 	std::vector<BPM_DATA> bpmlist_;
 
@@ -93,7 +93,7 @@ private:
 	SOUND bgm_;
 
 	// ä÷êîêÈåæ
-	long GetElapsedCount(unsigned elapsedtime);
+	long GetElapsedCount(int elapsedtime);
 	void ToUITellValue();
 
 };

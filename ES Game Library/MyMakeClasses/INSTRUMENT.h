@@ -16,27 +16,27 @@ public:
 	INSTRUMENT(LONG max_mouse_y, std::vector<BPM_DATA>& bpmlist, const char* filename);
 	~INSTRUMENT();
 
-	void Update(unsigned nowtime, unsigned elapsedtime_,long elapsedcount);
-	void Draw(unsigned nowtime,float animation_rate);
+	void Update(int nowtime, int elapsedtime_, long elapsedcount);
+	void Draw(int nowtime, float animation_rate);
 
-	void SetBPM(unsigned bpm, unsigned quater_rhythm);
+	void SetBPM(int bpm, int quater_rhythm);
 
 	JUDGECOUNT GetScoreJudge();
 	JUDGECOUNT GetAccuracyJudge();
 
-	unsigned GetNotesCount(){ return notes_.size(); }
-	unsigned GetCombo(){ return havecombo_; }
+	int GetNotesCount(){ return notes_.size(); }
+	int GetCombo(){ return havecombo_; }
 
 private:
 
 	void Setting(const char* filename, std::vector<BPM_DATA>& bpmlist);
 	void ReadBpm(FILE* file, std::vector<BPM_DATA>& bpmlist);
 	void ReadNote(FILE* file, std::vector<BPM_DATA>& bpmlist);
-	void RangeCalculation(unsigned timing, int* range_time, long* range_count, long* firsthave_count, std::vector<BPM_DATA>& bpmlist);
+	void RangeCalculation(int timing, int* range_time, long* range_count, long* firsthave_count, std::vector<BPM_DATA>& bpmlist);
 
 	void HighSpeedUpdate(LONG ScrollWheelValue);
 	//Ç∆ÇËÇ†Ç¶Ç∏Å´
-	void RightUp(unsigned nowtime);
+	void RightUp(int nowtime);
 
 	FONT font_;
 	//Ç∆ÇËÇ†Ç¶Ç∏Å™
@@ -53,9 +53,9 @@ private:
 
 	float button_height_;
 
-	unsigned songbpm_;
-	unsigned quater_rhythm_;
-	unsigned havecombo_;
+	int songbpm_;
+	int quater_rhythm_;
+	int havecombo_;
 
 	float high_speed;
 

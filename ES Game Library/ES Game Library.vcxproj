@@ -238,6 +238,10 @@
     <ClInclude Include="MyMakeClasses\BPM_DATA_STRUCT.h" />
     <ClInclude Include="MyMakeClasses\CONTROLL.h" />
     <ClInclude Include="MyMakeClasses\FADER.h" />
+    <ClInclude Include="MyMakeClasses\HIGHSPEED.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="MyMakeClasses\INSTRUMENT.h" />
     <ClInclude Include="MyMakeClasses\JUDGELIST_ENUM.h" />
     <ClInclude Include="MyMakeClasses\JUDGE_DISPLAY.h" />

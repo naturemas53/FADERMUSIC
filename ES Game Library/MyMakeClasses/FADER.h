@@ -14,14 +14,14 @@ public:
 	FADER(Vector3 draw_pos, Keys asign_key);
 	~FADER();
 
-	void Update(unsigned nowtime, unsigned elapsedtime, float button_height_rate,long elapsedcount);
-	void Draw(float button_height_rate, float animetion_rate, unsigned nowtime,float highspeed);
+	void Update(int nowtime, int elapsedtime, float button_height_rate, long elapsedcount);
+	void Draw(float button_height_rate, float animetion_rate, int nowtime, float highspeed);
 
 	void InNote(ABSTRUCT_NOTE* innote);
 	JUDGELIST GetScoreJudge(){ return this->score_judge_; }
 	JUDGELIST GetAccuracyJudge(){ return this->accuracy_judge_; }
 
-	void SetBPM(unsigned bpm, unsigned quater_rhythm){
+	void SetBPM(int bpm, int quater_rhythm){
 
 		this->songbpm_ = bpm;
 		this->quater_rhythm_ = quater_rhythm;
@@ -30,9 +30,9 @@ public:
 
 private:
 
-	void SingleNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr,unsigned nowtime,float button_height_rate);
-	void LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, unsigned nowtime, unsigned elapsedtime,float button_height_rate);
-	void ScaleUpdate(unsigned nowtime,long elapsedcount);
+	void SingleNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, int nowtime, float button_height_rate);
+	void LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, int nowtime, int elapsedtime, float button_height_rate);
+	void ScaleUpdate(int nowtime, long elapsedcount);
 
 	bool IsInForButton(std::list<ABSTRUCT_NOTE*>::iterator top_itr, float button_height_rate);
 
@@ -50,6 +50,7 @@ private:
 	const float HEIGHT_;
 	const float WIDTH_;
 	const float INNER_HEIGHT_;
+	const float INNER_WIDTH_;
 	const float INNER_TOP_POS_;
 	const float INNER_LEFT_POS_;
 	const float BUTTON_SIZE_;
@@ -65,9 +66,9 @@ private:
 	JUDGELIST score_judge_;
 	JUDGELIST accuracy_judge_;
 
-	unsigned total_elapsed_;
-	unsigned songbpm_;
-	unsigned quater_rhythm_;
+	int total_elapsed_;
+	int songbpm_;
+	int quater_rhythm_;
 
 };
 

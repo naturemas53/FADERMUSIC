@@ -4,7 +4,7 @@
 std::map<Color_by_Name, SPRITE>* LONGNOTE::longnote_sprites_ = nullptr;
 std::map<Color_by_Name, SPRITE>* LONGNOTE::triangle_sprites_ = nullptr;
 
-LONGNOTE::LONGNOTE(unsigned timing, float height_rate, Color_by_Name color, long range_count, int range_time, long firsthave_count) :
+LONGNOTE::LONGNOTE(int timing, float height_rate, Color_by_Name color, long range_count, int range_time, long firsthave_count) :
 ABSTRUCT_NOTE(range_count, range_time,firsthave_count),
 RIGHT_POWER_MAX_(2000.0f)
 {
@@ -63,7 +63,7 @@ LONGNOTE::~LONGNOTE()
 
 }
 
-void LONGNOTE::Update(unsigned nowtime){
+void LONGNOTE::Update(int nowtime){
 
 	auto p_itr = this->long_points_.begin();
 	auto pe_itr = this->long_points_.end();
@@ -77,7 +77,7 @@ void LONGNOTE::Update(unsigned nowtime){
 
 }
 
-bool LONGNOTE::Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, unsigned nowtime, float highspeed){
+bool LONGNOTE::Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, int nowtime, float highspeed){
 
 	float x_scale_rate = this->GetXScale(highspeed);
 
@@ -90,7 +90,7 @@ bool LONGNOTE::Draw(Vector3 fader_top_pos, float fader_height, float animation_r
 	auto pe_itr = this->long_points_.end();
 	pe_itr--;
 
-	unsigned longtime = (*pe_itr).timing - this->timing_;
+	int longtime = (*pe_itr).timing - this->timing_;
 
 	DrawTriangle(fader_top_pos, fader_height, nowtime, longtime, triangle_x_scale);
 
@@ -100,7 +100,7 @@ bool LONGNOTE::Draw(Vector3 fader_top_pos, float fader_height, float animation_r
 
 }
 
-void LONGNOTE::DrawNote(Vector3 fader_top_pos, float fader_height, unsigned nowtime, float animation_rate, float x_scale_rate){
+void LONGNOTE::DrawNote(Vector3 fader_top_pos, float fader_height, int nowtime, float animation_rate, float x_scale_rate){
 
 	Vector3 note_displaypos = fader_top_pos;
 	note_displaypos.y += (fader_height - this->LINE_HEIGHT_) * this->height_rate_ - (this->HEIGHT_ - this->LINE_HEIGHT_) / 2.0f;
@@ -109,40 +109,54 @@ void LONGNOTE::DrawNote(Vector3 fader_top_pos, float fader_height, unsigned nowt
 	float pal;
 	SPRITE draw_sprite_;
 
-	if (ispush_){
+	//if (ispush_){
 
-		if (long_xscale_ > 1.0f) long_xscale_ = 1.0f;
-		x_scale_rate = long_xscale_;
+	//	if (long_xscale_ > 1.0f) long_xscale_ = 1.0f;
+	//	x_scale_rate = long_xscale_;
 
-		draw_sprite_ = (*this->longnote_sprites_)[mycolor_];
+	//	draw_sprite_ = (*this->longnote_sprites_)[mycolor_];
 
+
+	//}
+	//else{
+
+	//	if (this->rightup_flag_){
+	//		
+	//		draw_sprite_ = (*this->colornote_sprites_)[mycolor_];
+
+	//	}
+	//	else{
+
+	//		draw_sprite_ = this->normal_sprite_;
+
+	//	}
+	//	
+	//	
+	//}
+
+	if (this->rightup_flag_){
+
+		draw_sprite_ = (*this->colornote_sprites_)[mycolor_];
 
 	}
 	else{
 
-		if (this->rightup_flag_){
-			
-			draw_sprite_ = (*this->colornote_sprites_)[mycolor_];
+		draw_sprite_ = this->normal_sprite_;
 
-		}
-		else{
-
-			draw_sprite_ = this->normal_sprite_;
-
-		}
-		
-		
 	}
+
 
 	pal = this->right_power_ / this->RIGHT_POWER_MAX_;
 
-	SpriteBatch.Draw(*draw_sprite_, note_displaypos,
+/*	SpriteBatch.Draw(*draw_sprite_, note_displaypos,
 		RectWH((animenum % 10) * this->WIDTH_, (animenum / 10) * this->HEIGHT_, this->WIDTH_, this->HEIGHT_), pal,
-		Vector3_Zero, Vector3(this->WIDTH_ / 2.0f, 0.0f, 0.0f), Vector2(x_scale_rate, 1.0f));  
+		Vector3_Zero, Vector3(this->WIDTH_ / 2.0f, 0.0f, 0.0f), Vector2(x_scale_rate, 1.0f)); */ 
+
+	SpriteBatch.Draw(*draw_sprite_, note_displaypos, pal,Vector3_Zero, Vector3(this->WIDTH_ / 2.0f, 0.0f, 0.0f), Vector2(x_scale_rate, 1.0f));
 
 }
 
-void LONGNOTE::DrawTriangle(Vector3 fadet_top_pos, float fader_height, unsigned nowtime, unsigned longtime, float long_x_scale){
+void LONGNOTE::DrawTriangle(Vector3 fadet_top_pos, float fader_height, int nowtime, int longtime, float long_x_scale){
 
 	auto p_itr = this->long_points_.begin();
 	auto pe_itr = this->long_points_.end();
@@ -212,7 +226,7 @@ void LONGNOTE::DrawTriangle(Vector3 fadet_top_pos, float fader_height, unsigned 
 
 }
 
-void LONGNOTE::NoteMove(unsigned nowtime){
+void LONGNOTE::NoteMove(int nowtime){
 
 	auto p_itr = this->long_points_.begin();
 	auto pe_itr = this->long_points_.end();
@@ -236,20 +250,47 @@ void LONGNOTE::NoteMove(unsigned nowtime){
 
 }
 
-void LONGNOTE::LongXScale(unsigned nowtime){
+void LONGNOTE::LongXScale(int nowtime){
 
-	unsigned starttime = this->timing_;
-	unsigned endtime = (long_points_.end() - 1)->timing;
+	int starttime = this->timing_;
+	int endtime = (long_points_.end() - 1)->timing;
 
-	unsigned betweentime = endtime - starttime;
+	int betweentime = endtime - starttime;
 	int pointnowtime = (int)nowtime - (int)starttime;
 
 	this->long_xscale_ = 1.0f - ((float)pointnowtime / (float)betweentime);
 
 }
 
-void LONGNOTE::AddPoint(unsigned timing,float height_rate){
+void LONGNOTE::AddPoint(int timing,float height_rate){
 
-	this->long_points_.push_back(LONG_POINT(timing,height_rate));
+	int size = this->long_points_.size();
 
+	if (size == 0){
+
+		this->long_points_.push_back(LONG_POINT(timing,height_rate));
+		return;
+
+	}
+
+	auto itr = this->long_points_.begin();
+	auto e_itr = this->long_points_.end();
+
+	int inserttiming = itr->timing;
+	int checktiming;
+
+	while (itr != e_itr){
+
+		if (inserttiming < checktiming){
+
+			this->long_points_.insert(itr,LONG_POINT(timing,height_rate));
+			return;
+		}
+
+		itr++;
+
+	}
+
+	this->long_points_.push_back(LONG_POINT(timing, height_rate));
+	
 }

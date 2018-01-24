@@ -50,7 +50,7 @@ INSTRUMENT::~INSTRUMENT()
 
 }
 
-void INSTRUMENT::Update(unsigned nowtime, unsigned elapsedtime, long elapsedcount){
+void INSTRUMENT::Update(int nowtime, int elapsedtime, long elapsedcount){
 
 	RightUp(nowtime);
 
@@ -92,7 +92,7 @@ void INSTRUMENT::Update(unsigned nowtime, unsigned elapsedtime, long elapsedcoun
 
 }
 
-void INSTRUMENT::Draw(unsigned nowtime, float animation_rate){
+void INSTRUMENT::Draw(int nowtime, float animation_rate){
 
 	for (auto f_itr : faders_) f_itr->Draw(button_height_, animation_rate, nowtime,this->high_speed);
 
@@ -137,19 +137,6 @@ void INSTRUMENT::ComboCheck(){
 
 void INSTRUMENT::HighSpeedUpdate(LONG ScrollWheelValue){
 
-	//CONTROLL& keyboard = CONTROLL::GetInstance();
-
-	//if (keyboard.BufferIsPress(Keys_Up)){
-
-	//	this->high_speed += 0.1f;
-
-	//}
-
-	//if (keyboard.BufferIsPress(Keys_Down)){
-	//	
-	//	this->high_speed -= 0.1f;
-
-	//}
 
 	this->high_speed += (float)(ScrollWheelValue / 120) * 0.1f;
 
@@ -204,7 +191,7 @@ JUDGECOUNT INSTRUMENT::GetAccuracyJudge(){
 
 }
 
-void INSTRUMENT::RightUp(unsigned nowtime){
+void INSTRUMENT::RightUp(int nowtime){
 
 	auto itr = notes_.begin();
 	itr++;
@@ -233,7 +220,7 @@ void INSTRUMENT::RightUp(unsigned nowtime){
 
 }
 
-void INSTRUMENT::SetBPM(unsigned bpm, unsigned quater_rhythm){
+void INSTRUMENT::SetBPM(int bpm, int quater_rhythm){
 
 	this->songbpm_ = bpm;
 	this->quater_rhythm_ = quater_rhythm;
@@ -254,14 +241,7 @@ void INSTRUMENT::Setting(const char* filename, std::vector<BPM_DATA>& bpmlist){
 	file = fopen(filename,"r");
 
 	do{
-/*
-		if (!std::getline(file, str)){
 
-			::OutputDebugString(_T("\n\n\nBPM‚ðŒ©‚Â‚¯‚ç‚ê‚Ü‚¹‚ñ‚Å‚µ‚½\n\n\n"));
-
-			return;
-
-		}*/
 
 		if (fscanf(file,"%s",buffer) == EOF){
 
@@ -274,18 +254,9 @@ void INSTRUMENT::Setting(const char* filename, std::vector<BPM_DATA>& bpmlist){
 
 	} while (str != "BPM");
 
-	//std::getline(file, str);
 	this->ReadBpm(file, bpmlist);
 
 	do{
-
-		//if (!std::getline(file, str)){
-
-		//	::OutputDebugString(_T("\n\n\nNOTES‚ðŒ©‚Â‚¯‚ç‚ê‚Ü‚¹‚ñ‚Å‚µ‚½\n\n\n"));
-
-		//	return;
-
-		//}
 
 
 		if (fscanf(file, "%s", buffer) == EOF){
@@ -308,8 +279,8 @@ void INSTRUMENT::ReadBpm(FILE* file, std::vector<BPM_DATA>& bpmlist){
 	//std::string timing;
 	//std::string bpm;
 
-	unsigned timing;
-	unsigned bpm;
+	int timing;
+	int bpm;
 
 	int i = 0;
 
@@ -347,7 +318,7 @@ void INSTRUMENT::ReadBpm(FILE* file, std::vector<BPM_DATA>& bpmlist){
 void INSTRUMENT::ReadNote(FILE* file, std::vector<BPM_DATA>& bpmlist){
 
 	int number = 0;
-	unsigned timing;
+	int timing;
 	float height_rate;
 	char type;
 
@@ -429,7 +400,7 @@ void INSTRUMENT::ReadNote(FILE* file, std::vector<BPM_DATA>& bpmlist){
 
 }
 
-void INSTRUMENT::RangeCalculation(unsigned timing, int* range_time, long* range_count, long* firsthave_count, std::vector<BPM_DATA>& bpmlist){
+void INSTRUMENT::RangeCalculation(int timing, int* range_time, long* range_count, long* firsthave_count, std::vector<BPM_DATA>& bpmlist){
 
 	auto itr = bpmlist.begin();
 	auto fitr = bpmlist.end();

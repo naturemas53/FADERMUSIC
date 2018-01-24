@@ -6,18 +6,18 @@
 class LONGNOTE : public ABSTRUCT_NOTE
 {
 public:
-	LONGNOTE(unsigned timing, float height_rate, Color_by_Name color, long range_count, int range_time, long firsthave_count);
+	LONGNOTE(int timing, float height_rate, Color_by_Name color, long range_count, int range_time, long firsthave_count);
 	~LONGNOTE();
 
-	virtual void Update(unsigned nowtime);
-	virtual bool Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, unsigned nowtime, float highspeed);
+	virtual void Update(int nowtime);
+	virtual bool Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, int nowtime, float highspeed);
 
 	struct LONG_POINT{
 
-		unsigned timing;
+		int timing;
 		float height_rate;
 
-		LONG_POINT(unsigned timing,float height_rate){
+		LONG_POINT(int timing, float height_rate){
 		
 			this->timing = timing;
 			this->height_rate = height_rate;
@@ -26,9 +26,9 @@ public:
 
 	};
 
-	void AddPoint(unsigned timing,float height_rate);
+	void AddPoint(int timing, float height_rate);
 
-	unsigned GetTimingSlowMostPoint(){
+	int GetTimingSlowMostPoint(){
 	
 		auto itr = long_points_.end();
 
@@ -40,16 +40,16 @@ public:
 	bool IsPush(){ return ispush_; }
 	void Push(){ ispush_ = true; }
 
-	void DownRight(unsigned downvalue){ this->right_power_ -= (float)downvalue; }
+	void DownRight(int downvalue){ this->right_power_ -= (float)downvalue; }
 	bool IsHaveRightPower(){ return (this->right_power_ / this->RIGHT_POWER_MAX_ >= 0.5f); }
 
 private:
 
-	void NoteMove(unsigned nowtime);
-	void LongXScale(unsigned nowtime);
+	void NoteMove(int nowtime);
+	void LongXScale(int nowtime);
 
-	void DrawTriangle(Vector3 fader_top_pos,float fader_height,unsigned nowtime,unsigned longtime,float long_x_scale);
-	void DrawNote(Vector3 fader_top_pos, float fader_height, unsigned nowtime, float animation_rate, float x_scale_rate);
+	void DrawTriangle(Vector3 fader_top_pos, float fader_height, int nowtime, int longtime, float long_x_scale);
+	void DrawNote(Vector3 fader_top_pos, float fader_height, int nowtime, float animation_rate, float x_scale_rate);
 
 	bool ispush_;
 	float long_xscale_;

@@ -9,7 +9,6 @@ accuracy_font_(GraphicsDevice.CreateSpriteFont(_T("Voyager Grotesque Light"), 20
 {
 
 	this->lifegauge_sprite_ = GraphicsDevice.CreateSpriteFromFile(_T("lifegauge/ui_lifegauge.png"));
-	this->uiline_sprite_ = GraphicsDevice.CreateSpriteFromFile(_T("background/ui.png"));
 
 	this->draw_lifepersent_ = 0.5f;
 	this->draw_score_ = 0;
@@ -29,8 +28,6 @@ void UI::Update(){
 }
 
 void UI::Draw(float animation_rate){
-
-	SpriteBatch.Draw(*this->uiline_sprite_,Vector3_Zero);
 
 	int animenum = (int)(90.0f * animation_rate);
 

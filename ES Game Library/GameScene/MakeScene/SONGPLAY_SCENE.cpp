@@ -26,7 +26,7 @@ bool SONGPLAY_SCENE::Initialize()
 	
 	auto itr = bpmlist_.begin();
 	this->bpm_ = itr->bpm;
-	this->quater_rhythm_ = (UINT)(60.0f / (float)bpm_ * 1 * 1000.0f);
+	this->quater_rhythm_ = (int)(60.0f / (float)bpm_ * 1 * 1000.0f);
 	instrument_->SetBPM(this->bpm_, this->quater_rhythm_);
 
 	nowtime_ = 0;
@@ -75,7 +75,7 @@ int SONGPLAY_SCENE::Update()
 
 		prevtime_ = nowtime_;
 
- 		nowtime_ = (UINT)( (double)songlength_ * ((double)bgm_->GetPosition() / (double)bgm_->GetSize()) );
+		nowtime_ = (int)((float)songlength_ * ((float)bgm_->GetPosition() / (float)bgm_->GetSize()));
 		elapsedtime = nowtime_ - prevtime_;
 
 	}
@@ -133,9 +133,9 @@ void SONGPLAY_SCENE::Draw()
 
 void SONGPLAY_SCENE::ToUITellValue(){
 
-	unsigned framescore = instrument_->GetScoreJudge().GetScore();
+	int framescore = instrument_->GetScoreJudge().GetScore();
 	float multiplayer_ = 1.0f + (float)instrument_->GetCombo() / 100.0f;
-	score_ += (UINT)((float)framescore * multiplayer_);
+	score_ += (int)((float)framescore * multiplayer_);
 	life_ += instrument_->GetScoreJudge().GetLifePersent();
 	if (life_ > 1.0f) life_ = 1.0f;
 	if (life_ < 0.0f) life_ = 0.0f;
@@ -149,7 +149,7 @@ void SONGPLAY_SCENE::ToUITellValue(){
 
 }
 
-long SONGPLAY_SCENE::GetElapsedCount(unsigned elapsedtime){
+long SONGPLAY_SCENE::GetElapsedCount(int elapsedtime){
 
 	auto bpm_itr = bpmlist_.begin();
 
@@ -159,13 +159,13 @@ long SONGPLAY_SCENE::GetElapsedCount(unsigned elapsedtime){
 
 		if ((bpm_itr + 1)->timing < this->nowtime_){
 
-			unsigned overtime = this->nowtime_ - (bpm_itr + 1)->timing;
+			int overtime = this->nowtime_ - (bpm_itr + 1)->timing;
 			count += (bpm_itr + 1)->bpm * overtime;
 			count += (elapsedtime - overtime) * bpm_itr->bpm;
 
 			bpm_itr = bpmlist_.erase(bpm_itr);
 			this->bpm_ = (bpm_itr)->bpm;
-			this->quater_rhythm_ = (UINT)(60.0f / (float)bpm_ * 1 * 1000.0f);
+			this->quater_rhythm_ = (int)(60.0f / (float)bpm_ * 1 * 1000.0f);
 
 			instrument_->SetBPM(this->bpm_, this->quater_rhythm_);
 

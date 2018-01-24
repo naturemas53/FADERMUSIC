@@ -11,11 +11,12 @@ SPRITE FADER::normal_sprite_ = nullptr;
 std::map<Color_by_Name, SPRITE>* FADER::color_playareas_ = nullptr;
 
 FADER::FADER(Vector3 draw_pos, Keys asign_key) :
-HEIGHT_(580.0f),
-WIDTH_(114.0f),
+HEIGHT_(596.0f),
+WIDTH_(236.0f),
 INNER_HEIGHT_(540.0f),
-INNER_TOP_POS_(20.0f),
-INNER_LEFT_POS_(20.0f),
+INNER_WIDTH_(180.0f),
+INNER_TOP_POS_((this->HEIGHT_ - this->INNER_HEIGHT_) / 2.0f),
+INNER_LEFT_POS_((this->WIDTH_ - this->INNER_WIDTH_) / 2.0f),
 BUTTON_SIZE_(84.0f),
 ACCEPTABLE_RANGE_(0.009f),
 ASIGN_KEY_(asign_key),
@@ -62,7 +63,7 @@ FADER::~FADER()
 
 }
 
-void FADER::Update(unsigned nowtime, unsigned elapsedtime_, float button_height_rate,long elapsedcount){
+void FADER::Update(int nowtime, int elapsedtime_, float button_height_rate, long elapsedcount){
 
 	KeyboardState key_state = Keyboard->GetState();
 
@@ -83,7 +84,7 @@ void FADER::Update(unsigned nowtime, unsigned elapsedtime_, float button_height_
 
 }
 
-void FADER::SingleNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, unsigned nowtime, float button_height_rate){
+void FADER::SingleNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, int nowtime, float button_height_rate){
 
 	int betweentime = (int)nowtime - (int)(*top_itr)->GetTiming();
 
@@ -115,7 +116,7 @@ void FADER::SingleNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, unsigne
 
 }
 
-void FADER::LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, unsigned nowtime, unsigned elapsedtime_, float button_height_rate){
+void FADER::LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, int nowtime, int elapsedtime_, float button_height_rate){
 
 	LONGNOTE* top_long = (LONGNOTE*)(*top_itr);
 
@@ -200,59 +201,43 @@ void FADER::LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, unsigned 
 
 }
 
-void FADER::ScaleUpdate(unsigned nowtime,long elapsedcount){
+void FADER::ScaleUpdate(int nowtime, long elapsedcount){
 
 	auto itr = this->notelist_.begin();
 	while (itr != notelist_.end()){ 
 		(*itr)->CountUpdate(nowtime, elapsedcount);
-		itr++; }
+		itr++;
+	}
 
 }
 
-void FADER::Draw(float button_height_rate, float animetion_rate, unsigned nowtime, float highspeed){
+void FADER::Draw(float button_height_rate, float animetion_rate, int nowtime, float highspeed){
 
 	int animenum = (int)(animetion_rate * 90.0f);
 
 	auto s_itr = this->notelist_.begin();
 
-	LONGNOTE* longnote_;
+	LONGNOTE* longnote;
+
+	SPRITE playareasp = this->normal_sprite_;
 
 	if (s_itr != this->notelist_.end()){
 
 		if ((*s_itr)->isLong()){
 
+			longnote = (LONGNOTE*)(*s_itr);
+			if (longnote->IsPush()){
 
-			longnote_ = (LONGNOTE*)(*s_itr);
-			if (longnote_->IsPush()){
-
-				SpriteBatch.Draw(*(*this->color_playareas_)[longnote_->GetColor()], this->DRAW_POS_,
-					RectWH((animenum % 30) * WIDTH_, (animenum / 30) * HEIGHT_, WIDTH_, HEIGHT_), 1.0f);
-
-			}
-			else{
-
-				SpriteBatch.Draw(*this->normal_sprite_, this->DRAW_POS_,
-					RectWH((animenum % 30) * WIDTH_, (animenum / 30) * HEIGHT_, WIDTH_, HEIGHT_), 1.0f);
+				playareasp = (*this->color_playareas_)[longnote->GetColor()];
 
 			}
 
 
 		}
-		else{
-
-			SpriteBatch.Draw(*this->normal_sprite_, this->DRAW_POS_,
-				RectWH((animenum % 30) * WIDTH_, (animenum / 30) * HEIGHT_, WIDTH_, HEIGHT_), 1.0f);
-
-		}
-
-	}
-	else{
-
-		SpriteBatch.Draw(*this->normal_sprite_, this->DRAW_POS_,
-			RectWH((animenum % 30) * WIDTH_, (animenum / 30) * HEIGHT_, WIDTH_, HEIGHT_), 1.0f);
 
 	}
 
+	SpriteBatch.Draw(*playareasp, this->DRAW_POS_, 1.0f);
 
 	Vector3 top_pos = this->DRAW_POS_;
 	top_pos.y += INNER_TOP_POS_;

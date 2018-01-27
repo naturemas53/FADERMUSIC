@@ -289,6 +289,9 @@
     <ClCompile Include="MyMakeClasses\UI.cpp">
       <Filter>ソース ファイル\MyMakeClasses</Filter>
     </ClCompile>
+    <ClCompile Include="MyMakeClasses\ImageFont.cpp">
+      <Filter>ソース ファイル\MyMakeClasses</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectX\Audio\DXAudio8.hpp">
@@ -479,6 +482,9 @@
       <Filter>ヘッダー ファイル\MyMakeClasses</Filter>
     </ClInclude>
     <ClInclude Include="MyMakeClasses\HIGHSPEED.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\ImageFont.h">
       <Filter>ヘッダー ファイル\MyMakeClasses</Filter>
     </ClInclude>
   </ItemGroup>

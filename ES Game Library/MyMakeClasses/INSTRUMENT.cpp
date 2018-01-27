@@ -1,5 +1,4 @@
 #include "INSTRUMENT.h"
-#include "FADER.h"
 #include "SINGLENOTE.h"
 #include "LONGNOTE.h"
 #include "CONTROLL.h"
@@ -23,22 +22,27 @@ INSTRUMENT::INSTRUMENT(LONG max_mouse_y,  std::vector<BPM_DATA>& bpmlist, const 
 
 	mouse_y_ = 0;
 
-	faders_.push_back(new FADER(Vector3(1280.0f / 2.0f +12.0f+ 10.0f, 120.0f + 10.0f, 0.0f), Keys_S));
-	faders_.push_back(new FADER(Vector3(1280.0f / 2.0f + 12.0f + 10.0f + 160.0f, 120.0f + 10.0f, 0.0f), Keys_D));
-	faders_.push_back(new FADER(Vector3(1280.0f / 2.0f + 12.0f + 10.0f + 320.0f, 120.0f + 10.0f, 0.0f), Keys_F));
+	float base_x = 330.0f + 10.0f;
+
+	faders_.push_back(new FADER(Vector3(base_x,92.0f,0.0f), Keys_S));
+	faders_.push_back(new FADER(Vector3((base_x + 236.0f + 96.0f),92.0f,0.0f), Keys_D));
+	faders_.push_back(new FADER(Vector3((base_x + (236.0f + 96.0f)*2.0f ), 92.0f, 0.0f), Keys_F));
 
 	this->Setting(filename,bpmlist);
 
 	(*(notes_.begin())) -> RightUp();
 
-	range_hours_show = 1000;
+	this->range_hours_show = 1000;
 
 	this->font_ = GraphicsDevice.CreateSpriteFont(_T("Voyager Grotesque Bold"),114);
 
 	this->havecombo_ = 0;
 
-	this->high_speed = 0.5f;
-	
+	auto itr = this->faders_.begin();
+
+	Vector2 innersize = (*itr)->GetInnerSize();
+
+	this->judge_display_ = new JUDGE_DISPLAY(innersize.y,innersize.x);
 
 }
 
@@ -47,6 +51,7 @@ INSTRUMENT::~INSTRUMENT()
 {
 	for (auto f_itr : faders_) delete f_itr;
 	for (auto itr : notes_) delete itr;
+	delete this->judge_display_;
 
 }
 
@@ -73,75 +78,56 @@ void INSTRUMENT::Update(int nowtime, int elapsedtime, long elapsedcount){
 
 	button_height_ = (float)mouse_y_ / (float)MAX_MOUSE_Y_;
 
-	if (CONTROLL::GetInstance().StateIsDown(Keys_Up)){
+	if (mouse.ScrollWheelValue != 0){
 
-		if (range_hours_show >= 300) range_hours_show -= 30;
-
-	}
-
-	if (CONTROLL::GetInstance().StateIsDown(Keys_Down)){
-
-		range_hours_show += 30;
+		this->highspeed_.ChengeHighSpeed(mouse.ScrollWheelValue);
 
 	}
+	this->highspeed_.HighSpeedUpdate(elapsedtime);
 
 	for (auto f_itr : faders_)f_itr->Update(nowtime, elapsedtime, button_height_,elapsedcount);
 
 	this->ComboCheck();
-	this->HighSpeedUpdate(mouse.ScrollWheelValue);
+	this->judge_display_->Update();
 
 }
 
 void INSTRUMENT::Draw(int nowtime, float animation_rate){
 
-	for (auto f_itr : faders_) f_itr->Draw(button_height_, animation_rate, nowtime,this->high_speed);
+	float highspeed = this->highspeed_.GetHighSpeed();
 
-	if (this->havecombo_ > 0){
+	for (auto f_itr : faders_) f_itr->Draw(animation_rate, nowtime, highspeed,false);
 
-		SpriteBatch.DrawString(font_,Vector2(1270.0f,120.0f + 10.0f + 20.0f),Color(0,255,0),
-			Vector2_One, Vector3(0.0f, 0.0f, 90.0f), Vector3(1270.0f, 120.0f + 10.0f + 20.0f,0.0f), _T("%dcombo"), this->havecombo_);
-
-	}
-
-	SpriteBatch.DrawString(font_,Vector2(0.0f,500.0f),Color(0,255,0),_T("%.1f"),this->high_speed);
+	this->judge_display_->Draw();
 
 }
 
 void INSTRUMENT::ComboCheck(){
 
-	JUDGELIST judge;
+	JUDGENOTICE judgenotice;
 
 	for (auto f_itr = faders_.begin(); f_itr != faders_.end();f_itr++){
 
-		judge = (*f_itr)->GetScoreJudge();
+		judgenotice = (*f_itr)->GetScoreJudge();
 
-		if (judge != NONE){
+		if (judgenotice.judge != NONE){
 
-			if (judge == MISSTIME || judge == OUCH){
+			if (judgenotice.judge == MISSTIME || judgenotice.judge == OUCH){
 
-				havecombo_ = 0;
-				break;
+				this->havecombo_ = 0;
 
 			}
 			else{
 
-				havecombo_++;
+				this->havecombo_++;
 
 			}
+
+			this->judge_display_->SetBomb(judgenotice.judge, (*f_itr)->GetInnerPos(), judgenotice.height,this->havecombo_);
 
 		}
 
 	}
-
-}
-
-void INSTRUMENT::HighSpeedUpdate(LONG ScrollWheelValue){
-
-
-	this->high_speed += (float)(ScrollWheelValue / 120) * 0.1f;
-
-	if (high_speed <= 0.1f) high_speed = 0.1f;
-	if (high_speed >= 0.9f) high_speed = 0.9f;
 
 }
 
@@ -151,7 +137,7 @@ JUDGECOUNT INSTRUMENT::GetScoreJudge(){
 
 	for (auto itr = faders_.begin(); itr != faders_.end();itr++){
 
-		switch ((*itr)->GetScoreJudge()){
+		switch ((*itr)->GetScoreJudge().judge){
 
 		case UNBELIEVABLE: judge.unbelievable++; break;
 		case GREAT: judge.great++; break;
@@ -415,7 +401,7 @@ void INSTRUMENT::RangeCalculation(int timing, int* range_time, long* range_count
 
 	long totalcount = 0;
 
-	*range_count = 480000;
+	*range_count =  480000 * 4;
 
 	int i_timing = (int)timing;
 

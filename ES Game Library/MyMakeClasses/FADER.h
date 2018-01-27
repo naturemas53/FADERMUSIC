@@ -1,11 +1,24 @@
 #pragma once
 #include "../ESGLib.h"
+#include "JUDGELIST_ENUM.h"
 #include <list>
 #include <map>
 
 class ABSTRUCT_NOTE;
-class JUDGE_DISPLAY;
-enum JUDGELIST;
+
+struct JUDGENOTICE{
+
+	JUDGELIST judge;
+	float height;
+
+	JUDGENOTICE(){
+
+		judge = NONE;
+		height = 0.0f;
+
+	}
+
+};
 
 class FADER
 {
@@ -15,11 +28,26 @@ public:
 	~FADER();
 
 	void Update(int nowtime, int elapsedtime, float button_height_rate, long elapsedcount);
-	void Draw(float button_height_rate, float animetion_rate, int nowtime, float highspeed);
+	void Draw(float animetion_rate, int nowtime, float highspeed,bool addblend);
+	void ButtonDraw(float button_height_rate);
 
 	void InNote(ABSTRUCT_NOTE* innote);
-	JUDGELIST GetScoreJudge(){ return this->score_judge_; }
+
+	JUDGENOTICE GetScoreJudge(){ return this->score_judge_; }
 	JUDGELIST GetAccuracyJudge(){ return this->accuracy_judge_; }
+	Vector2 GetSize(){ return this->SIZE_; }
+	Vector2 GetInnerSize(){ return this->INNER_SIZE_; }
+	Vector3 GetInnerPos(){
+
+		Vector3 innerpos = this->DRAW_POS_;
+		innerpos.x += this->INNER_LEFT_POS_;
+		innerpos.y += this->INNER_TOP_POS_;
+
+		return innerpos;
+
+	}
+
+	Vector3 GetDrawPos(){ return this->DRAW_POS_; }
 
 	void SetBPM(int bpm, int quater_rhythm){
 
@@ -36,21 +64,16 @@ private:
 
 	bool IsInForButton(std::list<ABSTRUCT_NOTE*>::iterator top_itr, float button_height_rate);
 
-	void NoteErase(std::list<ABSTRUCT_NOTE*>::iterator erase_itr,JUDGELIST judge);
+	void NoteErase(std::list<ABSTRUCT_NOTE*>::iterator erase_itr,JUDGELIST judge,float height);
 
 	JUDGELIST Judge(int pushtime);
-
-
 
 	static SPRITE normal_sprite_;
 	static SPRITE button_sprite_;
 	static std::map<Color_by_Name, SPRITE>* color_playareas_;
 
-
-	const float HEIGHT_;
-	const float WIDTH_;
-	const float INNER_HEIGHT_;
-	const float INNER_WIDTH_;
+	const Vector2 SIZE_;
+	const Vector2 INNER_SIZE_;
 	const float INNER_TOP_POS_;
 	const float INNER_LEFT_POS_;
 	const float BUTTON_SIZE_;
@@ -60,10 +83,8 @@ private:
 	
 	std::list<ABSTRUCT_NOTE*> notelist_;
 
-	JUDGE_DISPLAY* judge_display_;
-
 	JUDGELIST longjudge_;
-	JUDGELIST score_judge_;
+	JUDGENOTICE score_judge_;
 	JUDGELIST accuracy_judge_;
 
 	int total_elapsed_;

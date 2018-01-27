@@ -23,7 +23,7 @@ void SINGLENOTE::Init(int timing, float height_rate){
 
 }
 
-bool SINGLENOTE::Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, int nowtime, float highspeed){
+bool SINGLENOTE::Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, int nowtime, float highspeed,bool addblend){
 
 	//数字は全部エフェクトのそれ
 
@@ -51,7 +51,9 @@ bool SINGLENOTE::Draw(Vector3 fader_top_pos, float fader_height, float animation
 	//	RectWH((animenum % 10) * this->WIDTH_, (animenum / 10) * this->HEIGHT_, this->WIDTH_, this->HEIGHT_), 1.0f,
 	//	Vector3_Zero, Vector3(this->WIDTH_ / 2.0f, 0.0f, 0.0f), Vector2(x_scale_rate, 1.0f));
 
-	SpriteBatch.Draw(*draw_sprite, note_displaypos, 1.0f,Vector3_Zero, Vector3(this->WIDTH_ / 2.0f, 0.0f, 0.0f), Vector2(x_scale_rate, 1.0f));
+	float pal = (addblend) ? animation_rate : 1.0f;
+
+	SpriteBatch.Draw(*draw_sprite, note_displaypos, pal, Vector3_Zero, Vector3(this->WIDTH_ / 2.0f, 0.0f, 0.0f), Vector2(x_scale_rate, 1.0f));
 
 	return true;
 }

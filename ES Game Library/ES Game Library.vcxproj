@@ -175,6 +175,7 @@
     <ClCompile Include="MyMakeClasses\ABSTRUCT_NOTE.cpp" />
     <ClCompile Include="MyMakeClasses\CONTROLL.cpp" />
     <ClCompile Include="MyMakeClasses\FADER.cpp" />
+    <ClCompile Include="MyMakeClasses\ImageFont.cpp" />
     <ClCompile Include="MyMakeClasses\INSTRUMENT.cpp" />
     <ClCompile Include="MyMakeClasses\JUDGE_DISPLAY.cpp" />
     <ClCompile Include="MyMakeClasses\LONGNOTE.cpp" />
@@ -239,9 +240,10 @@
     <ClInclude Include="MyMakeClasses\CONTROLL.h" />
     <ClInclude Include="MyMakeClasses\FADER.h" />
     <ClInclude Include="MyMakeClasses\HIGHSPEED.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="MyMakeClasses\ImageFont.h" />
     <ClInclude Include="MyMakeClasses\INSTRUMENT.h" />
     <ClInclude Include="MyMakeClasses\JUDGELIST_ENUM.h" />
     <ClInclude Include="MyMakeClasses\JUDGE_DISPLAY.h" />

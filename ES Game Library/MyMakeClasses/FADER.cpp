@@ -2,8 +2,6 @@
 #include "SINGLENOTE.h"
 #include "LONGNOTE.h"
 #include <cstdlib>
-#include "JUDGELIST_ENUM.h"
-#include "JUDGE_DISPLAY.h"
 #include "CONTROLL.h"
 
 SPRITE FADER::button_sprite_ = nullptr;
@@ -11,13 +9,11 @@ SPRITE FADER::normal_sprite_ = nullptr;
 std::map<Color_by_Name, SPRITE>* FADER::color_playareas_ = nullptr;
 
 FADER::FADER(Vector3 draw_pos, Keys asign_key) :
-HEIGHT_(596.0f),
-WIDTH_(236.0f),
-INNER_HEIGHT_(540.0f),
-INNER_WIDTH_(180.0f),
-INNER_TOP_POS_((this->HEIGHT_ - this->INNER_HEIGHT_) / 2.0f),
-INNER_LEFT_POS_((this->WIDTH_ - this->INNER_WIDTH_) / 2.0f),
-BUTTON_SIZE_(84.0f),
+SIZE_(Vector2(236.0f,596.0f)),
+INNER_SIZE_(Vector2(180.0f,540.0f)),
+INNER_TOP_POS_((this->SIZE_.x - this->INNER_SIZE_.x) / 2.0f),
+INNER_LEFT_POS_((this->SIZE_.y - this->INNER_SIZE_.y) / 2.0f),
+BUTTON_SIZE_(195.0f),
 ACCEPTABLE_RANGE_(0.009f),
 ASIGN_KEY_(asign_key),
 DRAW_POS_(draw_pos)
@@ -39,10 +35,8 @@ DRAW_POS_(draw_pos)
 	Vector3 pos = draw_pos;
 	pos.y += INNER_TOP_POS_;
 
-	this->judge_display_ = new JUDGE_DISPLAY(pos,this->INNER_HEIGHT_,this->WIDTH_);
-
 	this->longjudge_ = NONE;
-	this->score_judge_ = NONE;
+	this->score_judge_ = JUDGENOTICE();
 	this->accuracy_judge_ = NONE;
 
 	this->total_elapsed_ = 0;
@@ -59,15 +53,13 @@ FADER::~FADER()
 
 	}
 
-	delete judge_display_;
-
 }
 
 void FADER::Update(int nowtime, int elapsedtime_, float button_height_rate, long elapsedcount){
 
 	KeyboardState key_state = Keyboard->GetState();
 
-	this->score_judge_ = NONE;
+	this->score_judge_.judge= NONE;
 	this->accuracy_judge_ = NONE;
 
 	this->total_elapsed_ += elapsedtime_;
@@ -77,8 +69,6 @@ void FADER::Update(int nowtime, int elapsedtime_, float button_height_rate, long
 	
 	if (s_itr != this->notelist_.end())
 		((*s_itr)->isLong()) ? LongNoteCheck(s_itr, nowtime,elapsedtime_, button_height_rate) : SingleNoteCheck(s_itr, nowtime, button_height_rate);
-
-	this->judge_display_->Update();
 	
 	this->ScaleUpdate(nowtime,elapsedcount);
 
@@ -90,7 +80,7 @@ void FADER::SingleNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, int now
 
 	if (betweentime > OK){
 
-		NoteErase(top_itr, MISSTIME);
+		NoteErase(top_itr, MISSTIME,(*top_itr)->GetHeightRate());
 
 		return;
 
@@ -101,13 +91,13 @@ void FADER::SingleNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, int now
 
 			JUDGELIST judge = Judge(abs(betweentime));
 
-			NoteErase(top_itr, judge);
+			NoteErase(top_itr, judge, (*top_itr)->GetHeightRate());
 			return;
 
 		}
 		else{
 
-			NoteErase(top_itr, OUCH);
+			NoteErase(top_itr, OUCH, (*top_itr)->GetHeightRate());
 			return;
 
 		}
@@ -132,8 +122,8 @@ void FADER::LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, int nowti
 
 				if (this->total_elapsed_ > this->quater_rhythm_ / 4){
 
-					this->judge_display_->SetBomb(this->longjudge_, (*top_itr)->GetHeightRate());
-					this->score_judge_ = this->longjudge_;
+					this->score_judge_.judge = this->longjudge_;
+					this->score_judge_.height = (*top_itr)->GetHeightRate();
 
 					this->total_elapsed_ -= this->quater_rhythm_ / 4;
 				
@@ -146,7 +136,7 @@ void FADER::LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, int nowti
 
 				if (!top_long->IsHaveRightPower()){
 
-					NoteErase(top_itr, MISSTIME);
+					NoteErase(top_itr, MISSTIME,(*top_itr)->GetHeightRate());
 					return;
 				}
 				
@@ -155,7 +145,7 @@ void FADER::LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, int nowti
 			if (top_long->GetTimingSlowMostPoint() < nowtime){
 
 
-				NoteErase(top_itr, this->longjudge_);
+				NoteErase(top_itr, this->longjudge_, (*top_itr)->GetHeightRate());
 				return;
 
 			}
@@ -166,7 +156,7 @@ void FADER::LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, int nowti
 
 			JUDGELIST releasejudge;
 			releasejudge = Judge(top_long->GetTimingSlowMostPoint() - nowtime);
-			NoteErase(top_itr, releasejudge);
+			NoteErase(top_itr, releasejudge, (*top_itr)->GetHeightRate());
 			return;
 
 		}
@@ -177,15 +167,16 @@ void FADER::LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, int nowti
 		if (this->IsInForButton(top_itr, button_height_rate)){
 
 			this->longjudge_ = Judge(abs(betweentime));
+			this->score_judge_.judge = this->longjudge_;
+			this->score_judge_.height = (*top_itr)->GetHeightRate();
 
-			this->judge_display_->SetBomb(this->longjudge_, (*top_itr)->GetHeightRate());
 			top_long->Push();
 			this->total_elapsed_ = 0;
 
 		}
 		else{
 
-			NoteErase(top_itr, OUCH);
+			NoteErase(top_itr, OUCH, (*top_itr)->GetHeightRate());
 			return;
 
 		}
@@ -193,7 +184,7 @@ void FADER::LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, int nowti
 
 	}else if (betweentime > OK){
 	
-		NoteErase(top_itr,MISSTIME);
+		NoteErase(top_itr, MISSTIME, (*top_itr)->GetHeightRate());
 		return;
 
 	}
@@ -211,9 +202,11 @@ void FADER::ScaleUpdate(int nowtime, long elapsedcount){
 
 }
 
-void FADER::Draw(float button_height_rate, float animetion_rate, int nowtime, float highspeed){
+void FADER::Draw(float animetion_rate, int nowtime, float highspeed,bool addblend){
 
 	int animenum = (int)(animetion_rate * 90.0f);
+
+	float pal = (addblend) ? animetion_rate : 1.0f;
 
 	auto s_itr = this->notelist_.begin();
 
@@ -237,51 +230,67 @@ void FADER::Draw(float button_height_rate, float animetion_rate, int nowtime, fl
 
 	}
 
-	SpriteBatch.Draw(*playareasp, this->DRAW_POS_, 1.0f);
+
+
+	SpriteBatch.Draw(*playareasp, this->DRAW_POS_, pal);
 
 	Vector3 top_pos = this->DRAW_POS_;
 	top_pos.y += INNER_TOP_POS_;
 	top_pos.x += INNER_LEFT_POS_;
 	
-	//ノーツの描画　ロング→シングル
-	s_itr = this->notelist_.begin();
-	bool next;
-	while (s_itr != this->notelist_.end()){
+	////ノーツの描画　ロング→シングル
+	//s_itr = this->notelist_.begin();
+	//while (s_itr != this->notelist_.end()){
 
-		if ((*s_itr)->isLong()){
+	//	if ((*s_itr)->isLong()){
 
-			
-			if (!(*s_itr)->Draw(top_pos, this->INNER_HEIGHT_, animetion_rate, nowtime, highspeed))break;
+	//		
+	//		if (!(*s_itr)->Draw(top_pos, this->INNER_HEIGHT_, animetion_rate, nowtime, highspeed))break;
 
-		}
+	//	}
 
-		s_itr++;
+	//	s_itr++;
+
+	//}
+
+	//s_itr = this->notelist_.begin();
+
+	//while (s_itr != this->notelist_.end()){
+
+	//	if (!(*s_itr)->isLong()){
+
+	//		if (!(*s_itr)->Draw(top_pos, this->INNER_HEIGHT_, animetion_rate, nowtime, highspeed))break;
+
+	//	}
+	//
+	//	s_itr++;
+
+	//}
+
+	//ノーツの描画
+	auto itr = this->notelist_.begin();
+	while (itr != this->notelist_.end()){
+
+		if (!(*itr)->Draw(top_pos, this->INNER_SIZE_.y, animetion_rate, nowtime, highspeed, addblend))break;
+		itr++;
 
 	}
 
-	s_itr = this->notelist_.begin();
+}
 
-	while (s_itr != this->notelist_.end()){
+void FADER::ButtonDraw(float button_height_rate){
 
-		if (!(*s_itr)->isLong()){
-
-			if (!(*s_itr)->Draw(top_pos, this->INNER_HEIGHT_, animetion_rate, nowtime, highspeed))break;
-
-		}
-	
-		s_itr++;
-
-	}
+	Vector3 top_pos = this->DRAW_POS_;
+	top_pos.y += INNER_TOP_POS_;
+	top_pos.x += INNER_LEFT_POS_;
 
 	Vector3 button_pos_ = top_pos;
 
 	button_pos_.y -= 5.0f; //線の太さ
-	button_pos_.x -= 5.0f; //線の太さ
-	button_pos_.y += (INNER_HEIGHT_ - BUTTON_SIZE_ + 10.0f) * button_height_rate;//5.0fは線の太さ * 2
+	button_pos_.x -= 8.0f; //線の太さ
+	button_pos_.y += (this->INNER_SIZE_.y - BUTTON_SIZE_ + 10.0f) * button_height_rate;//5.0fは線の太さ * 2
 
 	SpriteBatch.Draw(*this->button_sprite_, button_pos_, 1.0f);
-
-	this->judge_display_->Draw();
 
 }
 
@@ -293,8 +302,8 @@ void FADER::InNote(ABSTRUCT_NOTE* innote){
 
 bool FADER::IsInForButton(std::list<ABSTRUCT_NOTE*>::iterator top_itr, float button_height_rate){
 
-	float button_top_rate = button_height_rate * ((this->INNER_HEIGHT_ - this->BUTTON_SIZE_) / this->INNER_HEIGHT_);
-	float button_down_rate = button_top_rate + (1.0f - (this->INNER_HEIGHT_ - this->BUTTON_SIZE_) / this->INNER_HEIGHT_);
+	float button_top_rate = button_height_rate * ((this->INNER_SIZE_.y - this->BUTTON_SIZE_) / this->INNER_SIZE_.y);
+	float button_down_rate = button_top_rate + (1.0f - (this->INNER_SIZE_.y - this->BUTTON_SIZE_) / this->INNER_SIZE_.y);
 
 	if ((*top_itr)->GetHeightRate() > button_top_rate - ACCEPTABLE_RANGE_ &&
 		(*top_itr)->GetHeightRate() < button_down_rate + ACCEPTABLE_RANGE_){
@@ -308,13 +317,12 @@ bool FADER::IsInForButton(std::list<ABSTRUCT_NOTE*>::iterator top_itr, float but
 
 }
 
-void FADER::NoteErase(std::list<ABSTRUCT_NOTE*>::iterator erase_itr, JUDGELIST judge){
-
-	this->judge_display_->SetBomb(judge, (*erase_itr)->GetHeightRate());
+void FADER::NoteErase(std::list<ABSTRUCT_NOTE*>::iterator erase_itr, JUDGELIST judge,float height){
 
 	this->notelist_.erase(erase_itr);
 
-	this->score_judge_ = judge;
+	this->score_judge_.judge = judge;
+	this->score_judge_.height = height;
 	this->accuracy_judge_ = judge;
 
 	return;

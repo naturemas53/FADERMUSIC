@@ -7,8 +7,8 @@ class ABSTRUCT_NOTE
 {
 public:
 	ABSTRUCT_NOTE(long range_count, int range_time, long firsthave_count) :
-		WIDTH_(74.0f),
-		HEIGHT_(30.0f),
+		WIDTH_(180.0f),
+		HEIGHT_(50.0f),
 		LINE_HEIGHT_(10.0f),
 		RANGE_COUNT_(range_count),
 		RANGE_TIME_(range_time)
@@ -41,7 +41,7 @@ public:
 	};
 
 	virtual void Update(int nowtime) = 0;
-	virtual bool Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, int nowtime, float highspeed) = 0;
+	virtual bool Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, int nowtime, float highspeed,bool addblend) = 0;
 	
 	virtual int GetTiming(){ return this->timing_; }
 
@@ -67,7 +67,7 @@ public:
 
 protected:
 
-	float GetXScale(float highspeed = 0.5f){
+	float GetXScale(float highspeed = 0.25f){
 
 		float x_scale = (float)this->have_count_ / (float)this->RANGE_COUNT_;
 

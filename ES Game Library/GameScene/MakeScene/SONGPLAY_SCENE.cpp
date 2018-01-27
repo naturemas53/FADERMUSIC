@@ -4,6 +4,7 @@
 #include "../../MyMakeClasses/INSTRUMENT.h"
 #include "../../MyMakeClasses/UI.h"
 #include "../../MyMakeClasses/CONTROLL.h"
+#include "../../MyMakeClasses/ImageFont.h"
 #include "../SceneShared.hpp"
 #include <time.h>
 
@@ -17,30 +18,35 @@ bool SONGPLAY_SCENE::Initialize()
 {
 	// TODO: Add your initialization logic here
 
-	background_ = GraphicsDevice.CreateSpriteFromFile(_T("background/backwall.png"));
-	bgm_ = SoundDevice.CreateSoundFromFile(_T("transtep.wav"));
+	IMAGEFONT; //‰æ‘œ‚Ì‰Šú‰»
 
-	instrument_ = new INSTRUMENT(SceneShared().GetLongIntegerForKey("MOUSE_MAX_Y"), bpmlist_, "test.txt");
+	MediaManager.Attach(GraphicsDevice);
+
+	movie_ = MediaManager.CreateMediaFromFile(_T("backmovie.wmv"));
+
+	this->bgm_ = SoundDevice.CreateSoundFromFile(_T("transtep.wav"));
+
+	this->instrument_ = new INSTRUMENT(SceneShared().GetLongIntegerForKey("MOUSE_MAX_Y"), bpmlist_, "test.txt");
 	SceneShared().RemoveLongIntegerForKey("MOUSE_MAX_Y");
-	ui_ = new UI();
+	this->ui_ = new UI();
 	
 	auto itr = bpmlist_.begin();
 	this->bpm_ = itr->bpm;
 	this->quater_rhythm_ = (int)(60.0f / (float)bpm_ * 1 * 1000.0f);
-	instrument_->SetBPM(this->bpm_, this->quater_rhythm_);
+	this->instrument_->SetBPM(this->bpm_, this->quater_rhythm_);
 
-	nowtime_ = 0;
-	animation_rate_ = 0.0f;
-	start_ = false;
+	this->nowtime_ = 0;
+	this->animation_rate_ = 0.0f;
+	this->start_ = false;
 
-	songlength_ = bgm_->GetLengthMSec();
+	this->songlength_ = bgm_->GetLengthMSec();
 
-	prevtime_ = clock();
+	this->prevtime_ = clock();
 
-	accuracy_ = 0;
-	score_ = 0;
-	life_ = 0.5f;
-	maxcombo_ = 0;
+	this->accuracy_ = 0;
+	this->score_ = 0;
+	this->life_ = 0.5f;
+	this->maxcombo_ = 0;
 
 	return true;
 }
@@ -70,6 +76,7 @@ int SONGPLAY_SCENE::Update()
 	// TODO: Add your update logic here
 
 	CONTROLL::GetInstance().Update();
+	IMAGEFONT.SrtingReset();
 
 	if (start_){
 
@@ -77,6 +84,8 @@ int SONGPLAY_SCENE::Update()
 
 		nowtime_ = (int)((float)songlength_ * ((float)bgm_->GetPosition() / (float)bgm_->GetSize()));
 		elapsedtime = nowtime_ - prevtime_;
+
+		this->movie_->Play();
 
 	}
 	else{
@@ -115,17 +124,36 @@ void SONGPLAY_SCENE::Draw()
 
 	SpriteBatch.Begin();
 
+	if (this->start_){
 
-	SpriteBatch.Draw(*background_,Vector3_Zero,0.3f);
+		SpriteBatch.Draw(*this->movie_,Vector3_Zero,1.0f,Vector3_Zero,Vector3_Zero,Vector2(1280.0f / 640.0f,720.0f / 360.0f));
+
+	}
 
 	instrument_->Draw(nowtime_,animation_rate_);
 
 	ui_->Draw(animation_rate_);
 
+	IMAGEFONT.DrawString();
+
 	SpriteBatch.DrawString(DefaultFont, Vector2(0.0f, 100.0f), Color(0, 255, 255), _T("time : %u"), nowtime_);
 	SpriteBatch.DrawString(DefaultFont, Vector2(0.0f, 130), Color(0, 255, 255), _T("elapsedtime : %u"), elapsedtime);
 
 
+	SpriteBatch.End();
+
+	SpriteBatch.Begin();
+	GraphicsDevice.SetBlendMode(DXGBLEND_ADD);
+
+	IMAGEFONT.AddDrawString(this->animation_rate_);
+	ui_->InnerAddDraw(this->animation_rate_);
+	instrument_->AddDraw(this->animation_rate_, nowtime_);
+
+	GraphicsDevice.SetBlendMode(DXGBLEND_NORMAL);
+	SpriteBatch.End();
+
+	SpriteBatch.Begin();
+	instrument_->ButtonDraw();
 	SpriteBatch.End();
 
 	GraphicsDevice.EndScene();

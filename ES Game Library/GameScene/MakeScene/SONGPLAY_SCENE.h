@@ -67,7 +67,7 @@ private:
 	INSTRUMENT* instrument_;
 	UI* ui_;
 
-	SPRITE background_;
+	MEDIA movie_;
 
 	int nowtime_;
 	int songlength_;

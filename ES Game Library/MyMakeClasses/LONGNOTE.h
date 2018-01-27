@@ -10,7 +10,7 @@ public:
 	~LONGNOTE();
 
 	virtual void Update(int nowtime);
-	virtual bool Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, int nowtime, float highspeed);
+	virtual bool Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, int nowtime, float highspeed, bool addblend);
 
 	struct LONG_POINT{
 
@@ -48,8 +48,8 @@ private:
 	void NoteMove(int nowtime);
 	void LongXScale(int nowtime);
 
-	void DrawTriangle(Vector3 fader_top_pos, float fader_height, int nowtime, int longtime, float long_x_scale);
-	void DrawNote(Vector3 fader_top_pos, float fader_height, int nowtime, float animation_rate, float x_scale_rate);
+	void DrawTriangle(Vector3 fader_top_pos, float fader_height, int nowtime, int longtime, float animation_rate, float long_x_scale, bool addblend);
+	void DrawNote(Vector3 fader_top_pos, float fader_height, int nowtime, float animation_rate, float x_scale_rate, bool addblend);
 
 	bool ispush_;
 	float long_xscale_;
@@ -61,6 +61,7 @@ private:
 
 	static std::map<Color_by_Name, SPRITE>* longnote_sprites_;
 	static std::map<Color_by_Name, SPRITE>* triangle_sprites_;
+	static SPRITE innner_box_;
 
 };
 

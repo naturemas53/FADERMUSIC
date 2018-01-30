@@ -295,14 +295,14 @@
     <ClCompile Include="MyMakeClasses\EffectBomb.cpp">
       <Filter>ソース ファイル\MyMakeClasses</Filter>
     </ClCompile>
-    <ClCompile Include="MyMakeClasses\GamePlayState.cpp">
-      <Filter>ソース ファイル\MyMakeClasses</Filter>
-    </ClCompile>
     <ClCompile Include="MyMakeClasses\GameOverDisplay.cpp">
       <Filter>ソース ファイル\MyMakeClasses</Filter>
     </ClCompile>
     <ClCompile Include="GameScene\MakeScene\RESULT_SCENE.cpp">
       <Filter>ソース ファイル\ゲームシーン</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\GamePlayState.cpp">
+      <Filter>ソース ファイル\MyMakeClasses</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

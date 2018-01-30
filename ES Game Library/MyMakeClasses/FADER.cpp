@@ -7,6 +7,7 @@
 SPRITE FADER::button_sprite_ = nullptr;
 SPRITE FADER::normal_sprite_ = nullptr;
 std::map<Color_by_Name, SPRITE>* FADER::color_playareas_ = nullptr;
+SOUND FADER::pushsound_ = nullptr;
 
 FADER::FADER(Vector3 draw_pos, Keys asign_key) :
 SIZE_(Vector2(236.0f,596.0f)),
@@ -21,6 +22,7 @@ DRAW_POS_(draw_pos)
 
 	if (this->normal_sprite_ == nullptr) this->normal_sprite_ = GraphicsDevice.CreateSpriteFromFile(_T("fader/fader_normal.png"));
 	if (this->button_sprite_ == nullptr) this->button_sprite_ = GraphicsDevice.CreateSpriteFromFile(_T("button/newbutton_normal.png"));
+	if (this->pushsound_ == nullptr) this->pushsound_ = SoundDevice.CreateSoundFromFile(_T("pushsound.wav"));
 
 	if (this->color_playareas_ == nullptr){
 
@@ -40,6 +42,8 @@ DRAW_POS_(draw_pos)
 	this->accuracy_judge_ = NONE;
 
 	this->total_elapsed_ = 0;
+
+	effectbomb_ = new EffectBomb();
 }
 
 
@@ -53,6 +57,8 @@ FADER::~FADER()
 
 	}
 
+	delete this->effectbomb_;
+
 }
 
 void FADER::Update(int nowtime, int elapsedtime_, float button_height_rate, long elapsedcount){
@@ -64,6 +70,7 @@ void FADER::Update(int nowtime, int elapsedtime_, float button_height_rate, long
 
 	this->total_elapsed_ += elapsedtime_;
 
+	this->effectbomb_->Update();
 
 	auto s_itr = this->notelist_.begin();
 	
@@ -90,7 +97,7 @@ void FADER::SingleNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, int now
 		if (this->IsInForButton(top_itr, button_height_rate)){
 
 			JUDGELIST judge = Judge(abs(betweentime));
-
+			this->pushsound_->Play();
 			NoteErase(top_itr, judge, (*top_itr)->GetHeightRate());
 			return;
 
@@ -125,6 +132,8 @@ void FADER::LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, int nowti
 					this->score_judge_.judge = this->longjudge_;
 					this->score_judge_.height = (*top_itr)->GetHeightRate();
 
+					this->effectbomb_->SetBomb((*top_itr), this->longjudge_, (*top_itr)->GetHeightRate());
+
 					this->total_elapsed_ -= this->quater_rhythm_ / 4;
 				
 				}
@@ -144,7 +153,7 @@ void FADER::LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, int nowti
 
 			if (top_long->GetTimingSlowMostPoint() < nowtime){
 
-
+				this->pushsound_->Play();
 				NoteErase(top_itr, this->longjudge_, (*top_itr)->GetHeightRate());
 				return;
 
@@ -153,7 +162,7 @@ void FADER::LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, int nowti
 		}
 		else{
 
-
+			this->pushsound_->Play();
 			JUDGELIST releasejudge;
 			releasejudge = Judge(top_long->GetTimingSlowMostPoint() - nowtime);
 			NoteErase(top_itr, releasejudge, (*top_itr)->GetHeightRate());
@@ -165,6 +174,8 @@ void FADER::LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, int nowti
 	else if (betweentime > -OK && CONTROLL::GetInstance().BufferIsPress(ASIGN_KEY_)){
 
 		if (this->IsInForButton(top_itr, button_height_rate)){
+
+			this->pushsound_->Play();
 
 			this->longjudge_ = Judge(abs(betweentime));
 			this->score_judge_.judge = this->longjudge_;
@@ -202,11 +213,28 @@ void FADER::ScaleUpdate(int nowtime, long elapsedcount){
 
 }
 
-void FADER::Draw(float animetion_rate, int nowtime, float highspeed,bool addblend){
+void FADER::Draw(float button_height_rate, float animationrate, int nowtime, float highspeed){
 
-	int animenum = (int)(animetion_rate * 90.0f);
+	int animenum = (int)(animationrate * 90.0f);
 
-	float pal = (addblend) ? animetion_rate : 1.0f;
+	Vector3 pos = this->DRAW_POS_;
+	pos.y += INNER_TOP_POS_;
+	pos.x += INNER_LEFT_POS_;
+
+	this->FaderDraw(animenum, animationrate);
+
+	this->effectbomb_->Draw(pos, this->INNER_SIZE_);
+
+
+	this->NoteDraw(animationrate,nowtime,highspeed);
+
+	SpriteBatch.Begin();
+	this->ButtonDraw(button_height_rate);
+	SpriteBatch.End();
+
+}
+
+void FADER::FaderDraw(int animecount, float animationrate){
 
 	auto s_itr = this->notelist_.begin();
 
@@ -215,66 +243,56 @@ void FADER::Draw(float animetion_rate, int nowtime, float highspeed,bool addblen
 	SPRITE playareasp = this->normal_sprite_;
 
 	if (s_itr != this->notelist_.end()){
-
 		if ((*s_itr)->isLong()){
-
 			longnote = (LONGNOTE*)(*s_itr);
 			if (longnote->IsPush()){
 
 				playareasp = (*this->color_playareas_)[longnote->GetColor()];
 
 			}
-
-
 		}
-
 	}
 
+	SpriteBatch.Begin();
+	SpriteBatch.Draw(*playareasp, this->DRAW_POS_, 1.0f);
+	SpriteBatch.End();
 
+	GraphicsDevice.SetBlendMode(DXGBLEND_ADD);
+	SpriteBatch.Begin();
+	SpriteBatch.Draw(*playareasp, this->DRAW_POS_, animationrate);
+	SpriteBatch.End();
+	GraphicsDevice.SetBlendMode(DXGBLEND_NORMAL);
 
-	SpriteBatch.Draw(*playareasp, this->DRAW_POS_, pal);
+}
+
+void FADER::NoteDraw(float animationrate, int nowtime, float highspeed){
 
 	Vector3 top_pos = this->DRAW_POS_;
 	top_pos.y += INNER_TOP_POS_;
 	top_pos.x += INNER_LEFT_POS_;
-	
-	////ƒm[ƒc‚Ì•`‰æ@ƒƒ“ƒO¨ƒVƒ“ƒOƒ‹
-	//s_itr = this->notelist_.begin();
-	//while (s_itr != this->notelist_.end()){
 
-	//	if ((*s_itr)->isLong()){
-
-	//		
-	//		if (!(*s_itr)->Draw(top_pos, this->INNER_HEIGHT_, animetion_rate, nowtime, highspeed))break;
-
-	//	}
-
-	//	s_itr++;
-
-	//}
-
-	//s_itr = this->notelist_.begin();
-
-	//while (s_itr != this->notelist_.end()){
-
-	//	if (!(*s_itr)->isLong()){
-
-	//		if (!(*s_itr)->Draw(top_pos, this->INNER_HEIGHT_, animetion_rate, nowtime, highspeed))break;
-
-	//	}
-	//
-	//	s_itr++;
-
-	//}
-
+	SpriteBatch.Begin();
 	//ƒm[ƒc‚Ì•`‰æ
 	auto itr = this->notelist_.begin();
 	while (itr != this->notelist_.end()){
 
-		if (!(*itr)->Draw(top_pos, this->INNER_SIZE_.y, animetion_rate, nowtime, highspeed, addblend))break;
+		if (!(*itr)->Draw(top_pos, this->INNER_SIZE_.y, animationrate, nowtime, highspeed, false))break;
 		itr++;
 
 	}
+	SpriteBatch.End();
+
+	GraphicsDevice.SetBlendMode(DXGBLEND_ADD);
+	SpriteBatch.Begin();
+	itr = this->notelist_.begin();
+	while (itr != this->notelist_.end()){
+
+		if (!(*itr)->Draw(top_pos, this->INNER_SIZE_.y, animationrate, nowtime, highspeed, true))break;
+		itr++;
+
+	}
+	SpriteBatch.End();
+	GraphicsDevice.SetBlendMode(DXGBLEND_NORMAL);
 
 }
 
@@ -318,6 +336,8 @@ bool FADER::IsInForButton(std::list<ABSTRUCT_NOTE*>::iterator top_itr, float but
 }
 
 void FADER::NoteErase(std::list<ABSTRUCT_NOTE*>::iterator erase_itr, JUDGELIST judge,float height){
+
+	this->effectbomb_->SetBomb((*erase_itr),judge,height);
 
 	this->notelist_.erase(erase_itr);
 

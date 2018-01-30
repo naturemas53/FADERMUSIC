@@ -82,3 +82,4 @@ private:
 //------------------------------------------------------------------------------
 #include "MakeScene\SONGPLAY_SCENE.h"
 #include "MakeScene\CALIBRATION_SCENE.hpp"
+#include "MakeScene\RESULT_SCENE.hpp"

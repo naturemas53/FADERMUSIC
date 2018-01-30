@@ -226,6 +226,8 @@ void LONGNOTE::DrawTriangle(
 	while (p_itr != pe_itr){
 
 		pos = fadet_top_pos;
+		//210 ˜g‚Ü‚Å‚Ì‰¡ƒTƒCƒY
+		pos.x -= (210.0f - this->WIDTH_) / 2.0f;
 
 		if ((*p_itr).timing > nowtime){
 
@@ -256,8 +258,9 @@ void LONGNOTE::DrawTriangle(
 
 		pal = (addblend) ? animation_rate : this->right_power_ / this->RIGHT_POWER_MAX_;
 
-		SpriteBatch.Draw(*( (*this->triangle_sprites_)[mycolor_] ),pos,Rect(0,rect_top,this->WIDTH_,rect_bottom),pal,
-			Vector3_Zero, Vector3(this->WIDTH_ / 2.0f,0.0f, 0.0f), Vector2(long_x_scale, scale_y));
+		//210 FADER‚Ì˜g‚Ü‚Å‚Ì‰¡
+		SpriteBatch.Draw(*( (*this->triangle_sprites_)[mycolor_] ),pos,Rect(0,rect_top,210.0f,rect_bottom),pal,
+			Vector3_Zero, Vector3(210.0f/ 2.0f,0.0f, 0.0f), Vector2(long_x_scale, scale_y));
 
 
 		p_itr++;

@@ -27,12 +27,16 @@ public:
 
 		JUDGELIST judge = (this->draw_judge_ == OUCH) ? MISSTIME : this->draw_judge_;
 
-		SPRITE draw_sprite = (*this->judge_sprites_)[judge];
+		SPRITE draw_sprite = this->judge_sprites_[judge];
 
 		if (this->addalpha_ > 0.0f){
 
+			GraphicsDevice.SetBlendMode(DXGBLEND_ADD);
+			SpriteBatch.Begin();
 			SpriteBatch.Draw(*draw_sprite, pos, this->addalpha_, Vector3_Zero, Vector3(SIZE_ / 2.0f, SIZE_ / 2.0f, 0.0f), this->scale_);
-				
+			SpriteBatch.End();
+			GraphicsDevice.SetBlendMode(DXGBLEND_NORMAL);
+
 		}
 
 
@@ -90,7 +94,7 @@ private:
 
 	int drawcombo_;
 
-	static std::map<JUDGELIST, SPRITE>* judge_sprites_;
+	std::map<JUDGELIST, SPRITE> judge_sprites_;
 
 	JUDGELIST draw_judge_;
 

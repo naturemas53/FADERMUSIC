@@ -1,8 +1,6 @@
 #include "JUDGE_DISPLAY.h"
 #include "ImageFont.h"
 
-std::map<JUDGELIST, SPRITE>* JUDGE_DISPLAY::judge_sprites_ = nullptr;
-
 JUDGE_DISPLAY::JUDGE_DISPLAY(float fader_height,float fader_width) :
 FADER_HEIGHT_(fader_height),
 FADER_WIDTH_(fader_width),
@@ -19,16 +17,10 @@ THIRD_SCALE_(0.45f)
 	this->draw_height_ = 0.0f;
 	this->scale_ = this->THIRD_SCALE_;
 
-	if (this->judge_sprites_ == nullptr){
-
-		this->judge_sprites_ = new std::map<JUDGELIST, SPRITE>;
-
-		(*this->judge_sprites_)[MISSTIME] = GraphicsDevice.CreateSpriteFromFile(_T("judge/MISS.png"));
-		(*this->judge_sprites_)[OK] = GraphicsDevice.CreateSpriteFromFile(_T("judge/OK.png"));
-		(*this->judge_sprites_)[GREAT] = GraphicsDevice.CreateSpriteFromFile(_T("judge/GREAT.png"));
-		(*this->judge_sprites_)[UNBELIEVABLE] = GraphicsDevice.CreateSpriteFromFile(_T("judge/unbelievable.png"));
-
-	}
+	this->judge_sprites_[MISSTIME] = GraphicsDevice.CreateSpriteFromFile(_T("judge/MISS.png"));
+	this->judge_sprites_[OK] = GraphicsDevice.CreateSpriteFromFile(_T("judge/OK.png"));
+	this->judge_sprites_[GREAT] = GraphicsDevice.CreateSpriteFromFile(_T("judge/GREAT.png"));
+	this->judge_sprites_[UNBELIEVABLE] = GraphicsDevice.CreateSpriteFromFile(_T("judge/unbelievable.png"));
 
 	this->draw_judge_ = MISSTIME;
 	this->now_count_ = this->THIRD_COUNT_;
@@ -41,14 +33,6 @@ THIRD_SCALE_(0.45f)
 
 JUDGE_DISPLAY::~JUDGE_DISPLAY()
 {
-
-	if (this->judge_sprites_ != nullptr){
-
-		delete this->judge_sprites_;
-		this->judge_sprites_ = nullptr;
-
-	}
-
 }
 
 void JUDGE_DISPLAY::Update(){
@@ -66,12 +50,16 @@ void JUDGE_DISPLAY::Draw(){
 
 	JUDGELIST judge = (this->draw_judge_ == OUCH) ? MISSTIME : this->draw_judge_;
 
-	SPRITE draw_sprite = (*this->judge_sprites_)[judge];
+	SPRITE draw_sprite = this->judge_sprites_[judge];
 
 	Color mask = (this->draw_judge_ == OUCH) ? Color(255, 255, 0) : Color(255, 255, 255);
 	mask.A(this->transparency_);
 
+	SpriteBatch.Begin();
 	SpriteBatch.Draw(*draw_sprite,pos,mask,Vector3_Zero,Vector3(SIZE_ / 2.0f,SIZE_ / 2.0f,0.0f),this->scale_);
+	SpriteBatch.End();
+
+	this->AddDraw();
 
 	if (this->drawcombo_ <= 0 || (this->scale_state_ == THIRD && this->now_count_ >= this->THIRD_COUNT_) ) return;
 

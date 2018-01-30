@@ -292,6 +292,18 @@
     <ClCompile Include="MyMakeClasses\ImageFont.cpp">
       <Filter>ソース ファイル\MyMakeClasses</Filter>
     </ClCompile>
+    <ClCompile Include="MyMakeClasses\EffectBomb.cpp">
+      <Filter>ソース ファイル\MyMakeClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\GamePlayState.cpp">
+      <Filter>ソース ファイル\MyMakeClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\GameOverDisplay.cpp">
+      <Filter>ソース ファイル\MyMakeClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene\MakeScene\RESULT_SCENE.cpp">
+      <Filter>ソース ファイル\ゲームシーン</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectX\Audio\DXAudio8.hpp">
@@ -486,6 +498,21 @@
     </ClInclude>
     <ClInclude Include="MyMakeClasses\ImageFont.h">
       <Filter>ヘッダー ファイル\MyMakeClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\EffectBomb.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\AbstructState.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\GamePlayState.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\GameOverDisplay.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene\MakeScene\RESULT_SCENE.hpp">
+      <Filter>ヘッダー ファイル\ゲームシーン</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

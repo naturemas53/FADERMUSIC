@@ -19,17 +19,6 @@ public:
 
 	void Update(int nowtime, int elapsedtime_, long elapsedcount);
 	void Draw(int nowtime, float animation_rate);
-	void AddDraw(float animationrate,int nowtime){
-
-		for (auto fader : this->faders_) fader->Draw(animationrate,nowtime,this->highspeed_.GetHighSpeed(),true);
-		this->judge_display_->AddDraw();
-
-	}
-	void ButtonDraw(){
-
-		for (auto fader : this->faders_) fader->ButtonDraw(this->button_height_);
-
-	}
 
 	void SetBPM(int bpm, int quater_rhythm);
 

@@ -2,13 +2,11 @@
 #include "JUDGELIST_ENUM.h"
 #include "ImageFont.h"
 
-UI::UI():
-FRAME_HEIGHT_(52.0f),
-FRAME_WIDTH_(600.0f),
-INNER_HEIGHT_(37.0f),
-INNER_WIDTH_(582.0f),
-score_font_(GraphicsDevice.CreateSpriteFont(_T("Voyager Grotesque Bold"), 50)),
-accuracy_font_(GraphicsDevice.CreateSpriteFont(_T("Voyager Grotesque Light"), 20))
+UI::UI() :
+FRAME_SIZE_(Vector2(600.0f, 52.0f)),
+INNER_SIZE_(Vector2(582.0f, 37.0f)),
+ANIMECOUNT_(30),
+CELLCOUNT_(2)
 {
 
 	this->framesp_ = GraphicsDevice.CreateSpriteFromFile(_T("lifegauge/life_frame.png"));
@@ -19,6 +17,7 @@ accuracy_font_(GraphicsDevice.CreateSpriteFont(_T("Voyager Grotesque Light"), 20
 	this->draw_accuracy_ = 0;
 	this->draw_maxcombo_ = 0;
 
+	this->nowcount_ = 0;
 }
 
 
@@ -28,6 +27,15 @@ UI::~UI()
 
 void UI::Update(){
 
+	this->nowcount_++;
+
+	int maxcount = this->ANIMECOUNT_ * this->CELLCOUNT_;
+
+	if (this->nowcount_ >= maxcount ){
+
+		this->nowcount_ = 0;
+
+	}
 
 }
 
@@ -35,58 +43,51 @@ void UI::Draw(float animation_rate){
 
 	int animenum = (int)(90.0f * animation_rate);
 
-	//SpriteBatch.DrawString(this->score_font_, Vector2(10.0f, 10.0f), Color(0, 255, 0), _T("SCORE : %08d"),this->draw_score_);
-	//SpriteBatch.DrawString(this->accuracy_font_, Vector2(10.0f, 70.0f), Color(0, 255, 0), _T("ACCURACY : %06d"), this->draw_accuracy_);
-	//SpriteBatch.DrawString(this->accuracy_font_, Vector2(210.0f, 70.0f), Color(0, 255, 0), _T("MAXCOMBO : %04d"), this->draw_maxcombo_);
-
 	Vector2 cellsize = IMAGEFONT.GetCellSize();
 
-	cellsize *= 0.5f;
-	IMAGEFONT.SetImageString(Vector3(10.0f, 10.0f, 0.0f), cellsize, true,"SCORE:\n%08d", this->draw_score_);
-	IMAGEFONT.SetImageString(Vector3(10.0f, 10.0f + 150.0f, 0.0f), cellsize,true, "ACCURACY:\n   %06d", this->draw_accuracy_);
+	cellsize /= 2.0f;
+	IMAGEFONT.SetImageString(Vector3(5.0f, 5.0f, 0.0f), cellsize, true,"SCORE:\n%08d", this->draw_score_);
+
+	Vector2 drawsize = IMAGEFONT.GetDrawSize(cellsize, "ACCURACY:\n   %06d", this->draw_accuracy_);
+	float mostright = 1280.0f - drawsize.x;
+	IMAGEFONT.SetImageString(Vector3(mostright - 5.0f, 5.0f, 0.0f), cellsize,true, "ACCURACY:\n   %06d", this->draw_accuracy_);
 
 	cellsize *= 0.5f;
-	IMAGEFONT.SetImageString(Vector3(10.0f, 10.0f + 320.0f, 0.0f), cellsize, false,"MAXCOMBO: %4d", this->draw_maxcombo_);
+	IMAGEFONT.SetImageString(Vector3(5.0f, 155.0f , 0.0f), cellsize, false, "MAXCOMBO: %4d", this->draw_maxcombo_);
 
 	Vector3 pos = Vector3_Zero;
-	pos.x += 1280.0f / 2.0f;
 	pos.y = 10.0f;
 
+	Vector2 framesize = this->FRAME_SIZE_;
+	Vector2 innersize = this->INNER_SIZE_;
 
-	int rect_right = (int)(this->INNER_WIDTH_ * this->draw_lifepersent_);
+	int rect_right = (int)(innersize.x * this->draw_lifepersent_);
 
 	SPRITE sp = this->framesp_;
-	float pos_x = 330.0f + (960.0f - this->FRAME_WIDTH_) / 2.0f;
+	float pos_x = (1280.0f - framesize.x) / 2.0f;
 
+	SpriteBatch.Begin();
 	SpriteBatch.Draw(*sp,Vector3(pos_x,20.0f,0.0f),1.0f);
 
-	RectWH userect = RectWH(0, 0, rect_right, (int)this->INNER_HEIGHT_);
-	float plus_x = (this->FRAME_WIDTH_ - this->INNER_WIDTH_) / 2.0f;
-	float plus_y = (this->FRAME_HEIGHT_ - this->INNER_HEIGHT_) / 2.0f;
+	int animecount = this->nowcount_ / this->CELLCOUNT_;
+
+	RectWH userect = RectWH(0, innersize.y * animecount, rect_right, (int)innersize.y);
+	float plus_x = (framesize.x - innersize.x) / 2.0f;
+	float plus_y = (framesize.y - innersize.y) / 2.0f;
 	sp = this->innersp_;
 
 	SpriteBatch.Draw(*sp, Vector3(pos_x + plus_x, 20.0f + plus_y, 0.0f),userect, 1.0f);
+	SpriteBatch.End();
 
-}
-
-void UI::InnerAddDraw(float animation_rate){
-
-	Vector3 pos = Vector3_Zero;
-	pos.x += 1280.0f / 2.0f;
-	pos.y = 10.0f;
-
-	int rect_right = (int)(this->INNER_WIDTH_ * this->draw_lifepersent_);
-
-	float pos_x = 330.0f + (960.0f - this->FRAME_WIDTH_) / 2.0f;
-
-	RectWH userect = RectWH(0, 0, rect_right, (int)this->INNER_HEIGHT_);
-	float plus_x = (this->FRAME_WIDTH_ - this->INNER_WIDTH_) / 2.0f;
-	float plus_y = (this->FRAME_HEIGHT_ - this->INNER_HEIGHT_) / 2.0f;
-	SPRITE sp = this->innersp_;
+	GraphicsDevice.SetBlendMode(DXGBLEND_ADD);
+	SpriteBatch.Begin();
 
 	float pal = (this->draw_lifepersent_ >= 1.0f) ? 0.3f + (0.7f * animation_rate) : 0.5f * animation_rate;
 
 	SpriteBatch.Draw(*sp, Vector3(pos_x + plus_x, 20.0f + plus_y, 0.0f), userect, pal);
+
+	SpriteBatch.End();
+	GraphicsDevice.SetBlendMode(DXGBLEND_NORMAL);
 
 }
 

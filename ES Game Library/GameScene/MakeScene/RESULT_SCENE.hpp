@@ -1,23 +1,19 @@
 #pragma once
 
-#include "../../ESGLib.h"
 #include "../GameScene.hpp"
-#include <vector>
+#include "../../ESGLib.h"
 #include "../../MyMakeClasses/JUDGELIST_ENUM.h"
-#include "../../MyMakeClasses/BPM_DATA_STRUCT.h"
 
-class AbstructState;
 
-class SONGPLAY_SCENE : public CGameScene {
+class RESULT_SCENE : public CGameScene {
 public:
-	SONGPLAY_SCENE() : DefaultFont(GraphicsDevice.CreateDefaultFont())
+	RESULT_SCENE() :font_(GraphicsDevice.CreateDefaultFont())
 	{
 //		ContentRootDirectory(_T("Content"));
 	}
 
-	virtual ~SONGPLAY_SCENE()
+	virtual ~RESULT_SCENE()
 	{
-
 		Finalize();
 
 #ifdef _INC_SQUIRREL
@@ -42,16 +38,14 @@ public:
 
 		GraphicsDevice.ReleaseAllRenderTargets();
 		GraphicsDevice.ReleaseAllStateBlocks();
-		//GraphicsDevice.ReleaseAllFonts();
+		GraphicsDevice.ReleaseAllFonts();
 		GraphicsDevice.ReleaseAllSprites();
 		GraphicsDevice.ReleaseAllAnimationModels();
 		GraphicsDevice.ReleaseAllModels();
 		GraphicsDevice.ReleaseAllVertexBuffers();
 		GraphicsDevice.ReleaseAllEffects();
-
 	}
 
-public:
 	virtual bool Initialize();
 
 	virtual int  Update();
@@ -59,12 +53,22 @@ public:
 
 private:
 	void Finalize();
-	FONT DefaultFont;
 
 private:
 	// 変数宣言
 
-	AbstructState* nowstate_;
 
+	//デバッグ用～↓
+	FONT font_;
+	bool clearflag_;
+
+	JUDGECOUNT scorejudge_;
+	JUDGECOUNT accuracyjudge_;
+
+	int score_;
+	int accuracy_;
+	int maxcombo_;
+
+	// 関数プロトタイプ
 
 };

@@ -1,6 +1,7 @@
 #pragma once
 #include "../ESGLib.h"
 #include "JUDGELIST_ENUM.h"
+#include "EffectBomb.h"
 #include <list>
 #include <map>
 
@@ -28,8 +29,7 @@ public:
 	~FADER();
 
 	void Update(int nowtime, int elapsedtime, float button_height_rate, long elapsedcount);
-	void Draw(float animetion_rate, int nowtime, float highspeed,bool addblend);
-	void ButtonDraw(float button_height_rate);
+	void Draw(float button_height_rate,float animetion_rate, int nowtime, float highspeed);
 
 	void InNote(ABSTRUCT_NOTE* innote);
 
@@ -58,6 +58,10 @@ public:
 
 private:
 
+	void FaderDraw(int animecount,float animationrate);
+	void NoteDraw(float animationrate,int nowtime,float highspeed);
+	void ButtonDraw(float button_height_rate);
+
 	void SingleNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, int nowtime, float button_height_rate);
 	void LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, int nowtime, int elapsedtime, float button_height_rate);
 	void ScaleUpdate(int nowtime, long elapsedcount);
@@ -71,6 +75,7 @@ private:
 	static SPRITE normal_sprite_;
 	static SPRITE button_sprite_;
 	static std::map<Color_by_Name, SPRITE>* color_playareas_;
+	static SOUND pushsound_;
 
 	const Vector2 SIZE_;
 	const Vector2 INNER_SIZE_;
@@ -86,6 +91,8 @@ private:
 	JUDGELIST longjudge_;
 	JUDGENOTICE score_judge_;
 	JUDGELIST accuracy_judge_;
+
+	EffectBomb* effectbomb_;
 
 	int total_elapsed_;
 	int songbpm_;

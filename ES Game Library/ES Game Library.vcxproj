@@ -118,6 +118,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GameScene\MakeScene\CALIBRATION_SCENE.cpp" />
+    <ClCompile Include="GameScene\MakeScene\RESULT_SCENE.cpp" />
     <ClCompile Include="GameScene\MakeScene\SONGPLAY_SCENE.cpp" />
     <ClCompile Include="Extension\Direct2D\Direct2D.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -174,7 +175,13 @@
     </ClCompile>
     <ClCompile Include="MyMakeClasses\ABSTRUCT_NOTE.cpp" />
     <ClCompile Include="MyMakeClasses\CONTROLL.cpp" />
+    <ClCompile Include="MyMakeClasses\EffectBomb.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="MyMakeClasses\FADER.cpp" />
+    <ClCompile Include="MyMakeClasses\GameOverDisplay.cpp" />
+    <ClCompile Include="MyMakeClasses\GamePlayState.cpp" />
     <ClCompile Include="MyMakeClasses\ImageFont.cpp" />
     <ClCompile Include="MyMakeClasses\INSTRUMENT.cpp" />
     <ClCompile Include="MyMakeClasses\JUDGE_DISPLAY.cpp" />
@@ -221,6 +228,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameScene\MakeScene\CALIBRATION_SCENE.hpp" />
+    <ClInclude Include="GameScene\MakeScene\RESULT_SCENE.hpp" />
     <ClInclude Include="GameScene\MakeScene\SONGPLAY_SCENE.h" />
     <ClInclude Include="Extension\Direct2D\Direct2D.hpp" />
     <ClInclude Include="Extension\DirectX11\DXGraphics11.hpp" />
@@ -238,7 +246,14 @@
     <ClInclude Include="MyMakeClasses\ABSTRUCT_NOTE.h" />
     <ClInclude Include="MyMakeClasses\BPM_DATA_STRUCT.h" />
     <ClInclude Include="MyMakeClasses\CONTROLL.h" />
+    <ClInclude Include="MyMakeClasses\EffectBomb.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="MyMakeClasses\FADER.h" />
+    <ClInclude Include="MyMakeClasses\AbstructState.h" />
+    <ClInclude Include="MyMakeClasses\GameOverDisplay.h" />
+    <ClInclude Include="MyMakeClasses\GamePlayState.h" />
     <ClInclude Include="MyMakeClasses\HIGHSPEED.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>

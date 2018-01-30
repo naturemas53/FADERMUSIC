@@ -22,11 +22,11 @@ INSTRUMENT::INSTRUMENT(LONG max_mouse_y,  std::vector<BPM_DATA>& bpmlist, const 
 
 	mouse_y_ = 0;
 
-	float base_x = 330.0f + 10.0f;
+	float base_x = 286.0f;
 
 	faders_.push_back(new FADER(Vector3(base_x,92.0f,0.0f), Keys_S));
-	faders_.push_back(new FADER(Vector3((base_x + 236.0f + 96.0f),92.0f,0.0f), Keys_D));
-	faders_.push_back(new FADER(Vector3((base_x + (236.0f + 96.0f)*2.0f ), 92.0f, 0.0f), Keys_F));
+	faders_.push_back(new FADER(Vector3((base_x + 236.0f ),92.0f,0.0f), Keys_D));
+	faders_.push_back(new FADER(Vector3((base_x + 236.0f * 2.0f ), 92.0f, 0.0f), Keys_F));
 
 	this->Setting(filename,bpmlist);
 
@@ -96,7 +96,7 @@ void INSTRUMENT::Draw(int nowtime, float animation_rate){
 
 	float highspeed = this->highspeed_.GetHighSpeed();
 
-	for (auto f_itr : faders_) f_itr->Draw(animation_rate, nowtime, highspeed,false);
+	for (auto f_itr : faders_) f_itr->Draw(this->button_height_,animation_rate, nowtime, highspeed);
 
 	this->judge_display_->Draw();
 

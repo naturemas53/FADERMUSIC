@@ -18,8 +18,7 @@ public:
 
 	void DirectDrawImageString(Vector3 position, Vector2 size, const char* str, ...);
 	void SetImageString(Vector3 position, Vector2 size,bool addblend, const char* str, ...);
-	void DrawString();
-	void AddDrawString(float addalpha);
+	void DrawString(float addalpha);
 
 	void SrtingReset(){ this->strdatas_.clear(); }
 

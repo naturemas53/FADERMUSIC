@@ -11,7 +11,10 @@ void ImageFont::DirectDrawImageString(Vector3 position, Vector2 size, const char
 	this->MakeString(string, str,args);
 	va_end(args);
 
+	SpriteBatch.Begin();
 	this->DrawImageString(position,size,string);
+	SpriteBatch.End();
+
 }
 
 void ImageFont::DrawImageString(Vector3 position, Vector2 size, std::string& string, float addalpha){
@@ -81,24 +84,25 @@ void ImageFont::SetImageString(Vector3 position, Vector2 size, bool addblend, co
 
 }
 
-void ImageFont::DrawString(){
+void ImageFont::DrawString(float addalpha){
 
 	for (auto strdata : this->strdatas_){
 
+		SpriteBatch.Begin();
 		this->DrawImageString(strdata.position,strdata.size,strdata.str);
+		SpriteBatch.End();
 
-	}
+		if (strdata.addblend){
 
-}
+			GraphicsDevice.SetBlendMode(DXGBLEND_ADD);
+			SpriteBatch.Begin();
 
-void ImageFont::AddDrawString(float addalpha){
+			this->DrawImageString(strdata.position, strdata.size, strdata.str,addalpha);
 
+			SpriteBatch.End();
+			GraphicsDevice.SetBlendMode(DXGBLEND_NORMAL);
 
-	for (auto strdata : this->strdatas_){
-
-		if (strdata.addblend != true) continue;
-
-		this->DrawImageString(strdata.position, strdata.size, strdata.str, addalpha);
+		}
 
 	}
 
@@ -126,6 +130,7 @@ Vector2 ImageFont::GetDrawSize(Vector2 size, const char* str, ...){
 
 			max_y++;
 			now_x = 0;
+			itr++;
 			continue;
 
 		}

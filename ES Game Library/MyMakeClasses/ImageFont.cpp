@@ -1,6 +1,6 @@
 #include "ImageFont.h"
 
-void ImageFont::DirectDrawImageString(Vector3 position, Vector2 size, const char* str, ...){
+void ImageFont::DirectDrawImageString(Vector3 position, Vector2 size, Color colormask, const char* str, ...){
 
 	if (this->sp_->IsNull()) return;
 
@@ -12,12 +12,12 @@ void ImageFont::DirectDrawImageString(Vector3 position, Vector2 size, const char
 	va_end(args);
 
 	SpriteBatch.Begin();
-	this->DrawImageString(position,size,string);
+	this->DrawImageString(position,size,string,colormask);
 	SpriteBatch.End();
 
 }
 
-void ImageFont::DrawImageString(Vector3 position, Vector2 size, std::string& string, float addalpha){
+void ImageFont::DrawImageString(Vector3 position, Vector2 size, std::string& string, Color colormask, float addalpha){
 
 	auto itr = string.begin();
 	auto e_itr = string.end();
@@ -36,6 +36,7 @@ void ImageFont::DrawImageString(Vector3 position, Vector2 size, std::string& str
 	int cell_y = (int)this->cellsize_.y;
 
 	SPRITE sp = this->sp_;
+	Color color;
 
 	while (itr != e_itr){
 
@@ -59,8 +60,10 @@ void ImageFont::DrawImageString(Vector3 position, Vector2 size, std::string& str
 		rect_x = rectnum % (int)this->imagecell_.x;
 		rect_y = rectnum / (int)this->imagecell_.x;
 		userect = RectWH(rect_x * cell_x, rect_y * cell_y, cell_x, cell_y);
-
-		SpriteBatch.Draw(*sp, pos, userect, addalpha, Vector3_Zero, Vector3_Zero, scale);
+		color = colormask;
+		color.A(addalpha);
+		
+		SpriteBatch.Draw(*sp, pos, userect,color, Vector3_Zero, Vector3_Zero, scale);
 
 		pos.x += size.x;
 		itr++;
@@ -69,7 +72,7 @@ void ImageFont::DrawImageString(Vector3 position, Vector2 size, std::string& str
 
 }
 
-void ImageFont::SetImageString(Vector3 position, Vector2 size, bool addblend, const char* str, ...){
+void ImageFont::SetImageString(Vector3 position, Vector2 size, Color colormask, bool addblend, const char* str, ...){
 
 	std::string string;
 
@@ -78,7 +81,7 @@ void ImageFont::SetImageString(Vector3 position, Vector2 size, bool addblend, co
 	this->MakeString(string, str, args);
 	va_end(args);
 
-	STRINGDATA newdata = STRINGDATA(position,size,addblend,string);
+	STRINGDATA newdata = STRINGDATA(position,size,addblend,string,colormask);
 
 	this->strdatas_.push_back(newdata);
 
@@ -89,18 +92,18 @@ void ImageFont::DrawString(float addalpha){
 	for (auto strdata : this->strdatas_){
 
 		SpriteBatch.Begin();
-		this->DrawImageString(strdata.position,strdata.size,strdata.str);
+		this->DrawImageString(strdata.position, strdata.size, strdata.str, strdata.colormask);
 		SpriteBatch.End();
 
 		if (strdata.addblend){
 
-			GraphicsDevice.SetBlendMode(DXGBLEND_ADD);
 			SpriteBatch.Begin();
+			GraphicsDevice.SetBlendMode(DXGBLEND_ADD);
 
-			this->DrawImageString(strdata.position, strdata.size, strdata.str,addalpha);
+			this->DrawImageString(strdata.position, strdata.size, strdata.str, Color(255,255,255), addalpha * 0.5f);
 
-			SpriteBatch.End();
 			GraphicsDevice.SetBlendMode(DXGBLEND_NORMAL);
+			SpriteBatch.End();
 
 		}
 

@@ -1,16 +1,17 @@
 #pragma once
 #include "../ESGLib.h"
+#include "ImageFont.h"
 
 class HIGHSPEED{
 
 public:
 
 	HIGHSPEED(int startspeedcount = 0) :
-		CHANGETIME_(300){
+		CHANGETIME_(100){
 
 		this->chenge_flag_ = false;
 
-		this->nowspeedcount = startspeedcount;
+		this->nowspeedcount_ = startspeedcount;
 
 		this->now_speed_ = this->HighSpeedCalclation();
 		this->target_speed_ = this->now_speed_;
@@ -18,6 +19,7 @@ public:
 
 		this->remaincount_ = 0;
 
+		this->color_ = Color(1.0f, 1.0f, 1.0f);
 	}
 
 	~HIGHSPEED() = default;
@@ -32,6 +34,7 @@ public:
 
 				this->chenge_flag_ = false;
 				this->now_speed_ = this->target_speed_;
+				this->color_ = Color(1.0f, 1.0f, 1.0f);
 				return;
 
 			}
@@ -41,6 +44,9 @@ public:
 
 			this->now_speed_ += movement;
 
+			float pluspal = rate * 0.5f;
+			this->color_ = this->color_ + Color(pluspal,pluspal,pluspal);
+
 		}
 	
 	};
@@ -49,7 +55,16 @@ public:
 
 		this->chenge_flag_ = true;
 
-		this->nowspeedcount += ScrollWheelValue / 120;
+		if (ScrollWheelValue < 0){
+
+			this->color_ = Color(0.5f,0.5f,1.0f);
+
+		}
+		else{
+			this->color_ = Color(1.0f, 0.5f, 0.5f);
+		}
+
+		this->nowspeedcount_ += ScrollWheelValue / 120;
 
 		this->target_speed_ = this->HighSpeedCalclation();
 		this->dir_speed_ = this->target_speed_ - this->now_speed_;
@@ -57,6 +72,15 @@ public:
 		this->remaincount_ = this->CHANGETIME_;
 
 	};
+
+	void Draw(){
+
+		Vector2 drawsize;
+		Vector2 smollcellsize = IMAGEFONT.GetCellSize() / 4.0f;
+		drawsize = IMAGEFONT.GetDrawSize(smollcellsize, "HIGHSPEED %d", this->nowspeedcount_);
+		IMAGEFONT.SetImageString(Vector3(1280.0f - drawsize.x, 72.0f, 0.0f), smollcellsize, this->color_, true, "HIGHSPEED %d", this->nowspeedcount_);
+
+	}
 
 	float GetHighSpeed(){ return this->now_speed_; }
 
@@ -66,20 +90,22 @@ private:
 
 		float speedrate;
 
-		if (this->nowspeedcount < 0){
+		if (this->nowspeedcount_ < 0){
 			
-			if (this->nowspeedcount < -8) this->nowspeedcount = -8;
+			if (this->nowspeedcount_ < -8) this->nowspeedcount_ = -8;
 
-			int speedcount = -this->nowspeedcount;
+			int speedcount = -this->nowspeedcount_;
 
 			speedrate = 1.0f + ((float)speedcount * 0.5f);
 
+			this->color_ = Color(0.5f,0.5f,1.0f);
+
 		}
-		else if (this->nowspeedcount > 0){
+		else if (this->nowspeedcount_ > 0){
 
-			if (this->nowspeedcount > 8)this->nowspeedcount = 8;
+			if (this->nowspeedcount_ > 8)this->nowspeedcount_ = 8;
 
-			speedrate = 1.0f / ((float)this->nowspeedcount * 2.0f);
+			speedrate = 1.0f / ((float)this->nowspeedcount_ * 2.0f);
 
 		}
 		else{
@@ -99,11 +125,12 @@ private:
 
 	const int CHANGETIME_;
 
-	int nowspeedcount;
+	int nowspeedcount_;
 	bool chenge_flag_;
 	float target_speed_;
 	float now_speed_;
 	float dir_speed_;
 	int remaincount_;
+	Color color_;
 
 };

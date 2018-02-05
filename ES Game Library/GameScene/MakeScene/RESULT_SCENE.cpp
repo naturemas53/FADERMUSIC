@@ -1,5 +1,7 @@
 #include "../../StdAfx.h"
 #include "RESULT_SCENE.hpp"
+#include "../../MyMakeClasses/CONTROLL.h"
+#include "../../MyMakeClasses/ImageFont.h"
 #include <string>
 
 /// <summary>
@@ -32,7 +34,7 @@ bool RESULT_SCENE::Initialize()
 	delete scorejudge;
 	delete accuracyjudge;
 
-	
+	this->state_ = RESULT_SCENE::FADEIN;
 
 	return true;
 }
@@ -58,6 +60,56 @@ int RESULT_SCENE::Update()
 {
     // TODO: Add your update logic here
 
+	CONTROLL::GetInstance().Update();
+
+	switch (this->state_){
+
+	case RESULT_SCENE::FADEIN:
+
+		if (fade_.Update()){
+
+			this->state_ = RESULT_SCENE::DISPLAYNOW;
+
+		}
+		else if(this->IsPush()){
+
+			fade_.Skip();
+			this->state_ = RESULT_SCENE::DISPLAYNOW;
+
+		}
+
+		break;
+
+	case RESULT_SCENE::DISPLAYNOW:
+
+		if (this->IsPush()){
+
+			fade_.SetFadeState(FadeDisplay::FADEOUT);
+			this->state_ = RESULT_SCENE::FADEOUT;
+
+		}
+
+		break;
+
+	case RESULT_SCENE::FADEOUT:
+
+		if (fade_.Update()){
+
+			return GAME_SCENE(new CALIBRATION_SCENE());
+
+		}
+		else if (this->IsPush()){
+
+			fade_.Skip();
+			return GAME_SCENE(new CALIBRATION_SCENE());
+
+		}
+
+		break;
+
+	default:
+		break;
+	}
 
 	return 0;
 }
@@ -68,28 +120,57 @@ int RESULT_SCENE::Update()
 void RESULT_SCENE::Draw()
 {
 	// TODO: Add your drawing code here
-	GraphicsDevice.Clear(Color_CornflowerBlue);
+	GraphicsDevice.Clear(Color_Black);
 
 	GraphicsDevice.BeginScene();
 
-	SpriteBatch.Begin();
-
-	std::wstring str;
+	std::string str;
 
 	if (this->clearflag_){
 
-		str = _T("STAGECLEAR!");
+		str = ("STAGE CLEARED");
 
 	}
 	else{
 
-		str = _T("STAGE FAILED");
+		str = ("STAGE FAILED");
 
 	}
 
-	SpriteBatch.DrawString(this->font_,Vector2_One * 30.0f,Color(0,0,0),str.c_str());
+	Vector2 bigcellsize = IMAGEFONT.GetCellSize();
+	Vector2 smollcellsize = IMAGEFONT.GetCellSize() / 2.0f;
+	Vector2 drawsize;
 
-	SpriteBatch.End();
+	drawsize = IMAGEFONT.GetDrawSize(bigcellsize,str.c_str());
+	Vector3 pos = Vector3_Zero;
+	Viewport viewport = GraphicsDevice.GetViewport();
+	pos.x = (viewport.Width - drawsize.x) / 2.0f;
+	pos.y = (viewport.Height - drawsize.y) / 2.0f - 100.0f;
+
+	IMAGEFONT.DirectDrawImageString(pos,bigcellsize,Color(255,255,255),str.c_str());
+
+	drawsize = IMAGEFONT.GetDrawSize(smollcellsize, "RETRY TO PUSH SorDorF");
+	pos = Vector3_Zero;
+	pos.x = (viewport.Width - drawsize.x) / 2.0f;
+	pos.y = (viewport.Height - drawsize.y) - 100.0f;
+
+	IMAGEFONT.DirectDrawImageString(pos, smollcellsize, Color(255, 255, 255),"RETRY TO PUSH SorDorF");
+
+	fade_.Draw();
 
 	GraphicsDevice.EndScene();
+}
+
+bool RESULT_SCENE::IsPush(){
+
+	if (CONTROLL::GetInstance().BufferIsPress(Keys_S)||
+		CONTROLL::GetInstance().BufferIsPress(Keys_D) || 
+		CONTROLL::GetInstance().BufferIsPress(Keys_F) ){
+
+		return true;
+
+	}
+
+	return false;
+
 }

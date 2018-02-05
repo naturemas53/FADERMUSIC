@@ -3,7 +3,7 @@
 #include "AbstructState.h"
 #include "BPM_DATA_STRUCT.h"
 #include "JUDGELIST_ENUM.h"
-#include "GameOverDisplay.h"
+#include "FadeDisplay.h"
 #include <vector>
 
 class INSTRUMENT;
@@ -21,6 +21,14 @@ public:
 
 private:
 
+	enum PLAYSTATE{
+
+		READY,
+		SONGPLAY,
+		ENDGAME
+
+	}playstate_;
+
 	// ŠÖ”éŒ¾
 	void TimeCalc();
 	long GetElapsedCount(int elapsedtime);
@@ -29,7 +37,8 @@ private:
 	void SetSceneShared(bool clearflag);
 
 	// •Ï”éŒ¾
-	FONT font_;
+
+
 
 	INSTRUMENT* instrument_;
 	UI* ui_;
@@ -57,12 +66,7 @@ private:
 	JUDGECOUNT scorejudge_;
 	JUDGECOUNT accuracyjudge_;
 
-	GameOverDisplay gameoverdisplay;
-
-	//‚Æ‚è‚ ‚¦‚¸‚Å«
-	bool start_;
-
-	bool endgameflag_;
+	FadeDisplay fade_;
 
 	SOUND bgm_;
 

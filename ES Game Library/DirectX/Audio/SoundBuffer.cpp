@@ -274,9 +274,35 @@ UINT CSoundBuffer::GetLengthMSec(){
 
 	}
 
-	UINT m_time = (UINT)(1000.0 * ((double)dsbcaps.dwBufferBytes / (double)format.nAvgBytesPerSec ));
+	int secbyte = (format.wBitsPerSample * format.nSamplesPerSec * format.nChannels / 8 / 1000);
+
+	UINT m_time = dsbcaps.dwBufferBytes / secbyte;
 
 	return m_time;
+
+}
+
+void CSoundBuffer::SetPositionMilliSec(int millisec){
+
+	DWORD size;
+	WAVEFORMATEX format;
+	m_pDSBuffer->GetFormat(NULL, NULL, &size);
+	if (m_pDSBuffer->GetFormat(&format, size, NULL) != S_OK){
+
+		::OutputDebugString(TEXT("*** Error - ’·‚³Žæ“¾Ž¸”s(CSoundBuffer_GetLengthMSec_format)\n"));
+		return;
+
+	}
+
+	int hz = format.nSamplesPerSec;
+	int bit = format.wBitsPerSample;
+	int channell = format.nChannels;
+
+	int secbyte = hz * bit * channell / 8;
+
+	int setpos = (int)(((float)millisec / 1000.0f) * (float)secbyte);
+
+	m_pDSBuffer->SetCurrentPosition(setpos);
 
 }
 

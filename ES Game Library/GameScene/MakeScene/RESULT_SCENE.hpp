@@ -3,11 +3,12 @@
 #include "../GameScene.hpp"
 #include "../../ESGLib.h"
 #include "../../MyMakeClasses/JUDGELIST_ENUM.h"
+#include "../../MyMakeClasses/FadeDisplay.h"
 
 
 class RESULT_SCENE : public CGameScene {
 public:
-	RESULT_SCENE() :font_(GraphicsDevice.CreateDefaultFont())
+	RESULT_SCENE()
 	{
 //		ContentRootDirectory(_T("Content"));
 	}
@@ -31,15 +32,15 @@ public:
 #ifdef _INC_DIRECT2D
 		Direct2D.ReleaseAllResources();
 #endif
-		MediaManager.ReleaseAllMedia();
+		//MediaManager.ReleaseAllMedia();
 
 		SoundDevice.ReleaseAllMusics();
-		SoundDevice.ReleaseAllSounds();
+		//SoundDevice.ReleaseAllSounds();
 
-		GraphicsDevice.ReleaseAllRenderTargets();
+		//GraphicsDevice.ReleaseAllRenderTargets();
 		GraphicsDevice.ReleaseAllStateBlocks();
-		GraphicsDevice.ReleaseAllFonts();
-		GraphicsDevice.ReleaseAllSprites();
+		//GraphicsDevice.ReleaseAllFonts();
+		//GraphicsDevice.ReleaseAllSprites();
 		GraphicsDevice.ReleaseAllAnimationModels();
 		GraphicsDevice.ReleaseAllModels();
 		GraphicsDevice.ReleaseAllVertexBuffers();
@@ -55,13 +56,20 @@ private:
 	void Finalize();
 
 private:
+
+	enum STATE{
+
+		FADEIN,
+		DISPLAYNOW,
+		FADEOUT
+
+	};
+
 	// 変数宣言
 
-
-	//デバッグ用～↓
-	FONT font_;
 	bool clearflag_;
 
+	FadeDisplay fade_;
 	JUDGECOUNT scorejudge_;
 	JUDGECOUNT accuracyjudge_;
 
@@ -69,6 +77,10 @@ private:
 	int accuracy_;
 	int maxcombo_;
 
+	RESULT_SCENE::STATE state_;
+
 	// 関数プロトタイプ
+
+	bool IsPush();
 
 };

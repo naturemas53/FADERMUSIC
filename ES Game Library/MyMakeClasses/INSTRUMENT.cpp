@@ -34,8 +34,6 @@ INSTRUMENT::INSTRUMENT(LONG max_mouse_y,  std::vector<BPM_DATA>& bpmlist, const 
 
 	this->range_hours_show = 1000;
 
-	this->font_ = GraphicsDevice.CreateSpriteFont(_T("Voyager Grotesque Bold"),114);
-
 	this->havecombo_ = 0;
 
 	auto itr = this->faders_.begin();
@@ -99,6 +97,7 @@ void INSTRUMENT::Draw(int nowtime, float animation_rate){
 	for (auto f_itr : faders_) f_itr->Draw(this->button_height_,animation_rate, nowtime, highspeed);
 
 	this->judge_display_->Draw();
+	this->highspeed_.Draw();
 
 }
 
@@ -183,24 +182,28 @@ void INSTRUMENT::RightUp(int nowtime){
 	itr++;
 
 	int rightupnum = 0;
+	int checktiming = 0;
 
-	while (itr != notes_.end()){
+	while (itr != notes_.end() && rightupnum < 3){
 
-		if (!(*itr)->isRightUp()){
+		checktiming = (*itr)->GetTiming();
 
-			(*itr)->RightUp();
-
-		}
-
-		if ((*itr)->GetTiming() != (*(itr - 1))->GetTiming() &&  (*itr)->GetTiming() > nowtime ){
+		if (checktiming >= nowtime){
 
 			rightupnum++;
+			if (!(*itr)->isRightUp()){
+
+				(*itr)->RightUp();
+
+			}
 
 		}
 
-		if (rightupnum >= 3) break;
-
 		itr++;
+		while (itr != notes_.end() && checktiming == (*itr)->GetTiming()){
+			(*itr)->RightUp();
+			itr++;
+		}
 
 	}
 
@@ -407,7 +410,7 @@ void INSTRUMENT::RangeCalculation(int timing, int* range_time, long* range_count
 
 	for ( (*range_time) = 0; totalcount < (*range_count); (*range_time)++){
 
-		if ((i_timing - *range_time) <= 0){
+		if ((i_timing - *range_time) <= -2000){
 
 			//(*range_time) += ((*range_count) - totalcount) / itr->bpm;
 			(*firsthave_count) += ((*range_count) - totalcount);

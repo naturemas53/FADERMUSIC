@@ -10,12 +10,17 @@ public:
 	~UI();
 
 	void Update();
-	void Draw(float animation_rate);
+	void Draw(float animationrate);
 
 	void SetDisplayData(int score,float life,int accuracy,int allnotes,int maxcombo);
 
 private:
 
+	void LifeGaugeDraw(float animationrate);
+	void FrameDraw(float animationrate);
+	void GaugeDraw(float animationrate);
+
+	SPRITE uiline_;
 	SPRITE framesp_;
 	SPRITE innersp_;
 

@@ -57,14 +57,34 @@ LONGNOTE::~LONGNOTE()
 {
 
 	if (this->longnote_sprites_ != nullptr) {
+
+		for (auto sprite : (*this->longnote_sprites_)){
+
+			GraphicsDevice.ReleaseSprite(sprite.second);
+
+		}
+
 		delete this->longnote_sprites_;
 		this->longnote_sprites_ = nullptr;
 	}
 
 	if (this->triangle_sprites_ != nullptr) {
 
+		for (auto sprite : (*this->triangle_sprites_)){
+
+			GraphicsDevice.ReleaseSprite(sprite.second);
+
+		}
+
 		delete this->triangle_sprites_;
 		this->triangle_sprites_ = nullptr;
+
+	}
+
+	if (this->innner_box_ != nullptr){
+
+		GraphicsDevice.ReleaseSprite(this->innner_box_);
+		this->innner_box_ = nullptr;
 
 	}
 
@@ -93,7 +113,6 @@ bool LONGNOTE::Draw(Vector3 fader_top_pos, float fader_height, float animation_r
 
 	SPRITE sp = this->innner_box_;
 	Vector3 pos = fader_top_pos;
-
 
 	float triangle_x_scale = x_scale_rate;
 	if (triangle_x_scale > 1.0f) triangle_x_scale = 1.0f;
@@ -222,6 +241,7 @@ void LONGNOTE::DrawTriangle(
 
 	//“§–¾“x
 	float pal;
+	Color color = Color(255,255,255);
 
 	while (p_itr != pe_itr){
 
@@ -257,9 +277,10 @@ void LONGNOTE::DrawTriangle(
 		scale_y = draw_height_rate / (end_use_rate - start_use_rate);
 
 		pal = (addblend) ? animation_rate : this->right_power_ / this->RIGHT_POWER_MAX_;
+		color.A(pal);
 
 		//210 FADER‚Ì˜g‚Ü‚Å‚Ì‰¡
-		SpriteBatch.Draw(*( (*this->triangle_sprites_)[mycolor_] ),pos,Rect(0,rect_top,210.0f,rect_bottom),pal,
+		SpriteBatch.Draw(*((*this->triangle_sprites_)[mycolor_]), pos, Rect(0, rect_top, 210.0f, rect_bottom), color,
 			Vector3_Zero, Vector3(210.0f/ 2.0f,0.0f, 0.0f), Vector2(long_x_scale, scale_y));
 
 
@@ -319,7 +340,7 @@ void LONGNOTE::AddPoint(int timing,float height_rate){
 	auto itr = this->long_points_.begin();
 	auto e_itr = this->long_points_.end();
 
-	int inserttiming = itr->timing;
+	int inserttiming = timing;
 	int checktiming;
 
 	while (itr != e_itr){

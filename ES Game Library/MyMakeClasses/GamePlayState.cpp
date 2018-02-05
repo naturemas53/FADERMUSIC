@@ -14,7 +14,7 @@ GamePlayState::GamePlayState(){
 
 	movie_ = MediaManager.CreateMediaFromFile(_T("backmovie.wmv"));
 
-	this->bgm_ = SoundDevice.CreateSoundFromFile(_T("transtep.wav"));
+	this->bgm_ = SoundDevice.CreateSoundFromFile(_T("nc136149.wav"));
 
 	this->instrument_ = new INSTRUMENT(SceneShared().GetLongIntegerForKey("MOUSE_MAX_Y"), this->bpmlist_, "test.txt");
 	SceneShared().RemoveLongIntegerForKey("MOUSE_MAX_Y");
@@ -25,11 +25,8 @@ GamePlayState::GamePlayState(){
 	this->quater_rhythm_ = (int)(60.0f / (float)bpm_ * 1 * 1000.0f);
 	this->instrument_->SetBPM(this->bpm_, this->quater_rhythm_);
 
-	this->nowtime_ = 0;
+	this->nowtime_ = -2000;
 	this->animationrate_ = 0.0f;
-
-	this->start_ = false;
-	this->endgameflag_ = false;
 
 	this->songlength_ = bgm_->GetLengthMSec();
 
@@ -40,11 +37,14 @@ GamePlayState::GamePlayState(){
 	this->life_ = 0.5f;
 	this->maxcombo_ = 0;
 
-	font_ = GraphicsDevice.CreateDefaultFont();
+	this->playstate_ = GamePlayState::READY;
 
 }
 
 GamePlayState::~GamePlayState(){
+
+	MediaManager.ReleaseMedia(this->movie_);
+	SoundDevice.ReleaseSound(this->bgm_);
 
 	delete instrument_;
 	delete ui_;
@@ -58,16 +58,19 @@ AbstructState* GamePlayState::Update(){
 
 	this->TimeCalc();
 
+	int isfinish = this->fade_.Update();
+
+
+	if (!(this->playstate_ == GamePlayState::ENDGAME)){
+
 	animationrate_ = (float)((quater_rhythm_ - 1) - nowtime_ % quater_rhythm_) / (float)quater_rhythm_;
 
 	instrument_->Update(nowtime_, elapsedtime_, GetElapsedCount(elapsedtime_));
 
-	if (!this->endgameflag_){
-		this->ToUITellValue();
+	this->ToUITellValue();
+
 	}
 	else{
-
-		int isfinish = this->gameoverdisplay.Update();
 
 		if (isfinish){
 
@@ -86,13 +89,11 @@ void GamePlayState::Draw(){
 
 	SpriteBatch.Begin();
 
-	if (this->start_){
+	if (this->bgm_->IsPlaying()){
 
 		SpriteBatch.Draw(*this->movie_, Vector3_Zero, 1.0f, Vector3_Zero, Vector3_Zero, Vector2(1280.0f / 640.0f, 720.0f / 360.0f));
 
 	}
-	SpriteBatch.DrawString(this->font_, Vector2(0.0f, 100.0f), Color(0, 255, 255), _T("time : %u"), nowtime_);
-	SpriteBatch.DrawString(this->font_, Vector2(0.0f, 130), Color(0, 255, 255), _T("elapsedtime : %u"), elapsedtime_);
 
 	SpriteBatch.End();
 
@@ -102,26 +103,20 @@ void GamePlayState::Draw(){
 
 	IMAGEFONT.DrawString(animationrate_);
 
-
-	if (this->endgameflag_){
-
-		this->gameoverdisplay.Draw();
-
-	}
+		this->fade_.Draw();
 
 }
 
 void GamePlayState::TimeCalc(){
 
-
-	if (this->start_){
+	if (this->playstate_ == GamePlayState::SONGPLAY){
 
 		prevtime_ = nowtime_;
 
 		nowtime_ = (int)((float)songlength_ * ((float)bgm_->GetPosition() / (float)bgm_->GetSize()));
 		elapsedtime_ = nowtime_ - prevtime_;
 
-		if (!this->bgm_->IsPlaying() && !this->endgameflag_){
+		if (!this->bgm_->IsPlaying()){
 
 			this->SetSceneShared(true);
 
@@ -130,13 +125,20 @@ void GamePlayState::TimeCalc(){
 	}
 	else{
 
-		elapsedtime_ = 0;
-		if (CONTROLL::GetInstance().BufferIsPress(Keys_Space)){
+		this->elapsedtime_ = GameTimer.GetElapsedMilliSecond();
+		this->nowtime_ += this->elapsedtime_;
 
-			start_ = true;
+		if (this->nowtime_ >= 0 && this->playstate_ == GamePlayState::READY){
 
+			this->playstate_ = GamePlayState::SONGPLAY;
+			this->bgm_->SetPositionMilliSec(this->nowtime_);
 			this->bgm_->Play();
+
+			LONGLONG setmoviepos = (LONGLONG)((double)UNITS * ((double)this->nowtime_ / 1000.0));
+
+			this->movie_->SetPosition(setmoviepos);
 			this->movie_->Play();
+
 		}
 
 	}
@@ -176,7 +178,8 @@ void GamePlayState::ToUITellValue(){
 
 void GamePlayState::SetSceneShared(bool clearflag){
 
-	this->endgameflag_ = true; 
+	this->playstate_ = GamePlayState::ENDGAME;
+	this->fade_.SetFadeState(FadeDisplay::FADEOUT);
 	this->bgm_->Stop();
 
 	SceneShared().SetBoolForKey("CLEARFLAG", clearflag);

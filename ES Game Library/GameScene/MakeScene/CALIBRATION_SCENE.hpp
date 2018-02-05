@@ -2,6 +2,7 @@
 
 #include "../GameScene.hpp"
 #include "../../ESGLib.h"
+#include "../../MyMakeClasses/FadeDisplay.h"
 
 class CALIBRATION_SCENE : public CGameScene {
 public:
@@ -29,15 +30,15 @@ public:
 #ifdef _INC_DIRECT2D
 		Direct2D.ReleaseAllResources();
 #endif
-		MediaManager.ReleaseAllMedia();
+		//MediaManager.ReleaseAllMedia();
 
 		SoundDevice.ReleaseAllMusics();
-		SoundDevice.ReleaseAllSounds();
+		//SoundDevice.ReleaseAllSounds();
 
-		GraphicsDevice.ReleaseAllRenderTargets();
+		//GraphicsDevice.ReleaseAllRenderTargets();
 		GraphicsDevice.ReleaseAllStateBlocks();
 		//GraphicsDevice.ReleaseAllFonts();
-		GraphicsDevice.ReleaseAllSprites();
+		//GraphicsDevice.ReleaseAllSprites();
 		GraphicsDevice.ReleaseAllAnimationModels();
 		GraphicsDevice.ReleaseAllModels();
 		GraphicsDevice.ReleaseAllVertexBuffers();
@@ -57,12 +58,15 @@ private:
 
 	FONT font_;
 	LONG mouse_top;
+	SPRITE title_logo_;
+	FadeDisplay fade_;
 
 	enum SETTING_STATE{
 
-		WAIT,
-		SETTINGNOW,
-		CHANGEING
+		CALIBRATIONWAIT,
+		SETTINGBOTTOM,
+		SETTINGTOP,
+		READY
 
 	}setting_state;
 

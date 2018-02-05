@@ -33,6 +33,12 @@ public:
 	
 		if (this->colornote_sprites_ != nullptr) {
 
+			for (auto sprite : (*this->colornote_sprites_)){
+
+				GraphicsDevice.ReleaseSprite(sprite.second);
+
+			}
+
 			delete this->colornote_sprites_;
 			this->colornote_sprites_ = nullptr;
 

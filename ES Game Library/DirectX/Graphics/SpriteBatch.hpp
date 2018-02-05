@@ -514,14 +514,14 @@ public:
 			 ((DWORD)(inAlpha * 255.0f) << 24) | 0x00ffffff);
 	}
 
-	inline void Draw(IDirect3DTexture9* pTexture, const D3DXVECTOR3& inPos, const RECT& inSrcRect,
-					 const float inAlpha, const D3DXVECTOR3& inRotation, const D3DXVECTOR3& inCenter,
-					 const D3DXVECTOR2& inScale)
-	{
-		D3DXVECTOR3   pos(inPos.x + inCenter.x, inPos.y + inCenter.y, inPos.z);
-		Draw(pTexture, &inSrcRect, pos, inScale, inRotation, &inCenter,
-			 ((DWORD)(inAlpha * 255.0f) << 24) | 0x00ffffff);
-	}
+	//inline void Draw(IDirect3DTexture9* pTexture, const D3DXVECTOR3& inPos, const RECT& inSrcRect,
+	//				 const float inAlpha, const D3DXVECTOR3& inRotation, const D3DXVECTOR3& inCenter,
+	//				 const D3DXVECTOR2& inScale)
+	//{
+	//	D3DXVECTOR3   pos(inPos.x + inCenter.x, inPos.y + inCenter.y, inPos.z);
+	//	Draw(pTexture, &inSrcRect, pos, inScale, inRotation, &inCenter,
+	//		 ((DWORD)(inAlpha * 255.0f) << 24) | 0x00ffffff);
+	//}
 
 	inline void Draw(IDirect3DTexture9* pTexture, const D3DXVECTOR3& inPos, const float inAlpha,
 					 const D3DXVECTOR3& inRotation, const D3DXVECTOR3& inCenter, const float inScale)

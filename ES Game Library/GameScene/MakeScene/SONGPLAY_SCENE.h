@@ -35,15 +35,15 @@ public:
 #ifdef _INC_DIRECT2D
 		Direct2D.ReleaseAllResources();
 #endif
-		MediaManager.ReleaseAllMedia();
+		//MediaManager.ReleaseAllMedia();
 
 		SoundDevice.ReleaseAllMusics();
-		SoundDevice.ReleaseAllSounds();
+		//SoundDevice.ReleaseAllSounds();
 
-		GraphicsDevice.ReleaseAllRenderTargets();
+		//GraphicsDevice.ReleaseAllRenderTargets();
 		GraphicsDevice.ReleaseAllStateBlocks();
 		//GraphicsDevice.ReleaseAllFonts();
-		GraphicsDevice.ReleaseAllSprites();
+		//GraphicsDevice.ReleaseAllSprites();
 		GraphicsDevice.ReleaseAllAnimationModels();
 		GraphicsDevice.ReleaseAllModels();
 		GraphicsDevice.ReleaseAllVertexBuffers();

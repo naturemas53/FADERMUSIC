@@ -118,6 +118,12 @@
     <Filter Include="ヘッダー ファイル\MyMakeClasses">
       <UniqueIdentifier>{252c1ecb-d56a-42b8-8b7e-cc77590b639d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\MyMakeClasses\Bombs">
+      <UniqueIdentifier>{4663f6df-fc98-45e9-85ae-1adf5dea6770}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\MyMakeClasses\Bombs">
+      <UniqueIdentifier>{3e7c9eb2-d9f4-43e8-ba55-cac12ed0b0e9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -295,14 +301,29 @@
     <ClCompile Include="MyMakeClasses\EffectBomb.cpp">
       <Filter>ソース ファイル\MyMakeClasses</Filter>
     </ClCompile>
-    <ClCompile Include="MyMakeClasses\GameOverDisplay.cpp">
-      <Filter>ソース ファイル\MyMakeClasses</Filter>
-    </ClCompile>
     <ClCompile Include="GameScene\MakeScene\RESULT_SCENE.cpp">
       <Filter>ソース ファイル\ゲームシーン</Filter>
     </ClCompile>
     <ClCompile Include="MyMakeClasses\GamePlayState.cpp">
       <Filter>ソース ファイル\MyMakeClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\FadeDisplay.cpp">
+      <Filter>ソース ファイル\MyMakeClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\Bombs\UnbelievableBomb.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\Bombs</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\Bombs\JudgeBomb.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\Bombs</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\Bombs\GreatBomb.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\Bombs</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\Bombs\OKBomb.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\Bombs</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\Bombs\MissBomb.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\Bombs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -508,11 +529,29 @@
     <ClInclude Include="MyMakeClasses\GamePlayState.h">
       <Filter>ヘッダー ファイル\MyMakeClasses</Filter>
     </ClInclude>
-    <ClInclude Include="MyMakeClasses\GameOverDisplay.h">
-      <Filter>ヘッダー ファイル\MyMakeClasses</Filter>
-    </ClInclude>
     <ClInclude Include="GameScene\MakeScene\RESULT_SCENE.hpp">
       <Filter>ヘッダー ファイル\ゲームシーン</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\FadeDisplay.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Bombs\AbstructBomb.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Bombs</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Bombs\UnbelievableBomb.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Bombs</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Bombs\JudgeBomb.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Bombs</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Bombs\GreatBomb.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Bombs</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Bombs\OKBomb.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Bombs</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Bombs\MissBomb.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Bombs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

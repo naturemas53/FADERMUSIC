@@ -33,6 +33,13 @@ THIRD_SCALE_(0.45f)
 
 JUDGE_DISPLAY::~JUDGE_DISPLAY()
 {
+
+	for (auto sprite : this->judge_sprites_){
+
+		GraphicsDevice.ReleaseSprite(sprite.second);
+
+	}
+
 }
 
 void JUDGE_DISPLAY::Update(){
@@ -64,14 +71,14 @@ void JUDGE_DISPLAY::Draw(){
 	if (this->drawcombo_ <= 0 || (this->scale_state_ == THIRD && this->now_count_ >= this->THIRD_COUNT_) ) return;
 
 	Vector2 cellsize = IMAGEFONT.GetCellSize();
-	cellsize /= 5.0f;
-	Vector2 drawsize = IMAGEFONT.GetDrawSize(cellsize,"COMBO %4d",this->drawcombo_);
+	cellsize /= 3.0f;
+	Vector2 drawsize = IMAGEFONT.GetDrawSize(cellsize,"COMBO%3d",this->drawcombo_);
 	float plus_x = (this->FADER_WIDTH_ - drawsize.x) / 2.0f;
 	pos.x = this->drawpos_.x + plus_x;
-	pos.y += 50.0f; //‚³‚¶‰ÁŒ¸
-	if (this->draw_judge_ == UNBELIEVABLE)pos.y -= cellsize.y;
+	pos.y += 40.0f; //‚³‚¶‰ÁŒ¸
+	if (this->draw_judge_ == UNBELIEVABLE)pos.y -= (cellsize.y * 0.7f);
 
-	IMAGEFONT.SetImageString(pos, cellsize,true,"COMBO %4d", this->drawcombo_);
+	IMAGEFONT.SetImageString(pos, cellsize,Color(255,255,255),true,"COMBO%3d", this->drawcombo_);
 
 }
 

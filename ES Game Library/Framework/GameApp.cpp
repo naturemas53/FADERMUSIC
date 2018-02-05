@@ -132,6 +132,9 @@ bool CGameApp::Initialize(const HINSTANCE hInstance)
 	// デフォルトフォルダ設定
 	::SetCurrentDirectory(string_buffer);
 
+	//ウインドウタイトル設定
+	WindowTitle(_T("FADER MUSIC"));
+
 	// ゲームシーン設定
 	if(m_GameProc.CreateScene(new CALIBRATION_SCENE()) == false)
 		return false;

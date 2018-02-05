@@ -17,7 +17,7 @@ public:
 	INSTRUMENT(LONG max_mouse_y, std::vector<BPM_DATA>& bpmlist, const char* filename);
 	~INSTRUMENT();
 
-	void Update(int nowtime, int elapsedtime_, long elapsedcount);
+	void Update(int nowtime, int elapsedtime, long elapsedcount);
 	void Draw(int nowtime, float animation_rate);
 
 	void SetBPM(int bpm, int quater_rhythm);
@@ -35,11 +35,7 @@ private:
 	void ReadNote(FILE* file, std::vector<BPM_DATA>& bpmlist);
 	void RangeCalculation(int timing, int* range_time, long* range_count, long* firsthave_count, std::vector<BPM_DATA>& bpmlist);
 
-	//Ç∆ÇËÇ†Ç¶Ç∏Å´
 	void RightUp(int nowtime);
-
-	FONT font_;
-	//Ç∆ÇËÇ†Ç¶Ç∏Å™
 
 	void ComboCheck();
 

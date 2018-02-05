@@ -85,6 +85,7 @@ private:
 	const float ACCEPTABLE_RANGE_;
 	const Keys ASIGN_KEY_;
 	const Vector3 DRAW_POS_;
+	const Vector3 INNER_POS_;
 	
 	std::list<ABSTRUCT_NOTE*> notelist_;
 

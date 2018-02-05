@@ -6,7 +6,11 @@
 class ImageFont{
 
 public:
-	~ImageFont() = default;
+	~ImageFont(){
+	
+		//GraphicsDevice.ReleaseSprite(this->sp_);
+	
+	};
 
 	static ImageFont& GetInstance(){
 
@@ -16,8 +20,8 @@ public:
 
 	}
 
-	void DirectDrawImageString(Vector3 position, Vector2 size, const char* str, ...);
-	void SetImageString(Vector3 position, Vector2 size,bool addblend, const char* str, ...);
+	void DirectDrawImageString(Vector3 position, Vector2 size, Color colormask, const char* str, ...);
+	void SetImageString(Vector3 position, Vector2 size, Color colormask, bool addblend, const char* str, ...);
 	void DrawString(float addalpha);
 
 	void SrtingReset(){ this->strdatas_.clear(); }
@@ -35,20 +39,22 @@ private:
 		Vector2 size;
 		Vector3 position;
 		bool addblend;
+		Color colormask;
 
-		STRINGDATA(Vector3 position, Vector2 size, bool addblend, std::string& str){
+		STRINGDATA(Vector3 position, Vector2 size, bool addblend, std::string& str, Color colormask){
 
 			this->str = str;
 			this->size = size;
 			this->position = position;
 			this->addblend = addblend;
+			this->colormask = colormask;
 
 		}
 
 	};
 
 	void MakeString(std::string& inbuffer, const char* str, va_list args);
-	void DrawImageString(Vector3 position, Vector2 size, std::string& str,float addalpha = 1.0f);
+	void DrawImageString(Vector3 position, Vector2 size, std::string& str, Color colormask, float addalpha = 1.0f);
 
 
 	ImageFont(){

@@ -10,7 +10,7 @@ public:
 	~LONGNOTE();
 
 	virtual void Update(int nowtime);
-	virtual bool Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, int nowtime, float highspeed, bool addblend);
+	virtual bool Draw(Vector3 fader_top_pos, Vector2 fader_inner, float animation_rate, int nowtime, float highspeed, bool addblend);
 
 	struct LONG_POINT{
 
@@ -37,6 +37,8 @@ public:
 	
 	}
 
+	float GetLongXScale(){ return this->long_xscale_; }
+
 	bool IsPush(){ return ispush_; }
 	void Push(){ ispush_ = true; }
 
@@ -45,11 +47,14 @@ public:
 
 private:
 
+	const Vector2 DIAMOND_SIZE_;
+
 	void NoteMove(int nowtime);
 	void LongXScale(int nowtime);
 
 	void DrawTriangle(Vector3 fader_top_pos, float fader_height, int nowtime, int longtime, float animation_rate, float long_x_scale, bool addblend);
 	void DrawNote(Vector3 fader_top_pos, float fader_height, int nowtime, float animation_rate, float x_scale_rate, bool addblend);
+	void DrawDiamond(Vector3 fader_top_pos, Vector2 fader_inner, int nowtime, int longtime, float animation_rate, float x_scale_rate, bool addblend);
 
 	bool ispush_;
 	float long_xscale_;
@@ -61,6 +66,7 @@ private:
 
 	static std::map<Color_by_Name, SPRITE>* longnote_sprites_;
 	static std::map<Color_by_Name, SPRITE>* triangle_sprites_;
+	static std::map<Color_by_Name, SPRITE>* diamond_sprites_;
 	static SPRITE innner_box_;
 
 };

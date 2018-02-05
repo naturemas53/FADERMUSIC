@@ -3,10 +3,14 @@
 
 std::map<Color_by_Name, SPRITE>* LONGNOTE::longnote_sprites_ = nullptr;
 std::map<Color_by_Name, SPRITE>* LONGNOTE::triangle_sprites_ = nullptr;
+std::map<Color_by_Name, SPRITE>* LONGNOTE::diamond_sprites_ = nullptr;
 SPRITE LONGNOTE::innner_box_ = nullptr;
+
+
 
 LONGNOTE::LONGNOTE(int timing, float height_rate, Color_by_Name color, long range_count, int range_time, long firsthave_count) :
 ABSTRUCT_NOTE(range_count, range_time,firsthave_count),
+DIAMOND_SIZE_(Vector2(54.0f,93.0f)),
 RIGHT_POWER_MAX_(2000.0f)
 {
 
@@ -41,6 +45,15 @@ RIGHT_POWER_MAX_(2000.0f)
 		(*this->longnote_sprites_)[Color_Red] = GraphicsDevice.CreateSpriteFromFile(_T("notes/long/longnote_red.png"));
 		(*this->longnote_sprites_)[Color_Green] = GraphicsDevice.CreateSpriteFromFile(_T("notes/long/longnote_green.png"));
 		(*this->longnote_sprites_)[Color_Blue] = GraphicsDevice.CreateSpriteFromFile(_T("notes/long/longnote_blue.png"));
+
+	}
+
+	if (this->diamond_sprites_ == nullptr){
+
+		this->diamond_sprites_ = new std::map<Color_by_Name, SPRITE>;
+		(*this->diamond_sprites_)[Color_Red] = GraphicsDevice.CreateSpriteFromFile(_T("notes/long/diamond_red.png"));
+		(*this->diamond_sprites_)[Color_Green] = GraphicsDevice.CreateSpriteFromFile(_T("notes/long/diamond_green.png"));
+		(*this->diamond_sprites_)[Color_Blue] = GraphicsDevice.CreateSpriteFromFile(_T("notes/long/diamond_blue.png"));
 
 	}
 
@@ -81,6 +94,19 @@ LONGNOTE::~LONGNOTE()
 
 	}
 
+	if (this->diamond_sprites_ != nullptr) {
+
+		for (auto sprite : (*this->diamond_sprites_)){
+
+			GraphicsDevice.ReleaseSprite(sprite.second);
+
+		}
+
+		delete this->diamond_sprites_;
+		this->diamond_sprites_ = nullptr;
+
+	}
+
 	if (this->innner_box_ != nullptr){
 
 		GraphicsDevice.ReleaseSprite(this->innner_box_);
@@ -104,7 +130,7 @@ void LONGNOTE::Update(int nowtime){
 
 }
 
-bool LONGNOTE::Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, int nowtime, float highspeed, bool addblend)
+bool LONGNOTE::Draw(Vector3 fader_top_pos, Vector2 fader_inner, float animation_rate, int nowtime, float highspeed, bool addblend)
 {
 
 	float x_scale_rate = this->GetXScale(highspeed);
@@ -140,13 +166,13 @@ bool LONGNOTE::Draw(Vector3 fader_top_pos, float fader_height, float animation_r
 
 	float scale = (this->ispush_) ? this->long_xscale_ : triangle_x_scale;
 
-	SpriteBatch.Draw(*sp, pos, color, Vector3_Zero, Vector3(this->WIDTH_ / 2.0f, 0.0f, 0.0f), Vector2(scale, 1.0f));
+	//SpriteBatch.Draw(*sp, pos, color, Vector3_Zero, Vector3(this->WIDTH_ / 2.0f, 0.0f, 0.0f), Vector2(scale, 1.0f));
 
-	DrawTriangle(fader_top_pos, fader_height, nowtime, longtime,animation_rate, triangle_x_scale,addblend);
+	DrawTriangle(fader_top_pos, fader_inner.y, nowtime, longtime,animation_rate, triangle_x_scale,addblend);
 
-	x_scale_rate = (this->ispush_) ? this->long_xscale_ : x_scale_rate;
+	DrawNote(fader_top_pos, fader_inner.y, nowtime, animation_rate, x_scale_rate, addblend);
 
-	DrawNote(fader_top_pos, fader_height, nowtime, animation_rate, x_scale_rate,addblend);
+	this->DrawDiamond(fader_top_pos, fader_inner,nowtime,longtime, animation_rate, x_scale_rate, addblend);
 
 	return true;
 
@@ -161,31 +187,6 @@ void LONGNOTE::DrawNote(Vector3 fader_top_pos, float fader_height, int nowtime, 
 	float pal;
 	SPRITE draw_sprite_;
 
-	//if (ispush_){
-
-	//	if (long_xscale_ > 1.0f) long_xscale_ = 1.0f;
-	//	x_scale_rate = long_xscale_;
-
-	//	draw_sprite_ = (*this->longnote_sprites_)[mycolor_];
-
-
-	//}
-	//else{
-
-	//	if (this->rightup_flag_){
-	//		
-	//		draw_sprite_ = (*this->colornote_sprites_)[mycolor_];
-
-	//	}
-	//	else{
-
-	//		draw_sprite_ = this->normal_sprite_;
-
-	//	}
-	//	
-	//	
-	//}
-
 	if (this->rightup_flag_){
 
 		draw_sprite_ = (*this->colornote_sprites_)[mycolor_];
@@ -197,14 +198,55 @@ void LONGNOTE::DrawNote(Vector3 fader_top_pos, float fader_height, int nowtime, 
 
 	}
 
+	if (this->ispush_){
+
+		//x_scale_rate = (x_scale_rate > 1.0f) ? 1.0f : x_scale_rate;
+		x_scale_rate = this->long_xscale_;
+
+	}
 
 	pal = (addblend) ? animation_rate : this->right_power_ / this->RIGHT_POWER_MAX_;
 
-/*	SpriteBatch.Draw(*draw_sprite_, note_displaypos,
-		RectWH((animenum % 10) * this->WIDTH_, (animenum / 10) * this->HEIGHT_, this->WIDTH_, this->HEIGHT_), pal,
-		Vector3_Zero, Vector3(this->WIDTH_ / 2.0f, 0.0f, 0.0f), Vector2(x_scale_rate, 1.0f)); */ 
-
 	SpriteBatch.Draw(*draw_sprite_, note_displaypos, pal,Vector3_Zero, Vector3(this->WIDTH_ / 2.0f, 0.0f, 0.0f), Vector2(x_scale_rate, 1.0f));
+
+}
+
+void LONGNOTE::DrawDiamond(Vector3 fader_top_pos, Vector2 fader_inner, int nowtime, int longtime, float animation_rate, float x_scale_rate, bool addblend){
+
+	Vector3 note_displaypos = fader_top_pos;
+	note_displaypos.x += (fader_inner.x - this->DIAMOND_SIZE_.x) / 2.0f;
+
+	//‹Ù‹}‚Å•t‚¯Än@(92.0f - 54.0f) / 2.0f;
+	note_displaypos.x -= (92.0f - 54.0f) / 2.0f;
+
+	note_displaypos.y += (fader_inner.y) * this->height_rate_;
+	note_displaypos.y -= this->DIAMOND_SIZE_.y / 2.0f;
+	int animenum = (int)(animation_rate * 90.0f);
+
+	float diamond_scale = fader_inner.x / this->DIAMOND_SIZE_.x;
+	diamond_scale -= 1.0f;
+		
+	float pal;
+	SPRITE draw_sprite = (*this->diamond_sprites_)[this->mycolor_];
+
+	if (this->ispush_){
+
+		nowtime = nowtime - this->timing_;
+		//float timerate = (float)nowtime / (float)longtime;
+		float timerate = 1.0f - this->long_xscale_;
+
+		x_scale_rate = 1.0f + (timerate * diamond_scale);
+
+	}
+	else{
+
+		x_scale_rate = (x_scale_rate > 1.0f) ? 1.0f : x_scale_rate;
+
+	}
+
+	pal = (addblend) ? animation_rate : this->right_power_ / this->RIGHT_POWER_MAX_;
+
+	SpriteBatch.Draw(*draw_sprite, note_displaypos, pal, Vector3_Zero, Vector3(92.0f / 2.0f, 0.0f, 0.0f), Vector2(x_scale_rate, 1.0f));
 
 }
 

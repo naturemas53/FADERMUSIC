@@ -5,7 +5,7 @@ class MissBomb : public JudgeBomb{
 
 public:
 
-	MissBomb() : JudgeBomb(350, 5, 5, Vector2(120.0f, 120.0f), MISSTIME){}
+	MissBomb() : JudgeBomb(250, 5, 5, Vector2(120.0f, 120.0f), MISSTIME){}
 	~MissBomb() = default;
 
 	virtual void Init(Vector3 faderpos, Vector2 fader_inner, float height);

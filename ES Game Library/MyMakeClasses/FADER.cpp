@@ -189,12 +189,12 @@ void FADER::LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, int nowti
 		}
 		else{
 
-			this->pushsound_->Play();
 			JUDGELIST releasejudge;
 			JUDGELIST finaljudge;
 			releasejudge = Judge(abs(top_long->GetTimingSlowMostPoint() - nowtime));
 			if (releasejudge != MISSTIME && releasejudge != OUCH){
 				finaljudge = this->longjudge_;
+				this->pushsound_->Play();
 			}
 			else{
 				finaljudge = MISSTIME;
@@ -310,7 +310,7 @@ void FADER::NoteDraw(float animationrate, int nowtime, float highspeed){
 	auto itr = this->notelist_.begin();
 	while (itr != this->notelist_.end()){
 
-		if (!(*itr)->Draw(top_pos, this->INNER_SIZE_.y, animationrate, nowtime, highspeed, false))break;
+		if (!(*itr)->Draw(top_pos, this->INNER_SIZE_, animationrate, nowtime, highspeed, false))break;
 		itr++;
 
 	}
@@ -321,7 +321,7 @@ void FADER::NoteDraw(float animationrate, int nowtime, float highspeed){
 	itr = this->notelist_.begin();
 	while (itr != this->notelist_.end()){
 
-		if (!(*itr)->Draw(top_pos, this->INNER_SIZE_.y, animationrate, nowtime, highspeed, true))break;
+		if (!(*itr)->Draw(top_pos, this->INNER_SIZE_, animationrate, nowtime, highspeed, true))break;
 		itr++;
 
 	}

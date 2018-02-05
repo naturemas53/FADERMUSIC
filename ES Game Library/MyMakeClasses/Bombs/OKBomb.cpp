@@ -2,7 +2,7 @@
 
 SPRITE OKBomb::sprite_ = nullptr;
 
-OKBomb::OKBomb() : JudgeBomb(350, 5, 5, Vector2(120.0f, 120.0f), OK){
+OKBomb::OKBomb() : JudgeBomb(250, 5, 5, Vector2(120.0f, 120.0f), OK){
 
 	if (this->sprite_ == nullptr){
 

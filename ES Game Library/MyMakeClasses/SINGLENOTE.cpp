@@ -23,12 +23,12 @@ void SINGLENOTE::Init(int timing, float height_rate){
 
 }
 
-bool SINGLENOTE::Draw(Vector3 fader_top_pos, float fader_height, float animation_rate, int nowtime, float highspeed,bool addblend){
+bool SINGLENOTE::Draw(Vector3 fader_top_pos, Vector2 fader_inner, float animation_rate, int nowtime, float highspeed, bool addblend){
 
 	//数字は全部エフェクトのそれ
 
 	Vector3 note_displaypos = fader_top_pos;
-	note_displaypos.y += (fader_height - this->LINE_HEIGHT_) * this->height_rate_ - (this->HEIGHT_ - this->LINE_HEIGHT_) / 2.0f; 
+	note_displaypos.y += (fader_inner.y - this->LINE_HEIGHT_) * this->height_rate_ - (this->HEIGHT_ - this->LINE_HEIGHT_) / 2.0f; 
 	int animenum = (int)(animation_rate * 90.0f);
 
 	float x_scale_rate = this->GetXScale(highspeed);

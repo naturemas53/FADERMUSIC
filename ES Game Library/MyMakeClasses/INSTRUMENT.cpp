@@ -17,16 +17,16 @@ namespace{
 
 }
 
-INSTRUMENT::INSTRUMENT(LONG max_mouse_y,  std::vector<BPM_DATA>& bpmlist, const char* filename) : MAX_MOUSE_Y_(max_mouse_y)
+INSTRUMENT::INSTRUMENT(LONG max_mouse_y,  std::vector<BPM_DATA>& bpmlist, const char* filename) : MAX_MOUSE_Y_(5000)
 {
 
 	mouse_y_ = 0;
 
 	float base_x = 286.0f;
 
-	faders_.push_back(new FADER(Vector3(base_x,92.0f,0.0f), Keys_S));
-	faders_.push_back(new FADER(Vector3((base_x + 236.0f ),92.0f,0.0f), Keys_D));
-	faders_.push_back(new FADER(Vector3((base_x + 236.0f * 2.0f ), 92.0f, 0.0f), Keys_F));
+	faders_.push_back(new FADER(Vector3(base_x,92.0f,0.0f), LEFT));
+	faders_.push_back(new FADER(Vector3((base_x + 236.0f ),92.0f,0.0f), CENTER));
+	faders_.push_back(new FADER(Vector3((base_x + 236.0f * 2.0f ), 92.0f, 0.0f), RIGHT));
 
 	this->Setting(filename,bpmlist);
 
@@ -42,6 +42,10 @@ INSTRUMENT::INSTRUMENT(LONG max_mouse_y,  std::vector<BPM_DATA>& bpmlist, const 
 
 	this->judge_display_ = new JUDGE_DISPLAY(innersize.y,innersize.x);
 
+	int count = SceneShared().GetIntegerForKey("SPEEDCOUNT");
+	this->highspeed_ = new HIGHSPEED(count);
+	SceneShared().RemoveIntegerForKey("SPEEDCOUNT");
+
 }
 
 
@@ -50,6 +54,7 @@ INSTRUMENT::~INSTRUMENT()
 	for (auto f_itr : faders_) delete f_itr;
 	for (auto itr : notes_) delete itr;
 	delete this->judge_display_;
+	delete this->highspeed_;
 
 }
 
@@ -78,10 +83,10 @@ void INSTRUMENT::Update(int nowtime, int elapsedtime, long elapsedcount){
 
 	if (mouse.ScrollWheelValue != 0){
 
-		this->highspeed_.ChengeHighSpeed(mouse.ScrollWheelValue);
+		this->highspeed_->ChengeHighSpeed(mouse.ScrollWheelValue);
 
 	}
-	this->highspeed_.HighSpeedUpdate(elapsedtime);
+	this->highspeed_->HighSpeedUpdate(elapsedtime);
 
 	for (auto f_itr : faders_)f_itr->Update(nowtime, elapsedtime, button_height_,elapsedcount);
 
@@ -92,12 +97,12 @@ void INSTRUMENT::Update(int nowtime, int elapsedtime, long elapsedcount){
 
 void INSTRUMENT::Draw(int nowtime, float animation_rate){
 
-	float highspeed = this->highspeed_.GetHighSpeed();
+	float highspeed = this->highspeed_->GetHighSpeed();
 
 	for (auto f_itr : faders_) f_itr->Draw(this->button_height_,animation_rate, nowtime, highspeed);
 
 	this->judge_display_->Draw();
-	this->highspeed_.Draw();
+	this->highspeed_->Draw();
 
 }
 

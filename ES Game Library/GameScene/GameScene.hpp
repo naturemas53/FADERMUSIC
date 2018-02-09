@@ -81,5 +81,7 @@ private:
 //	ゲームシーンインクルードファイル
 //------------------------------------------------------------------------------
 #include "MakeScene\SONGPLAY_SCENE.h"
-#include "MakeScene\CALIBRATION_SCENE.hpp"
+#include "MakeScene\MUSICSELECT_SCENE.hpp"
 #include "MakeScene\RESULT_SCENE.hpp"
+#include "MakeScene\TITLE_SCENE.hpp"
+#include "MakeScene\THANK_SCENE.hpp"

@@ -2,7 +2,7 @@
 
 SPRITE UnbelievableBomb::sprite_ = nullptr;
 
-UnbelievableBomb::UnbelievableBomb() :JudgeBomb(250,5,5,Vector2(120.0f,120.0f),UNBELIEVABLE){
+UnbelievableBomb::UnbelievableBomb() :JudgeBomb(200, 5, 5, Vector2(120.0f, 120.0f), UNBELIEVABLE){
 
 	if (this->sprite_ == nullptr){
 

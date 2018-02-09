@@ -4,6 +4,7 @@
 #include "HIGHSPEED.h"
 #include "JUDGE_DISPLAY.h"
 #include "FADER.h"
+#include "CONTROLL.h"
 #include <vector>
 #include <fstream>
 
@@ -44,7 +45,7 @@ private:
 	std::vector<FADER*> faders_;
 	std::vector<ABSTRUCT_NOTE*> notes_;
 
-	HIGHSPEED highspeed_;
+	HIGHSPEED* highspeed_;
 	JUDGE_DISPLAY* judge_display_;
 
 	LONG mouse_y_;

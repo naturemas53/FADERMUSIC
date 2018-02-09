@@ -117,7 +117,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="GameScene\MakeScene\CALIBRATION_SCENE.cpp" />
+    <ClCompile Include="GameScene\MakeScene\MUSICSELECT_SCENE.cpp" />
     <ClCompile Include="GameScene\MakeScene\RESULT_SCENE.cpp" />
     <ClCompile Include="GameScene\MakeScene\SONGPLAY_SCENE.cpp" />
     <ClCompile Include="Extension\Direct2D\Direct2D.cpp">
@@ -164,6 +164,8 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="GameScene\MakeScene\THANK_SCENE.cpp" />
+    <ClCompile Include="GameScene\MakeScene\TITLE_SCENE.cpp" />
     <ClCompile Include="GameScene\SceneShared.cpp" />
     <ClCompile Include="GameScene\TemplateScene.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
@@ -174,11 +176,18 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="MyMakeClasses\ABSTRUCT_NOTE.cpp" />
+    <ClCompile Include="MyMakeClasses\Bombs\FlashBomb.cpp" />
     <ClCompile Include="MyMakeClasses\Bombs\GreatBomb.cpp" />
     <ClCompile Include="MyMakeClasses\Bombs\JudgeBomb.cpp" />
+    <ClCompile Include="MyMakeClasses\Bombs\LongBomb.cpp" />
+    <ClCompile Include="MyMakeClasses\Bombs\LongBreakBomb.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="MyMakeClasses\Bombs\MissBomb.cpp" />
     <ClCompile Include="MyMakeClasses\Bombs\OKBomb.cpp" />
     <ClCompile Include="MyMakeClasses\Bombs\UnbelievableBomb.cpp" />
+    <ClCompile Include="MyMakeClasses\ClapSound.cpp" />
     <ClCompile Include="MyMakeClasses\CONTROLL.cpp" />
     <ClCompile Include="MyMakeClasses\EffectBomb.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
@@ -186,11 +195,34 @@
     </ClCompile>
     <ClCompile Include="MyMakeClasses\FadeDisplay.cpp" />
     <ClCompile Include="MyMakeClasses\FADER.cpp" />
+    <ClCompile Include="MyMakeClasses\GameOverDisplay.cpp" />
     <ClCompile Include="MyMakeClasses\GamePlayState.cpp" />
     <ClCompile Include="MyMakeClasses\ImageFont.cpp" />
     <ClCompile Include="MyMakeClasses\INSTRUMENT.cpp" />
     <ClCompile Include="MyMakeClasses\JUDGE_DISPLAY.cpp" />
     <ClCompile Include="MyMakeClasses\LONGNOTE.cpp" />
+    <ClCompile Include="MyMakeClasses\Musicselect\Context.cpp" />
+    <ClCompile Include="MyMakeClasses\Musicselect\Difficulty.cpp" />
+    <ClCompile Include="MyMakeClasses\Musicselect\HighSpeedState.cpp" />
+    <ClCompile Include="MyMakeClasses\Musicselect\LevelState.cpp" />
+    <ClCompile Include="MyMakeClasses\Musicselect\SelectHighSpeed.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\Musicselect\MusicData.cpp" />
+    <ClCompile Include="MyMakeClasses\Musicselect\MusicDataManager.cpp" />
+    <ClCompile Include="MyMakeClasses\Musicselect\SelectSceneState.cpp" />
+    <ClCompile Include="MyMakeClasses\Musicselect\SongPlayState.cpp" />
+    <ClCompile Include="MyMakeClasses\Result\AbstructScoreDisplay.cpp" />
+    <ClCompile Include="MyMakeClasses\Result\JudgeDisPlay.cpp" />
+    <ClCompile Include="MyMakeClasses\Result\RankADisplay.cpp" />
+    <ClCompile Include="MyMakeClasses\Result\RankBDisplay.cpp" />
+    <ClCompile Include="MyMakeClasses\Result\RankCDisplay.cpp" />
+    <ClCompile Include="MyMakeClasses\Result\RankDDisplay.cpp" />
+    <ClCompile Include="MyMakeClasses\Result\RankSDisPlay.cpp" />
+    <ClCompile Include="MyMakeClasses\Result\ScoreDisplay.cpp" />
+    <ClCompile Include="MyMakeClasses\Result\ScoresManager.cpp" />
+    <ClCompile Include="MyMakeClasses\Result\RankFDisPlay.cpp" />
     <ClCompile Include="MyMakeClasses\SINGLENOTE.cpp" />
     <ClCompile Include="MyMakeClasses\UI.cpp" />
     <ClCompile Include="StdAfx.cpp">
@@ -232,7 +264,7 @@
     <ClCompile Include="Framework\Thread.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GameScene\MakeScene\CALIBRATION_SCENE.hpp" />
+    <ClInclude Include="GameScene\MakeScene\MUSICSELECT_SCENE.hpp" />
     <ClInclude Include="GameScene\MakeScene\RESULT_SCENE.hpp" />
     <ClInclude Include="GameScene\MakeScene\SONGPLAY_SCENE.h" />
     <ClInclude Include="Extension\Direct2D\Direct2D.hpp" />
@@ -246,16 +278,25 @@
     <ClInclude Include="Extension\OpenGL\OpenGL.hpp" />
     <ClInclude Include="Extension\Squirrel\Script.hpp" />
     <ClInclude Include="Extension\Squirrel\Squirrel.hpp" />
+    <ClInclude Include="GameScene\MakeScene\THANK_SCENE.hpp" />
+    <ClInclude Include="GameScene\MakeScene\TITLE_SCENE.hpp" />
     <ClInclude Include="GameScene\SceneShared.hpp" />
     <ClInclude Include="GameScene\TemplateScene.hpp" />
     <ClInclude Include="MyMakeClasses\ABSTRUCT_NOTE.h" />
     <ClInclude Include="MyMakeClasses\Bombs\AbstructBomb.h" />
+    <ClInclude Include="MyMakeClasses\Bombs\FlashBomb.h" />
     <ClInclude Include="MyMakeClasses\Bombs\GreatBomb.h" />
     <ClInclude Include="MyMakeClasses\Bombs\JudgeBomb.h" />
+    <ClInclude Include="MyMakeClasses\Bombs\LongBomb.h" />
+    <ClInclude Include="MyMakeClasses\Bombs\LongBreakBomb.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="MyMakeClasses\Bombs\MissBomb.h" />
     <ClInclude Include="MyMakeClasses\Bombs\OKBomb.h" />
     <ClInclude Include="MyMakeClasses\Bombs\UnbelievableBomb.h" />
     <ClInclude Include="MyMakeClasses\BPM_DATA_STRUCT.h" />
+    <ClInclude Include="MyMakeClasses\ClapSound.h" />
     <ClInclude Include="MyMakeClasses\CONTROLL.h" />
     <ClInclude Include="MyMakeClasses\EffectBomb.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
@@ -264,6 +305,7 @@
     <ClInclude Include="MyMakeClasses\FadeDisplay.h" />
     <ClInclude Include="MyMakeClasses\FADER.h" />
     <ClInclude Include="MyMakeClasses\AbstructState.h" />
+    <ClInclude Include="MyMakeClasses\GameOverDisplay.h" />
     <ClInclude Include="MyMakeClasses\GamePlayState.h" />
     <ClInclude Include="MyMakeClasses\HIGHSPEED.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
@@ -274,6 +316,35 @@
     <ClInclude Include="MyMakeClasses\JUDGELIST_ENUM.h" />
     <ClInclude Include="MyMakeClasses\JUDGE_DISPLAY.h" />
     <ClInclude Include="MyMakeClasses\LONGNOTE.h" />
+    <ClInclude Include="MyMakeClasses\Musicselect\Context.h" />
+    <ClInclude Include="MyMakeClasses\Musicselect\Difficulty.h" />
+    <ClInclude Include="MyMakeClasses\Musicselect\HighSpeedState.h" />
+    <ClInclude Include="MyMakeClasses\Musicselect\LevelState.h" />
+    <ClInclude Include="MyMakeClasses\Musicselect\LevelEnum.h" />
+    <ClInclude Include="MyMakeClasses\Musicselect\SelectHighSpeed.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Musicselect\LevelData.h" />
+    <ClInclude Include="MyMakeClasses\Musicselect\MusicData.h" />
+    <ClInclude Include="MyMakeClasses\Musicselect\MusicDataManager.h" />
+    <ClInclude Include="MyMakeClasses\Musicselect\SelectSceneState.h" />
+    <ClInclude Include="MyMakeClasses\Musicselect\SongData.h" />
+    <ClInclude Include="MyMakeClasses\Musicselect\SongPlayState.h" />
+    <ClInclude Include="MyMakeClasses\Result\AbstructRankDisplay.h" />
+    <ClInclude Include="MyMakeClasses\Result\JudgeDisplay.h" />
+    <ClInclude Include="MyMakeClasses\Result\RankADisplay.h" />
+    <ClInclude Include="MyMakeClasses\Result\RankBDisplay.h" />
+    <ClInclude Include="MyMakeClasses\Result\RankCDisplay.h" />
+    <ClInclude Include="MyMakeClasses\Result\RankDDisplay.h" />
+    <ClInclude Include="MyMakeClasses\Result\RankFDisplay.h" />
+    <ClInclude Include="MyMakeClasses\Result\RankSDisplay.h" />
+    <ClInclude Include="MyMakeClasses\Result\ScoreDisplay.h" />
+    <ClInclude Include="MyMakeClasses\Result\ScoresManager.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Result\AbstructScoreDisplay.h" />
     <ClInclude Include="MyMakeClasses\SINGLENOTE.h" />
     <ClInclude Include="MyMakeClasses\UI.h" />
     <ClInclude Include="StdAfx.h" />

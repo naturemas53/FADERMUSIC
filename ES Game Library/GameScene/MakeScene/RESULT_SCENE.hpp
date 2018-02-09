@@ -4,6 +4,7 @@
 #include "../../ESGLib.h"
 #include "../../MyMakeClasses/JUDGELIST_ENUM.h"
 #include "../../MyMakeClasses/FadeDisplay.h"
+#include "../../MyMakeClasses/Result/ScoresManager.h"
 
 
 class RESULT_SCENE : public CGameScene {
@@ -61,6 +62,7 @@ private:
 
 		FADEIN,
 		DISPLAYNOW,
+		PUSHWAIT,
 		FADEOUT
 
 	};
@@ -78,6 +80,10 @@ private:
 	int maxcombo_;
 
 	RESULT_SCENE::STATE state_;
+
+	ScoresManager* scoremanager_;
+
+	MEDIA movie_;
 
 	// 関数プロトタイプ
 

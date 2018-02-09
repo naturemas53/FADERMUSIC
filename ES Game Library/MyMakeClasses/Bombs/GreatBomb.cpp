@@ -2,7 +2,7 @@
 
 SPRITE GreatBomb::sprite_ = nullptr;
 
-GreatBomb::GreatBomb() : JudgeBomb(250, 5, 5, Vector2(120.0f, 120.0f),GREAT){
+GreatBomb::GreatBomb() : JudgeBomb(200, 5, 5, Vector2(120.0f, 120.0f),GREAT){
 
 	if (this->sprite_ == nullptr){
 

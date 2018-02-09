@@ -115,6 +115,9 @@ bool CGameApp::Initialize(const HINSTANCE hInstance)
 	   == false)
 		return false;
 
+	//動画のそれをアタッチ
+	DShow().Attach(DXGraphics());
+
 	// DirectInput初期化
 	if(DInput().Initialize(m_GameFrameWindow.GetHWnd()) == false)
 		return false;
@@ -135,8 +138,14 @@ bool CGameApp::Initialize(const HINSTANCE hInstance)
 	//ウインドウタイトル設定
 	WindowTitle(_T("FADER MUSIC"));
 
+	//マウス初期化
+	DInput().CreateMouse();
+
+	//ゲームパッド初期化
+	DInput().CreateGamePad(1);
+
 	// ゲームシーン設定
-	if(m_GameProc.CreateScene(new CALIBRATION_SCENE()) == false)
+	if (m_GameProc.CreateScene(new TITLE_SCENE()) == false)
 		return false;
 
 	return true;

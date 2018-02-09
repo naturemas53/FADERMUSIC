@@ -37,7 +37,7 @@ void MissBomb::Draw(){
 	RectWH userect = RectWH(rectleft, recttop, (int)this->CELLSIZE_.x, (int)this->CELLSIZE_.y);
 
 	SPRITE sp = this->addsprite_;
-	Color color = Color(0.5f, 0.5f, 0.5f);
+	Color color = Color(0.7f, 0.7f, 0.7f,0.5f);
 	Vector2 cellsize = this->CELLSIZE_;
 
 	SpriteBatch.Begin();

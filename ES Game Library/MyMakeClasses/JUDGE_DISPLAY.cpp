@@ -9,8 +9,8 @@ FIRST_COUNT_(5),
 SECOND_COUNT_(10),
 THIRD_COUNT_(10),
 FIRST_SCALE_(0.1f),
-SECOND_SCALE_(0.5f),
-THIRD_SCALE_(0.45f)
+SECOND_SCALE_(0.4f),
+THIRD_SCALE_(0.35f)
 {
 
 	this->transparency_ = 0.0f;

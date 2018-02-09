@@ -106,12 +106,22 @@ void* CSceneShared::GetDataForKey(const char* pKey)
 //------------------------------------------------------------------------------
 //	•¶Žš—ñŽæ“¾
 //------------------------------------------------------------------------------
-std::basic_string<TCHAR> CSceneShared::GetStringForKey(const char* pKey)
+std::basic_string<wchar_t> CSceneShared::GetWStringForKey(const char* pKey)
 {
-	std::map< std::basic_string<char>, std::basic_string<TCHAR> >::iterator it;
+	std::map< std::basic_string<char>, std::basic_string<wchar_t> >::iterator it;
+	it = m_MapWString.find(pKey);
+	if(it == m_MapWString.end())
+		return std::basic_string<wchar_t>();
+
+	return it->second;
+}
+
+std::basic_string<char> CSceneShared::GetStringForKey(const char* pKey)
+{
+	std::map< std::basic_string<char>, std::basic_string<char> >::iterator it;
 	it = m_MapString.find(pKey);
-	if(it == m_MapString.end())
-		return std::basic_string<TCHAR>();
+	if (it == m_MapString.end())
+		return std::basic_string<char>();
 
 	return it->second;
 }

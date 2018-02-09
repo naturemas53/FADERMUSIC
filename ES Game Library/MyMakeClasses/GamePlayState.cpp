@@ -4,20 +4,29 @@
 #include "ImageFont.h"
 #include "CONTROLL.h"
 #include "../GameScene/GameScene.hpp"
+#include <string>
 
 
 GamePlayState::GamePlayState(){
 
 	IMAGEFONT; //‰æ‘œ‚Ì‰Šú‰»
 
-	MediaManager.Attach(GraphicsDevice);
+	std::wstring buf;
 
-	movie_ = MediaManager.CreateMediaFromFile(_T("backmovie.wmv"));
+	buf = SceneShared().GetWStringForKey("MOVIE");
+	movie_ = MediaManager.CreateMediaFromFile(const_cast<wchar_t *>(buf.c_str()));
+	SceneShared().RemoveWStringForKey("MOVIE");
 
-	this->bgm_ = SoundDevice.CreateSoundFromFile(_T("nc136149.wav"));
+	buf.clear();
 
-	this->instrument_ = new INSTRUMENT(SceneShared().GetLongIntegerForKey("MOUSE_MAX_Y"), this->bpmlist_, "test.txt");
-	SceneShared().RemoveLongIntegerForKey("MOUSE_MAX_Y");
+	buf = SceneShared().GetWStringForKey("MUSIC");
+	this->bgm_ = SoundDevice.CreateSoundFromFile(const_cast<wchar_t *>(buf.c_str()));
+	SceneShared().RemoveWStringForKey("MUSIC");
+
+	std::string str;
+	str = SceneShared().GetStringForKey("MUSICSCORE");
+	this->instrument_ = new INSTRUMENT(4500, this->bpmlist_, str.c_str());
+	SceneShared().RemoveStringForKey("MUSICSCORE");
 	this->ui_ = new UI();
 
 	auto itr = this->bpmlist_.begin();
@@ -36,6 +45,9 @@ GamePlayState::GamePlayState(){
 	this->score_ = 0;
 	this->life_ = 0.5f;
 	this->maxcombo_ = 0;
+
+	this->scorejudge_ = JUDGECOUNT();
+	this->accuracyjudge_ = JUDGECOUNT();
 
 	this->playstate_ = GamePlayState::READY;
 
@@ -81,6 +93,10 @@ AbstructState* GamePlayState::Update(){
 	}
 	this->ui_->Update();
 
+	if (this->movie_->IsComplete()){
+		this->movie_->Replay();
+	}
+
 	return nullptr;
 
 }
@@ -103,7 +119,7 @@ void GamePlayState::Draw(){
 
 	IMAGEFONT.DrawString(animationrate_);
 
-		this->fade_.Draw();
+	this->fade_.Draw();
 
 }
 
@@ -159,7 +175,7 @@ void GamePlayState::ToUITellValue(){
 
 	accuracyjudge = instrument_->GetAccuracyJudge();
 	this->accuracy_ += accuracyjudge.GetAccuracy();
-	this->accuracyjudge_ += accuracyjudge_;
+	this->accuracyjudge_ += accuracyjudge;
 
 	if (this->maxcombo_ < instrument_->GetCombo())this->maxcombo_ = instrument_->GetCombo();
 
@@ -185,15 +201,18 @@ void GamePlayState::SetSceneShared(bool clearflag){
 	SceneShared().SetBoolForKey("CLEARFLAG", clearflag);
 
 	JUDGECOUNT* takescorejudge = new JUDGECOUNT();
-	JUDGECOUNT* takeraccuracyjudge = new JUDGECOUNT();
+	JUDGECOUNT* takeaccuracyjudge = new JUDGECOUNT();
 
 	*takescorejudge = this->scorejudge_;
-	*takeraccuracyjudge = this->accuracyjudge_;
+	*takeaccuracyjudge = this->accuracyjudge_;
 	SceneShared().SetDataForKey("SCOREJUDGE", takescorejudge);
-	SceneShared().SetDataForKey("ACCURACYJUDGE", takeraccuracyjudge);
+	SceneShared().SetDataForKey("COOLJUDGE", takeaccuracyjudge);
+
+	float accuracyrate = (float)this->accuracy_/ (float)(instrument_->GetNotesCount() * 100);
+	int trueaccuracy =(int) (accuracyrate * 100000.0f);
 
 	SceneShared().SetIntegerForKey("SCORE", this->score_);
-	SceneShared().SetIntegerForKey("ACCURACY", this->accuracy_);
+	SceneShared().SetIntegerForKey("ACCURACY", trueaccuracy);
 	SceneShared().SetIntegerForKey("MAXCOMBO", this->maxcombo_);
 
 }

@@ -2,6 +2,8 @@
 #include "../ESGLib.h"
 #include "JUDGELIST_ENUM.h"
 #include "EffectBomb.h"
+#include "ClapSound.h"
+#include "CONTROLL.h"
 #include <list>
 #include <map>
 
@@ -25,7 +27,7 @@ class FADER
 {
 public:
 
-	FADER(Vector3 draw_pos, Keys asign_key);
+	FADER(Vector3 draw_pos, BUTTONTYPE asign_key);
 	~FADER();
 
 	void Update(int nowtime, int elapsedtime, float button_height_rate, long elapsedcount);
@@ -75,7 +77,6 @@ private:
 	static SPRITE normal_sprite_;
 	static SPRITE button_sprite_;
 	static std::map<Color_by_Name, SPRITE>* color_playareas_;
-	static SOUND pushsound_;
 
 	const Vector2 SIZE_;
 	const Vector2 INNER_SIZE_;
@@ -83,7 +84,7 @@ private:
 	const float INNER_LEFT_POS_;
 	const float BUTTON_SIZE_;
 	const float ACCEPTABLE_RANGE_;
-	const Keys ASIGN_KEY_;
+	const BUTTONTYPE ASIGN_KEY_;
 	const Vector3 DRAW_POS_;
 	const Vector3 INNER_POS_;
 	
@@ -94,6 +95,7 @@ private:
 	JUDGELIST accuracy_judge_;
 
 	EffectBomb* effectbomb_;
+	ClapSound* clapsound_;
 
 	int total_elapsed_;
 	int songbpm_;

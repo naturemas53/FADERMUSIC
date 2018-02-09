@@ -28,6 +28,7 @@
 #include <map>
 #include <string>
 #include <tchar.h>
+//#include <winnt.h>
 
 //------------------------------------------------------------------------------
 //	シーン共有クラス定義
@@ -73,12 +74,27 @@ public:
 	inline void RemoveDataForKey   (const char* pKey)						{ m_MapVoidPtr.erase(pKey);    }
 	void* GetDataForKey(const char* pKey);
 
+	// ワイド文字列
+	inline void SetWStringForKey(const char* pKey, const std::basic_string<wchar_t> inString)
+	{
+		m_MapWString[pKey] = inString;
+	}
+	inline void RemoveWStringForKey(const char* pKey)
+	{
+		m_MapWString.erase(pKey);
+	}
+	std::basic_string<wchar_t> GetWStringForKey(const char* pKey);
+
 	// 文字列
-	inline void SetStringForKey(const char* pKey, const std::basic_string<TCHAR> inString)
-	{ m_MapString[pKey] = inString; }
+	inline void SetStringForKey(const char* pKey, const std::basic_string<char> inString)
+	{
+		m_MapString[pKey] = inString;
+	}
 	inline void RemoveStringForKey(const char* pKey)
-	{ m_MapString.erase(pKey);      }
-	std::basic_string<TCHAR> GetStringForKey(const char* pKey);
+	{
+		m_MapString.erase(pKey);
+	}
+	std::basic_string<char> GetStringForKey(const char* pKey);
 
 private:
 	CSceneShared() {}
@@ -90,7 +106,9 @@ private:
 	std::map<std::basic_string<char>, bool  >   m_MapBool;
 	std::map<std::basic_string<char>, void* >   m_MapVoidPtr;
 	std::map<std::basic_string<char>,
-				   std::basic_string<TCHAR> >   m_MapString;
+		std::basic_string<wchar_t> >   m_MapWString;
+	std::map<std::basic_string<char>,
+		std::basic_string<char> >   m_MapString;
 };
 
 //------------------------------------------------------------------------------

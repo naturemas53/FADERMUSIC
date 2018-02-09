@@ -35,6 +35,8 @@
 
 #include <d3d9.h>
 
+class CMedia;
+
 //------------------------------------------------------------------------------
 //	GUID定義
 //------------------------------------------------------------------------------
@@ -44,6 +46,8 @@ struct __declspec(uuid("{7A168DBA-32F8-4e07-86E9-76AA3802F83C}")) CLSID_D3DTextu
 //	Direct3DTexture9レンダラー定義
 //------------------------------------------------------------------------------
 class CD3DTexture9Renderer : public CBaseVideoRenderer {
+friend CMedia;
+
 public:
 	CD3DTexture9Renderer(IDirect3DDevice9* pD3DDevice, HRESULT* pHR);
 	virtual ~CD3DTexture9Renderer();
@@ -51,6 +55,7 @@ public:
 	virtual HRESULT CheckMediaType(const CMediaType* pMediaFormat);
 	virtual HRESULT SetMediaType  (const CMediaType* pMediaFormat);
 	virtual HRESULT DoRenderSample(IMediaSample* pMediaSample);
+	virtual HRESULT DoRenderSampleMono(IMediaSample* pMediaSample);
 	virtual void OnReceiveFirstSample(IMediaSample* pMediaSample);
 
 	IDirect3DTexture9* GetTexture() const { return m_pTexture[m_Primary]; }
@@ -61,13 +66,15 @@ public:
 private:
 	IDirect3DDevice9*    m_pD3DDevice;
 
-	IDirect3DTexture9*   m_pTexture[2];
-	D3DFORMAT            m_Format  [2];
+	IDirect3DTexture9*   m_pTexture[3];
+	D3DFORMAT            m_Format  [3];
 	int                  m_Primary;
 
 	int                  m_Width;
 	int                  m_Height;
 	int                  m_Pitch;
+
+	bool                 m_Mono;
 
 	template <class T> inline void SafeRelease(T& x)
 	{ if(x != NULL) { x->Release(); x = NULL; } }
@@ -111,6 +118,8 @@ public:
 	virtual void Suspend() = 0;
 	virtual void Resume () = 0;
 
+	virtual void PlayMono() = 0;
+
 	// オペレータ
 	virtual operator IDirect3DTexture9*() const = 0;
 };
@@ -125,7 +134,7 @@ public:
 
 	bool LoadFromFile(LPCTSTR inFileName);
 
-	virtual void Play  () { m_pMediaControl->Run  (); }
+	virtual void Play() { m_pD3DTxtRenderer->m_Mono = false; m_pMediaControl->Run(); }
 	virtual void Stop  () { m_pMediaControl->Stop (); }
 	virtual void Pause () { m_pMediaControl->Pause(); }
 	virtual void Replay();
@@ -158,6 +167,8 @@ public:
 
 	virtual operator IDirect3DTexture9*() const
 	{ return m_pD3DTxtRenderer->GetTexture(); }
+
+	virtual void PlayMono() { m_pD3DTxtRenderer->m_Mono = true; m_pMediaControl->Run(); }
 
 private:
 	void Release();
@@ -220,6 +231,8 @@ public:
 
 	virtual void Suspend() {}
 	virtual void Resume () {}
+
+	virtual void PlayMono() {}
 
 	virtual operator IDirect3DTexture9*() const { return NULL; }
 };

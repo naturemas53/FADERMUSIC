@@ -2,14 +2,12 @@
 #include "SINGLENOTE.h"
 #include "LONGNOTE.h"
 #include <cstdlib>
-#include "CONTROLL.h"
 
 SPRITE FADER::button_sprite_ = nullptr;
 SPRITE FADER::normal_sprite_ = nullptr;
 std::map<Color_by_Name, SPRITE>* FADER::color_playareas_ = nullptr;
-SOUND FADER::pushsound_ = nullptr;
 
-FADER::FADER(Vector3 draw_pos, Keys asign_key) :
+FADER::FADER(Vector3 draw_pos, BUTTONTYPE asign_key) :
 SIZE_(Vector2(236.0f,596.0f)),
 INNER_SIZE_(Vector2(180.0f,540.0f)),
 INNER_TOP_POS_((this->SIZE_.x - this->INNER_SIZE_.x) / 2.0f),
@@ -23,7 +21,6 @@ INNER_POS_(Vector3(draw_pos.x + this->INNER_TOP_POS_, draw_pos.y + this->INNER_L
 
 	if (this->normal_sprite_ == nullptr) this->normal_sprite_ = GraphicsDevice.CreateSpriteFromFile(_T("fader/fader_normal.png"));
 	if (this->button_sprite_ == nullptr) this->button_sprite_ = GraphicsDevice.CreateSpriteFromFile(_T("button/newbutton_normal.png"));
-	if (this->pushsound_ == nullptr) this->pushsound_ = SoundDevice.CreateSoundFromFile(_T("pushsound.wav"));
 
 	if (this->color_playareas_ == nullptr){
 
@@ -46,18 +43,13 @@ INNER_POS_(Vector3(draw_pos.x + this->INNER_TOP_POS_, draw_pos.y + this->INNER_L
 
 	this->total_elapsed_ = 0;
 
-	effectbomb_ = new EffectBomb();
+	this->effectbomb_ = new EffectBomb();
+	this->clapsound_ = new ClapSound();
 }
 
 
 FADER::~FADER()
 {
-
-	if (this->pushsound_ != nullptr){
-
-		SoundDevice.ReleaseSound(this->pushsound_);
-		this->pushsound_ = nullptr;
-	}
 
 	if (this->color_playareas_ != nullptr){
 
@@ -85,6 +77,7 @@ FADER::~FADER()
 	}
 
 	delete this->effectbomb_;
+	delete this->clapsound_;
 
 }
 
@@ -124,7 +117,13 @@ void FADER::SingleNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, int now
 		if (this->IsInForButton(top_itr, button_height_rate)){
 
 			JUDGELIST judge = Judge(abs(betweentime));
-			this->pushsound_->Play();
+
+			if (judge == UNBELIEVABLE){
+
+				this->effectbomb_->SetFlashBomb(this->INNER_POS_, this->INNER_SIZE_, (*top_itr)->GetHeightRate());
+
+			}
+
 			NoteErase(top_itr, judge, (*top_itr)->GetHeightRate());
 			return;
 
@@ -172,6 +171,8 @@ void FADER::LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, int nowti
 
 				if (!top_long->IsHaveRightPower()){
 
+					this->effectbomb_->SetLongBreakBomb(this->INNER_POS_, this->INNER_SIZE_,
+						top_long->GetHeightRate(), top_long->GetColor(), top_long->GetLongXScale());
 					NoteErase(top_itr, MISSTIME,(*top_itr)->GetHeightRate());
 					return;
 				}
@@ -180,7 +181,8 @@ void FADER::LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, int nowti
 
 			if (top_long->GetTimingSlowMostPoint() < nowtime){
 
-				this->pushsound_->Play();
+				this->effectbomb_->SetLongBomb(this->INNER_POS_, this->INNER_SIZE_,
+					top_long->GetHeightRate(), top_long->GetColor());
 				NoteErase(top_itr, this->longjudge_, (*top_itr)->GetHeightRate());
 				return;
 
@@ -194,10 +196,11 @@ void FADER::LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, int nowti
 			releasejudge = Judge(abs(top_long->GetTimingSlowMostPoint() - nowtime));
 			if (releasejudge != MISSTIME && releasejudge != OUCH){
 				finaljudge = this->longjudge_;
-				this->pushsound_->Play();
 			}
 			else{
 				finaljudge = MISSTIME;
+				this->effectbomb_->SetLongBreakBomb(this->INNER_POS_,this->INNER_SIZE_,
+					top_long->GetHeightRate(),top_long->GetColor(),top_long->GetLongXScale());
 			}
 			NoteErase(top_itr, finaljudge, (*top_itr)->GetHeightRate());
 			return;
@@ -209,11 +212,16 @@ void FADER::LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, int nowti
 
 		if (this->IsInForButton(top_itr, button_height_rate)){
 
-			this->pushsound_->Play();
-
 			this->longjudge_ = Judge(abs(betweentime));
 			this->score_judge_.judge = this->longjudge_;
 			this->score_judge_.height = (*top_itr)->GetHeightRate();
+
+			if (this->longjudge_ == UNBELIEVABLE){
+
+				this->effectbomb_->SetFlashBomb(this->INNER_POS_, this->INNER_SIZE_, (*top_itr)->GetHeightRate());
+
+			}
+			this->clapsound_->Play(this->longjudge_);
 
 			top_long->Push();
 			this->total_elapsed_ = 0;
@@ -257,8 +265,7 @@ void FADER::Draw(float button_height_rate, float animationrate, int nowtime, flo
 
 	this->FaderDraw(animenum, animationrate);
 
-	this->effectbomb_->Draw();
-
+	this->effectbomb_->BeforeDraw();
 
 	this->NoteDraw(animationrate,nowtime,highspeed);
 
@@ -266,6 +273,8 @@ void FADER::Draw(float button_height_rate, float animationrate, int nowtime, flo
 	this->ButtonDraw(button_height_rate);
 	SpriteBatch.End();
 
+	this->effectbomb_->AfterDraw();
+	
 }
 
 void FADER::FaderDraw(int animecount, float animationrate){
@@ -404,6 +413,8 @@ void FADER::NoteErase(std::list<ABSTRUCT_NOTE*>::iterator erase_itr, JUDGELIST j
 	this->effectbomb_->SetJudgeBomb( this->INNER_POS_, this->INNER_SIZE_, (*erase_itr)->GetHeightRate(), judge);
 
 	this->notelist_.erase(erase_itr);
+
+	this->clapsound_->Play(judge);
 
 	this->score_judge_.judge = judge;
 	this->score_judge_.height = height;

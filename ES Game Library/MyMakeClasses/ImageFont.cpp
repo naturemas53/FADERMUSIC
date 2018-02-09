@@ -61,7 +61,7 @@ void ImageFont::DrawImageString(Vector3 position, Vector2 size, std::string& str
 		rect_y = rectnum / (int)this->imagecell_.x;
 		userect = RectWH(rect_x * cell_x, rect_y * cell_y, cell_x, cell_y);
 		color = colormask;
-		color.A(addalpha);
+		//color.A(addalpha);
 		
 		SpriteBatch.Draw(*sp, pos, userect,color, Vector3_Zero, Vector3_Zero, scale);
 
@@ -100,7 +100,7 @@ void ImageFont::DrawString(float addalpha){
 			SpriteBatch.Begin();
 			GraphicsDevice.SetBlendMode(DXGBLEND_ADD);
 
-			this->DrawImageString(strdata.position, strdata.size, strdata.str, Color(255,255,255), addalpha * 0.5f);
+			this->DrawImageString(strdata.position, strdata.size, strdata.str, Color(1.0f,1.0f,1.0f, addalpha * 0.5f), addalpha * 0.5f);
 
 			GraphicsDevice.SetBlendMode(DXGBLEND_NORMAL);
 			SpriteBatch.End();

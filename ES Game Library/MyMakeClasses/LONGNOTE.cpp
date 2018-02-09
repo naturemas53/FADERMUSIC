@@ -166,7 +166,7 @@ bool LONGNOTE::Draw(Vector3 fader_top_pos, Vector2 fader_inner, float animation_
 
 	float scale = (this->ispush_) ? this->long_xscale_ : triangle_x_scale;
 
-	//SpriteBatch.Draw(*sp, pos, color, Vector3_Zero, Vector3(this->WIDTH_ / 2.0f, 0.0f, 0.0f), Vector2(scale, 1.0f));
+	SpriteBatch.Draw(*sp, pos, color, Vector3_Zero, Vector3(this->WIDTH_ / 2.0f, 0.0f, 0.0f), Vector2(scale, 1.0f));
 
 	DrawTriangle(fader_top_pos, fader_inner.y, nowtime, longtime,animation_rate, triangle_x_scale,addblend);
 

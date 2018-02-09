@@ -17,7 +17,7 @@ bool RESULT_SCENE::Initialize()
 	this->clearflag_ = SceneShared().GetBoolForKey("CLEARFLAG");
 
 	JUDGECOUNT* scorejudge = (JUDGECOUNT*)SceneShared().GetDataForKey("SCOREJUDGE");
-	JUDGECOUNT* accuracyjudge = (JUDGECOUNT*)SceneShared().GetDataForKey("ACCURACYJUDGE");
+	JUDGECOUNT* accuracyjudge = (JUDGECOUNT*)SceneShared().GetDataForKey("COOLJUDGE");
 	this->scorejudge_ = *scorejudge;
 	this->accuracyjudge_ = *accuracyjudge;
 
@@ -27,7 +27,7 @@ bool RESULT_SCENE::Initialize()
 
 	SceneShared().RemoveBoolForKey("CLEARFLAG");
 	SceneShared().RemoveDataForKey("SCOREJUDGE");
-	SceneShared().RemoveDataForKey("ACCURACYJUDGE");
+	SceneShared().RemoveDataForKey("COOLJUDGE");
 	SceneShared().RemoveIntegerForKey("SCORE");
 	SceneShared().RemoveIntegerForKey("ACCURACY");
 	SceneShared().RemoveIntegerForKey("MAXCOMBO");
@@ -35,6 +35,19 @@ bool RESULT_SCENE::Initialize()
 	delete accuracyjudge;
 
 	this->state_ = RESULT_SCENE::FADEIN;
+
+	this->scoremanager_ = new ScoresManager(this->clearflag_,this->score_,this->accuracy_,this->accuracyjudge_);
+
+	this->movie_ = MediaManager.CreateMediaFromFile(_T("result/result_movie.wmv"));
+
+	if (this->clearflag_){
+		this->movie_->Play();
+	}
+	else{
+
+		this->movie_->PlayMono();
+
+	}
 
 	return true;
 }
@@ -46,7 +59,8 @@ bool RESULT_SCENE::Initialize()
 void RESULT_SCENE::Finalize()
 {
 	// TODO: Add your finalization logic here
-
+	MediaManager.ReleaseMedia(this->movie_);
+	delete this->scoremanager_;
 }
 
 /// <summary>
@@ -62,6 +76,8 @@ int RESULT_SCENE::Update()
 
 	CONTROLL::GetInstance().Update();
 
+	int scoremanager = this->scoremanager_->Update(GameTimer.GetElapsedMilliSecond());
+
 	switch (this->state_){
 
 	case RESULT_SCENE::FADEIN:
@@ -69,13 +85,14 @@ int RESULT_SCENE::Update()
 		if (fade_.Update()){
 
 			this->state_ = RESULT_SCENE::DISPLAYNOW;
+			this->scoremanager_->ShowStart();
 
 		}
 		else if(this->IsPush()){
 
 			fade_.Skip();
 			this->state_ = RESULT_SCENE::DISPLAYNOW;
-
+			this->scoremanager_->ShowStart();
 		}
 
 		break;
@@ -84,24 +101,38 @@ int RESULT_SCENE::Update()
 
 		if (this->IsPush()){
 
+			this->scoremanager_->Skip();
+
+		}
+
+		if (scoremanager){
+			this->state_ = RESULT_SCENE::PUSHWAIT;
+		}
+
+		break;
+
+	case RESULT_SCENE::PUSHWAIT:
+		
+
+		if (this->IsPush()){
+
 			fade_.SetFadeState(FadeDisplay::FADEOUT);
 			this->state_ = RESULT_SCENE::FADEOUT;
 
 		}
-
+		
 		break;
 
 	case RESULT_SCENE::FADEOUT:
 
 		if (fade_.Update()){
 
-			return GAME_SCENE(new CALIBRATION_SCENE());
+			return GAME_SCENE(new THANK_SCENE());
 
 		}
 		else if (this->IsPush()){
 
 			fade_.Skip();
-			return GAME_SCENE(new CALIBRATION_SCENE());
 
 		}
 
@@ -109,6 +140,12 @@ int RESULT_SCENE::Update()
 
 	default:
 		break;
+	}
+
+	if (this->movie_->IsComplete()){
+
+		this->movie_->Replay();
+
 	}
 
 	return 0;
@@ -124,37 +161,54 @@ void RESULT_SCENE::Draw()
 
 	GraphicsDevice.BeginScene();
 
+	SpriteBatch.Begin();
+	SpriteBatch.Draw(*movie_,Vector3_Zero,0.7f);
+	SpriteBatch.End();
+
+	Viewport viewport = GraphicsDevice.GetViewport();
+
 	std::string str;
+	Vector2 bigcellsize = IMAGEFONT.GetCellSize() * 1.3f;
+	Vector2 biggestcellsize = IMAGEFONT.GetCellSize() * 1.8f;
+	Color color = Color(1.0f, 1.0f, 1.0f);
+	Vector2 drawsize;
 
 	if (this->clearflag_){
 
-		str = ("STAGE CLEARED");
+		str = ("CLEARED");
+		color = Color(1.0f,1.0f,0.0f);
 
 	}
 	else{
 
-		str = ("STAGE FAILED");
+		str = ("FAILED");
+		color = Color(1.0f, 0.0, 0.0f);
 
 	}
 
-	Vector2 bigcellsize = IMAGEFONT.GetCellSize();
-	Vector2 smollcellsize = IMAGEFONT.GetCellSize() / 2.0f;
-	Vector2 drawsize;
+	drawsize = IMAGEFONT.GetDrawSize(biggestcellsize, str.c_str());
 
-	drawsize = IMAGEFONT.GetDrawSize(bigcellsize,str.c_str());
+	float resultstr_x = drawsize.x;
+
+	drawsize = IMAGEFONT.GetDrawSize(bigcellsize, "STAGE");
+	resultstr_x += drawsize.x;
+	
 	Vector3 pos = Vector3_Zero;
-	Viewport viewport = GraphicsDevice.GetViewport();
-	pos.x = (viewport.Width - drawsize.x) / 2.0f;
-	pos.y = (viewport.Height - drawsize.y) / 2.0f - 100.0f;
+	pos.x = (viewport.Width - resultstr_x) / 2.0f;
+	IMAGEFONT.DirectDrawImageString(pos, bigcellsize, Color(255, 255, 255), "STAGE");
+	pos.x += drawsize.x;
+	IMAGEFONT.DirectDrawImageString(pos, biggestcellsize, color, str.c_str());
 
-	IMAGEFONT.DirectDrawImageString(pos,bigcellsize,Color(255,255,255),str.c_str());
+	Vector2 smollcellsize = IMAGEFONT.GetCellSize() / 2.0f;
 
 	drawsize = IMAGEFONT.GetDrawSize(smollcellsize, "RETRY TO PUSH SorDorF");
 	pos = Vector3_Zero;
 	pos.x = (viewport.Width - drawsize.x) / 2.0f;
-	pos.y = (viewport.Height - drawsize.y) - 100.0f;
+	pos.y = (viewport.Height - drawsize.y);
 
 	IMAGEFONT.DirectDrawImageString(pos, smollcellsize, Color(255, 255, 255),"RETRY TO PUSH SorDorF");
+
+	this->scoremanager_->Draw();
 
 	fade_.Draw();
 
@@ -163,9 +217,9 @@ void RESULT_SCENE::Draw()
 
 bool RESULT_SCENE::IsPush(){
 
-	if (CONTROLL::GetInstance().BufferIsPress(Keys_S)||
-		CONTROLL::GetInstance().BufferIsPress(Keys_D) || 
-		CONTROLL::GetInstance().BufferIsPress(Keys_F) ){
+	if (CONTROLL::GetInstance().BufferIsPress(LEFT)||
+		CONTROLL::GetInstance().BufferIsPress(CENTER) || 
+		CONTROLL::GetInstance().BufferIsPress(RIGHT) ){
 
 		return true;
 

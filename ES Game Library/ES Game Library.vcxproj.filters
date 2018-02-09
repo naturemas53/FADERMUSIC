@@ -124,6 +124,24 @@
     <Filter Include="ソース ファイル\MyMakeClasses\Bombs">
       <UniqueIdentifier>{3e7c9eb2-d9f4-43e8-ba55-cac12ed0b0e9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\MyMakeClasses\Result">
+      <UniqueIdentifier>{c073efac-9c86-40fb-ad4f-1f6b53c86444}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\MyMakeClasses\Result">
+      <UniqueIdentifier>{72520bdc-9a98-4235-85d6-b2e6c4695d3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\MyMakeClasses\Musicselect">
+      <UniqueIdentifier>{597d2288-44e9-43cd-a7a6-e38db472d7d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\MyMakeClasses\GamePlay">
+      <UniqueIdentifier>{6598312b-2790-4a85-92dd-29fcb14eff3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\MyMakeClasses\MusicSelect">
+      <UniqueIdentifier>{d5c06fca-b1d5-4638-a077-922b20028cdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\MyMakeClasses\GamePlay">
+      <UniqueIdentifier>{e4fcccd1-1d18-4b02-8d84-7e56c6c6740a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -265,50 +283,11 @@
     <ClCompile Include="Extension\Direct2D\Direct2D.cpp">
       <Filter>ソース ファイル\拡張\Direct2D</Filter>
     </ClCompile>
-    <ClCompile Include="GameScene\MakeScene\CALIBRATION_SCENE.cpp">
-      <Filter>ソース ファイル\ゲームシーン</Filter>
-    </ClCompile>
     <ClCompile Include="GameScene\MakeScene\SONGPLAY_SCENE.cpp">
       <Filter>ソース ファイル\ゲームシーン</Filter>
     </ClCompile>
-    <ClCompile Include="MyMakeClasses\ABSTRUCT_NOTE.cpp">
-      <Filter>ソース ファイル\MyMakeClasses</Filter>
-    </ClCompile>
-    <ClCompile Include="MyMakeClasses\CONTROLL.cpp">
-      <Filter>ソース ファイル\MyMakeClasses</Filter>
-    </ClCompile>
-    <ClCompile Include="MyMakeClasses\FADER.cpp">
-      <Filter>ソース ファイル\MyMakeClasses</Filter>
-    </ClCompile>
-    <ClCompile Include="MyMakeClasses\INSTRUMENT.cpp">
-      <Filter>ソース ファイル\MyMakeClasses</Filter>
-    </ClCompile>
-    <ClCompile Include="MyMakeClasses\JUDGE_DISPLAY.cpp">
-      <Filter>ソース ファイル\MyMakeClasses</Filter>
-    </ClCompile>
-    <ClCompile Include="MyMakeClasses\LONGNOTE.cpp">
-      <Filter>ソース ファイル\MyMakeClasses</Filter>
-    </ClCompile>
-    <ClCompile Include="MyMakeClasses\SINGLENOTE.cpp">
-      <Filter>ソース ファイル\MyMakeClasses</Filter>
-    </ClCompile>
-    <ClCompile Include="MyMakeClasses\UI.cpp">
-      <Filter>ソース ファイル\MyMakeClasses</Filter>
-    </ClCompile>
-    <ClCompile Include="MyMakeClasses\ImageFont.cpp">
-      <Filter>ソース ファイル\MyMakeClasses</Filter>
-    </ClCompile>
-    <ClCompile Include="MyMakeClasses\EffectBomb.cpp">
-      <Filter>ソース ファイル\MyMakeClasses</Filter>
-    </ClCompile>
     <ClCompile Include="GameScene\MakeScene\RESULT_SCENE.cpp">
       <Filter>ソース ファイル\ゲームシーン</Filter>
-    </ClCompile>
-    <ClCompile Include="MyMakeClasses\GamePlayState.cpp">
-      <Filter>ソース ファイル\MyMakeClasses</Filter>
-    </ClCompile>
-    <ClCompile Include="MyMakeClasses\FadeDisplay.cpp">
-      <Filter>ソース ファイル\MyMakeClasses</Filter>
     </ClCompile>
     <ClCompile Include="MyMakeClasses\Bombs\UnbelievableBomb.cpp">
       <Filter>ソース ファイル\MyMakeClasses\Bombs</Filter>
@@ -324,6 +303,123 @@
     </ClCompile>
     <ClCompile Include="MyMakeClasses\Bombs\MissBomb.cpp">
       <Filter>ソース ファイル\MyMakeClasses\Bombs</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\Bombs\LongBreakBomb.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\Bombs</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\Bombs\LongBomb.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\Bombs</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\Bombs\FlashBomb.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\Bombs</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\Result\AbstructScoreDisplay.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\Result</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\Result\JudgeDisPlay.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\Result</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\Result\ScoreDisplay.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\Result</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\Result\RankSDisPlay.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\Result</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\Result\ScoresManager.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\Result</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\Result\RankADisplay.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\Result</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\Result\RankBDisplay.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\Result</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\Result\RankCDisplay.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\Result</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\Result\RankDDisplay.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\Result</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\Result\RankFDisPlay.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\Result</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\Musicselect\MusicData.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\MusicSelect</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\ABSTRUCT_NOTE.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\ClapSound.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\CONTROLL.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\EffectBomb.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\FadeDisplay.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\FADER.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\GamePlayState.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\INSTRUMENT.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\JUDGE_DISPLAY.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\LONGNOTE.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\SINGLENOTE.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\UI.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\Musicselect\MusicDataManager.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\MusicSelect</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\ImageFont.cpp">
+      <Filter>ソース ファイル\MyMakeClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\Musicselect\SelectSceneState.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\MusicSelect</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\Musicselect\SelectHighSpeed.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\MusicSelect</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\Musicselect\SongPlayState.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\MusicSelect</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\Musicselect\HighSpeedState.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\MusicSelect</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\Musicselect\LevelState.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\MusicSelect</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\Musicselect\Context.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\MusicSelect</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\Musicselect\Difficulty.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\MusicSelect</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene\MakeScene\TITLE_SCENE.cpp">
+      <Filter>ソース ファイル\ゲームシーン</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene\MakeScene\THANK_SCENE.cpp">
+      <Filter>ソース ファイル\ゲームシーン</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMakeClasses\GameOverDisplay.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene\MakeScene\MUSICSELECT_SCENE.cpp">
+      <Filter>ソース ファイル\ゲームシーン</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -478,62 +574,11 @@
     <ClInclude Include="Extension\Direct2D\Direct2D.hpp">
       <Filter>ヘッダー ファイル\拡張\Direct2D</Filter>
     </ClInclude>
-    <ClInclude Include="GameScene\MakeScene\CALIBRATION_SCENE.hpp">
-      <Filter>ヘッダー ファイル\ゲームシーン</Filter>
-    </ClInclude>
     <ClInclude Include="GameScene\MakeScene\SONGPLAY_SCENE.h">
       <Filter>ヘッダー ファイル\ゲームシーン</Filter>
     </ClInclude>
-    <ClInclude Include="MyMakeClasses\ABSTRUCT_NOTE.h">
-      <Filter>ヘッダー ファイル\MyMakeClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="MyMakeClasses\CONTROLL.h">
-      <Filter>ヘッダー ファイル\MyMakeClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="MyMakeClasses\FADER.h">
-      <Filter>ヘッダー ファイル\MyMakeClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="MyMakeClasses\INSTRUMENT.h">
-      <Filter>ヘッダー ファイル\MyMakeClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="MyMakeClasses\JUDGE_DISPLAY.h">
-      <Filter>ヘッダー ファイル\MyMakeClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="MyMakeClasses\JUDGELIST_ENUM.h">
-      <Filter>ヘッダー ファイル\MyMakeClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="MyMakeClasses\LONGNOTE.h">
-      <Filter>ヘッダー ファイル\MyMakeClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="MyMakeClasses\SINGLENOTE.h">
-      <Filter>ヘッダー ファイル\MyMakeClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="MyMakeClasses\UI.h">
-      <Filter>ヘッダー ファイル\MyMakeClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="MyMakeClasses\BPM_DATA_STRUCT.h">
-      <Filter>ヘッダー ファイル\MyMakeClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="MyMakeClasses\HIGHSPEED.h">
-      <Filter>ヘッダー ファイル\MyMakeClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="MyMakeClasses\ImageFont.h">
-      <Filter>ヘッダー ファイル\MyMakeClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="MyMakeClasses\EffectBomb.h">
-      <Filter>ヘッダー ファイル\MyMakeClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="MyMakeClasses\AbstructState.h">
-      <Filter>ヘッダー ファイル\MyMakeClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="MyMakeClasses\GamePlayState.h">
-      <Filter>ヘッダー ファイル\MyMakeClasses</Filter>
-    </ClInclude>
     <ClInclude Include="GameScene\MakeScene\RESULT_SCENE.hpp">
       <Filter>ヘッダー ファイル\ゲームシーン</Filter>
-    </ClInclude>
-    <ClInclude Include="MyMakeClasses\FadeDisplay.h">
-      <Filter>ヘッダー ファイル\MyMakeClasses</Filter>
     </ClInclude>
     <ClInclude Include="MyMakeClasses\Bombs\AbstructBomb.h">
       <Filter>ヘッダー ファイル\MyMakeClasses\Bombs</Filter>
@@ -552,6 +597,147 @@
     </ClInclude>
     <ClInclude Include="MyMakeClasses\Bombs\MissBomb.h">
       <Filter>ヘッダー ファイル\MyMakeClasses\Bombs</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Bombs\LongBreakBomb.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Bombs</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Bombs\LongBomb.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Bombs</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Bombs\FlashBomb.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Bombs</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Result\AbstructScoreDisplay.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Result</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Result\JudgeDisplay.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Result</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Result\ScoresManager.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Result</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Result\ScoreDisplay.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Result</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Result\AbstructRankDisplay.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Result</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Result\RankSDisplay.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Result</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Result\RankADisplay.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Result</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Result\RankBDisplay.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Result</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Result\RankCDisplay.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Result</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Result\RankDDisplay.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Result</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Result\RankFDisplay.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Result</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Musicselect\SongData.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Musicselect</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Musicselect\LevelData.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Musicselect</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\ABSTRUCT_NOTE.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\BPM_DATA_STRUCT.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\ClapSound.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\CONTROLL.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\EffectBomb.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\FadeDisplay.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\FADER.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\GamePlayState.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\HIGHSPEED.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\ImageFont.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\INSTRUMENT.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\JUDGE_DISPLAY.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\JUDGELIST_ENUM.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\LONGNOTE.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\SINGLENOTE.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\UI.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Musicselect\MusicData.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Musicselect</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\AbstructState.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Musicselect\MusicDataManager.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Musicselect</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Musicselect\SelectSceneState.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Musicselect</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Musicselect\SelectHighSpeed.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Musicselect</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Musicselect\SongPlayState.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Musicselect</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Musicselect\HighSpeedState.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Musicselect</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Musicselect\LevelState.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Musicselect</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Musicselect\Context.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Musicselect</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Musicselect\Difficulty.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Musicselect</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\Musicselect\LevelEnum.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\Musicselect</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene\MakeScene\MUSICSELECT_SCENE.hpp">
+      <Filter>ヘッダー ファイル\ゲームシーン</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene\MakeScene\TITLE_SCENE.hpp">
+      <Filter>ヘッダー ファイル\ゲームシーン</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene\MakeScene\THANK_SCENE.hpp">
+      <Filter>ヘッダー ファイル\ゲームシーン</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\GameOverDisplay.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\GamePlay</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

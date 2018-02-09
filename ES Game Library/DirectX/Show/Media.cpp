@@ -357,9 +357,13 @@ CD3DTexture9Renderer::CD3DTexture9Renderer(IDirect3DDevice9* pD3DDevice, HRESULT
 
 	m_pTexture[0] = NULL;
 	m_pTexture[1] = NULL;
+	m_pTexture[2] = NULL;
 
 	m_Format  [0] = D3DFMT_UNKNOWN;
 	m_Format  [1] = D3DFMT_UNKNOWN;
+	m_Format  [2] = D3DFMT_UNKNOWN;
+
+	m_Mono = false;
 
     if(pHR != NULL)
         *pHR = S_OK;
@@ -370,6 +374,7 @@ CD3DTexture9Renderer::CD3DTexture9Renderer(IDirect3DDevice9* pD3DDevice, HRESULT
 //------------------------------------------------------------------------------
 CD3DTexture9Renderer::~CD3DTexture9Renderer()
 {
+	SafeRelease(m_pTexture[2]);
 	SafeRelease(m_pTexture[1]);
 	SafeRelease(m_pTexture[0]);
 	SafeRelease(m_pD3DDevice );
@@ -421,20 +426,30 @@ HRESULT CD3DTexture9Renderer::SetMediaType(const CMediaType* pMediaFormat)
 							 D3DPOOL_MANAGED, &m_pTexture[0]);
 	if(hr != D3D_OK)
 		return hr;
+
 	hr = ::D3DXCreateTexture(m_pD3DDevice, (UINT)m_Width, (UINT)height, 1, 0, D3DFMT_X8R8G8B8,
 							 D3DPOOL_MANAGED, &m_pTexture[1]);
+	if (hr != D3D_OK) {
+		SafeRelease(m_pTexture[0]);
+		return hr;
+	}
+
+	hr = ::D3DXCreateTexture(m_pD3DDevice, (UINT)m_Width, (UINT)height, 1, 0, D3DFMT_X8R8G8B8,
+							D3DPOOL_MANAGED, &m_pTexture[2]);
 	if(hr != D3D_OK) {
+		SafeRelease(m_pTexture[1]);
 		SafeRelease(m_pTexture[0]);
 		return hr;
 	}
 
 	// テクスチャフォーマットチェック
-	for(int i = 0; i < 2; i++) {
+	for(int i = 0; i < 3; i++) {
 		D3DSURFACE_DESC   ddsd;
 		::ZeroMemory(&ddsd, sizeof(ddsd));
 
 		m_pTexture[i]->GetLevelDesc(0, &ddsd);
 		if(ddsd.Format != D3DFMT_X8R8G8B8 && ddsd.Format != D3DFMT_A1R5G5B5) {
+			SafeRelease(m_pTexture[2]);
 			SafeRelease(m_pTexture[1]);
 			SafeRelease(m_pTexture[0]);
 			return VFW_E_TYPE_NOT_ACCEPTED;
@@ -454,7 +469,7 @@ HRESULT CD3DTexture9Renderer::DoRenderSample(IMediaSample* pMediaSample)
 		return E_POINTER;
 
 	// プライマリ／バックバッファ切り換え
-	const int   BACKBUFFER = m_Primary ^ 0x01;
+	const int   BACKBUFFER = (m_Primary + 1) % 3;
 
 	// バックバッファテクスチャポインタ取得
 	D3DLOCKED_RECT   d3dlr;
@@ -469,7 +484,7 @@ HRESULT CD3DTexture9Renderer::DoRenderSample(IMediaSample* pMediaSample)
 	pMediaSample->GetPointer(&pBmpImage);
 
 	// イメージコピー
-	if(m_Format[BACKBUFFER] == D3DFMT_X8R8G8B8) {
+	if (m_Format[BACKBUFFER] == D3DFMT_X8R8G8B8) {
 		// フルカラー
 		const int   WIDTH = m_Width / 4;
 		LPDWORD     pTXT, pBMP;
@@ -477,43 +492,94 @@ HRESULT CD3DTexture9Renderer::DoRenderSample(IMediaSample* pMediaSample)
 		int         bmp_pitch, height;
 		int         x, y;
 
-		if(m_Height >= 0) {
+		if (m_Height >= 0) {
 			// ボトムアップ
-			pBmpImage +=  m_Pitch * (m_Height - 1);
-			bmp_pitch  = -m_Pitch;
-			height     =  m_Height;
-		} else {
+			pBmpImage += m_Pitch * (m_Height - 1);
+			bmp_pitch = -m_Pitch;
+			height = m_Height;
+		}
+		else {
 			// トップダウン
-			bmp_pitch  =  m_Pitch;
-			height     = -m_Height;
+			bmp_pitch = m_Pitch;
+			height = -m_Height;
 		}
 
 		// イメージコピー
-		for(y = 0; y < height; y++) {
-			pTXT = (LPDWORD)pTxtImage;
-			pBMP = (LPDWORD)pBmpImage;
+		if (!m_Mono) {
+			for (y = 0; y < height; y++) {
+				pTXT = (LPDWORD)pTxtImage;
+				pBMP = (LPDWORD)pBmpImage;
 
-			for(x = 0; x < WIDTH; x++ ) {
-				pTXT[0] =   pBMP[0]        | 0xFF000000;
-				pTXT[1] = ((pBMP[1] <<  8) | 0xFF000000) | (pBMP[0] >> 24);
-				pTXT[2] = ((pBMP[2] << 16) | 0xFF000000) | (pBMP[1] >> 16);
-				pTXT[3] =                    0xFF000000  | (pBMP[2] >>  8);
-				pTXT +=4;
-				pBMP +=3;
-			}
+				for (x = 0; x < WIDTH; x++) {
+					pTXT[0] = pBMP[0] | 0xFF000000;
+					pTXT[1] = ((pBMP[1] << 8) | 0xFF000000) | (pBMP[0] >> 24);
+					pTXT[2] = ((pBMP[2] << 16) | 0xFF000000) | (pBMP[1] >> 16);
+					pTXT[3] = 0xFF000000 | (pBMP[2] >> 8);
 
-			// we might have remaining (misaligned) bytes here
-			pRMN = (LPBYTE)pBMP;
-			for(x = 0; x < m_Width % 4; x++) {
-				*pTXT =  0xFF000000     |
+					pTXT += 4;
+					pBMP += 3;
+				}
+
+				// we might have remaining (misaligned) bytes here
+				pRMN = (LPBYTE)pBMP;
+				for (x = 0; x < m_Width % 4; x++) {
+					*pTXT = 0xFF000000 |
 						(pRMN[2] << 16) | (pRMN[1] << 8) | pRMN[0];
-				pTXT++;
-				pRMN += 3;           
-			}
+					pTXT++;
+					pRMN += 3;
+				}
 
-			pTxtImage += TXT_PITCH;
-			pBmpImage += bmp_pitch;
-		}	// for(y)
+				pTxtImage += TXT_PITCH;
+				pBmpImage += bmp_pitch;
+			}	// for(y)
+		} else {
+			for (y = 0; y < height; y++) {
+				pTXT = (LPDWORD)pTxtImage;
+				pBMP = (LPDWORD)pBmpImage;
+
+				for (x = 0; x < WIDTH; x++) {
+					pTXT[0] = pBMP[0] | 0xFF000000;
+					pTXT[1] = ((pBMP[1] << 8) | 0xFF000000) | (pBMP[0] >> 24);
+					pTXT[2] = ((pBMP[2] << 16) | 0xFF000000) | (pBMP[1] >> 16);
+					pTXT[3] = 0xFF000000 | (pBMP[2] >> 8);
+
+					int      mono;
+					LPBYTE   pixel;
+
+					pixel   = (LPBYTE)&pTXT[0];
+					mono    = pixel[0] * 0.29891f + pixel[1] * 0.58661f + pixel[2] * 0.11448f;
+					pTXT[0] = mono;
+
+					pixel   = (LPBYTE)&pTXT[1];
+					mono    = pixel[0] * 0.29891f + pixel[1] * 0.58661f + pixel[2] * 0.11448f;
+					pTXT[1] = mono;
+
+					pixel   = (LPBYTE)&pTXT[2];
+					mono    = pixel[0] * 0.29891f + pixel[1] * 0.58661f + pixel[2] * 0.11448f;
+					pTXT[2] = mono;
+
+					pixel   = (LPBYTE)&pTXT[3];
+					mono    = pixel[0] * 0.29891f + pixel[1] * 0.58661f + pixel[2] * 0.11448f;
+					pTXT[3] = mono;
+
+					pTXT += 4;
+					pBMP += 3;
+				}
+
+
+				// we might have remaining (misaligned) bytes here
+				pRMN = (LPBYTE)pBMP;
+				for (x = 0; x < m_Width % 4; x++) {
+					*pTXT = 0xFF000000 |
+						(pRMN[2] << 16) | (pRMN[1] << 8) | pRMN[0];
+					pTXT++;
+					pRMN += 3;
+				}
+
+				pTxtImage += TXT_PITCH;
+				pBmpImage += bmp_pitch;
+			}	// for(y)
+		}
 	} else {
 		// ハイカラー
 		WORD*   pTXT;
@@ -559,9 +625,127 @@ HRESULT CD3DTexture9Renderer::DoRenderSample(IMediaSample* pMediaSample)
 }
 
 //------------------------------------------------------------------------------
+//	テクスチャレンダラー－サンプルレンダリング
+//------------------------------------------------------------------------------
+HRESULT CD3DTexture9Renderer::DoRenderSampleMono(IMediaSample* pMediaSample)
+{
+	if (pMediaSample == NULL)
+		return E_POINTER;
+
+	// プライマリ／バックバッファ切り換え
+	const int   BACKBUFFER = (m_Primary + 1) % 3;
+
+	// バックバッファテクスチャポインタ取得
+	D3DLOCKED_RECT   d3dlr;
+	if (m_pTexture[BACKBUFFER]->LockRect(0, &d3dlr, 0, 0) != D3D_OK)
+		return E_FAIL;
+
+	BYTE*       pTxtImage = (BYTE*)d3dlr.pBits;
+	const INT   TXT_PITCH = d3dlr.Pitch;
+
+	// ビットマップポインタ取得
+	BYTE*   pBmpImage;
+	pMediaSample->GetPointer(&pBmpImage);
+
+	// イメージコピー
+	if (m_Format[BACKBUFFER] == D3DFMT_X8R8G8B8) {
+		// フルカラー
+		const int   WIDTH = m_Width / 4;
+		LPDWORD     pTXT, pBMP;
+		LPBYTE      pRMN;
+		int         bmp_pitch, height;
+		int         x, y;
+
+		if (m_Height >= 0) {
+			// ボトムアップ
+			pBmpImage += m_Pitch * (m_Height - 1);
+			bmp_pitch = -m_Pitch;
+			height = m_Height;
+		}
+		else {
+			// トップダウン
+			bmp_pitch = m_Pitch;
+			height = -m_Height;
+		}
+
+		// イメージコピー
+		for (y = 0; y < height; y++) {
+			pTXT = (LPDWORD)pTxtImage;
+			pBMP = (LPDWORD)pBmpImage;
+
+			for (x = 0; x < WIDTH; x++) {
+				//pTXT[0] = pBMP[0] | 0xFF000000;
+				//pTXT[1] = ((pBMP[1] << 8) | 0xFF000000) | (pBMP[0] >> 24);
+				//pTXT[2] = ((pBMP[2] << 16) | 0xFF000000) | (pBMP[1] >> 16);
+				//pTXT[3] = 0xFF000000 | (pBMP[2] >> 8);
+
+				pTXT += 4;
+				pBMP += 3;
+			}
+
+			// we might have remaining (misaligned) bytes here
+			pRMN = (LPBYTE)pBMP;
+			for (x = 0; x < m_Width % 4; x++) {
+				*pTXT = 0xFF000000 |
+					(pRMN[2] << 16) | (pRMN[1] << 8) | pRMN[0];
+				pTXT++;
+				pRMN += 3;
+			}
+
+			pTxtImage += TXT_PITCH;
+			pBmpImage += bmp_pitch;
+		}	// for(y)
+	}
+	else {
+		// ハイカラー
+		WORD*   pTXT;
+		BYTE*   pBMP;
+		int     bmp_pitch, height;
+		int     x, y;
+
+		if (m_Height >= 0) {
+			// ボトムアップ
+			pBmpImage += m_Pitch * (m_Height - 1);
+			bmp_pitch = -m_Pitch;
+			height = m_Height;
+		}
+		else {
+			// トップダウン
+			bmp_pitch = m_Pitch;
+			height = -m_Height;
+		}
+
+		// イメージコピー
+		for (y = 0; y < height; y++) {
+			pTXT = (WORD*)pTxtImage;
+			pBMP = (BYTE*)pBmpImage;
+
+			for (x = 0; x < m_Width; x++) {
+				*pTXT = (WORD)(0x8000 |
+					((pBMP[2] & 0xF8) << 7) |
+					((pBMP[1] & 0xF8) << 2) |
+					(pBMP[0] >> 3));
+
+				pTXT++;
+				pBMP += 3;
+			}
+
+			pTxtImage += TXT_PITCH;
+			pBmpImage += bmp_pitch;
+		}	// for(y)
+	}	// if(m_Format)
+
+	m_pTexture[BACKBUFFER]->UnlockRect(0);
+	m_Primary = BACKBUFFER;
+
+	return S_OK;
+}
+
+//------------------------------------------------------------------------------
 //	テクスチャレンダラー－OnReceiveFirstSample処理
 //------------------------------------------------------------------------------
 void CD3DTexture9Renderer::OnReceiveFirstSample(IMediaSample* pMediaSample)
 {
 	DoRenderSample(pMediaSample);
+//	else			DoRenderSampleMono(pMediaSample);
 }

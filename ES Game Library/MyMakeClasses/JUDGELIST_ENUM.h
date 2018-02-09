@@ -66,7 +66,7 @@ struct JUDGECOUNT{
 
 		float life = 0.0f;
 
-		life += this->unbelievable * 0.05f;
+		life += this->unbelievable * 0.025f;
 		life += this->great * 0.01f;
 		life += this->ok * 0.005f;
 		life += this->misstime * -0.05f;

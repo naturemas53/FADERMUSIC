@@ -49,6 +49,9 @@ bool RESULT_SCENE::Initialize()
 
 	}
 
+	this->bgm_ = SoundDevice.CreateSoundFromFile(_T("result/resultbgm.wav"));
+	this->bgm_->PlayLooping();
+
 	return true;
 }
 
@@ -60,6 +63,7 @@ void RESULT_SCENE::Finalize()
 {
 	// TODO: Add your finalization logic here
 	MediaManager.ReleaseMedia(this->movie_);
+	SoundDevice.ReleaseSound(this->bgm_);
 	delete this->scoremanager_;
 }
 
@@ -127,6 +131,7 @@ int RESULT_SCENE::Update()
 
 		if (fade_.Update()){
 
+			this->bgm_->Stop();
 			return GAME_SCENE(new THANK_SCENE());
 
 		}
@@ -199,14 +204,14 @@ void RESULT_SCENE::Draw()
 	pos.x += drawsize.x;
 	IMAGEFONT.DirectDrawImageString(pos, biggestcellsize, color, str.c_str());
 
-	Vector2 smollcellsize = IMAGEFONT.GetCellSize() / 2.0f;
+	Vector2 smollcellsize = IMAGEFONT.GetCellSize() / 2.5f;
 
-	drawsize = IMAGEFONT.GetDrawSize(smollcellsize, "RETRY TO PUSH SorDorF");
+	drawsize = IMAGEFONT.GetDrawSize(smollcellsize, "PUSH BUTTON TO NEXT");
 	pos = Vector3_Zero;
 	pos.x = (viewport.Width - drawsize.x) / 2.0f;
 	pos.y = (viewport.Height - drawsize.y);
 
-	IMAGEFONT.DirectDrawImageString(pos, smollcellsize, Color(255, 255, 255),"RETRY TO PUSH SorDorF");
+	IMAGEFONT.DirectDrawImageString(pos, smollcellsize, Color(255, 255, 255),"PUSH BUTTON TO NEXT");
 
 	this->scoremanager_->Draw();
 

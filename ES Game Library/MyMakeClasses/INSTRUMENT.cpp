@@ -24,9 +24,9 @@ INSTRUMENT::INSTRUMENT(LONG max_mouse_y,  std::vector<BPM_DATA>& bpmlist, const 
 
 	float base_x = 286.0f;
 
-	faders_.push_back(new FADER(Vector3(base_x,92.0f,0.0f), LEFT));
-	faders_.push_back(new FADER(Vector3((base_x + 236.0f ),92.0f,0.0f), CENTER));
-	faders_.push_back(new FADER(Vector3((base_x + 236.0f * 2.0f ), 92.0f, 0.0f), RIGHT));
+	this->faders_.push_back(new FADER(Vector3(base_x,92.0f,0.0f), LEFT));
+	this->faders_.push_back(new FADER(Vector3((base_x + 236.0f), 92.0f, 0.0f), CENTER));
+	this->faders_.push_back(new FADER(Vector3((base_x + 236.0f * 2.0f), 92.0f, 0.0f), RIGHT));
 
 	this->Setting(filename,bpmlist);
 
@@ -348,7 +348,7 @@ void INSTRUMENT::ReadNote(FILE* file, std::vector<BPM_DATA>& bpmlist){
 
 				if (type == 'E'){
 					
-					faders_[number]->InNote(newlong);
+					this->faders_[number]->InNote(newlong);
 					notes_.push_back(newlong);
 					nowlong = false;
 
@@ -371,7 +371,7 @@ void INSTRUMENT::ReadNote(FILE* file, std::vector<BPM_DATA>& bpmlist){
 				if (type == 'S'){
 
 					newsingle = new SINGLENOTE(timing, height_rate, color, range_count, range_time, firsthave_count);
-					faders_[number]->InNote(newsingle);
+					this->faders_[number]->InNote(newsingle);
 					notes_.push_back(newsingle);
 
 				}

@@ -29,6 +29,9 @@ bool TITLE_SCENE::Initialize()
 void TITLE_SCENE::Finalize()
 {
 	// TODO: Add your finalization logic here
+	GraphicsDevice.ReleaseSprite(this->titlelogo_);
+	MediaManager.ReleaseMedia(this->movie_);
+
 
 }
 
@@ -51,7 +54,7 @@ int TITLE_SCENE::Update()
 
 		return GAME_SCENE(new MUSICSELECT_SCENE());
 
-	}
+	} else if(this->state_ != TITLE_SCENE::START){
 
 	if (CONTROLL::GetInstance().BufferIsPress(LEFT)||
 		CONTROLL::GetInstance().BufferIsPress(CENTER) || 
@@ -59,6 +62,14 @@ int TITLE_SCENE::Update()
 
 		this->state_ = TITLE_SCENE::START;
 		this->fade_.SetFadeState(FadeDisplay::FADEOUT);
+
+		}
+		
+	}
+
+	if (this->movie_->IsComplete()){
+
+		this->movie_->Replay();
 
 	}
 

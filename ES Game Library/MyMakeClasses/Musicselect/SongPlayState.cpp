@@ -29,7 +29,7 @@ void SongPlayState::ClassUpdate(float mouseheight, Context* context){
 
 	if (CONTROLL::GetInstance().BufferIsPress(LEFT)){
 
-		this->datamanager_->MoveDecrement();
+		this->datamanager_->MoveIncrement();
 		return;
 	}
 
@@ -41,7 +41,7 @@ void SongPlayState::ClassUpdate(float mouseheight, Context* context){
 
 	if (CONTROLL::GetInstance().BufferIsPress(RIGHT)){
 
-		this->datamanager_->MoveIncrement();
+		this->datamanager_->MoveDecrement();
 		return;
 	}
 

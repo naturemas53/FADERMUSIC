@@ -107,7 +107,7 @@ STRINGTABLE
 BEGIN
     IDS_SCREENHEIGHT        "720"
     IDS_FRAMERATE           "60"
-    IDS_FULLSCREEN          "1"
+    IDS_FULLSCREEN          "0"
     IDS_MOUSECURSOR         "1"
     IDS_CONTENTFOLDER       "Content"
 END

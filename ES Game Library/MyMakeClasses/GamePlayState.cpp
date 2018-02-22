@@ -72,7 +72,7 @@ AbstructState* GamePlayState::Update(){
 
 	int isfinish = this->fade_.Update();
 
-
+	
 	if (!(this->playstate_ == GamePlayState::ENDGAME)){
 
 	animationrate_ = (float)((quater_rhythm_ - 1) - nowtime_ % quater_rhythm_) / (float)quater_rhythm_;
@@ -92,6 +92,14 @@ AbstructState* GamePlayState::Update(){
 
 	}
 	this->ui_->Update();
+
+	if (this->gameover_.Update(GameTimer.GetElapsedMilliSecond()) &&
+		this->playstate_ == GamePlayState::SONGPLAY){
+
+		this->SetSceneShared(false);
+
+	}
+
 
 	if (this->movie_->IsComplete()){
 		this->movie_->Replay();
@@ -119,6 +127,8 @@ void GamePlayState::Draw(){
 
 	IMAGEFONT.DrawString(animationrate_);
 
+	this->gameover_.Draw();
+
 	this->fade_.Draw();
 
 }
@@ -132,7 +142,7 @@ void GamePlayState::TimeCalc(){
 		nowtime_ = (int)((float)songlength_ * ((float)bgm_->GetPosition() / (float)bgm_->GetSize()));
 		elapsedtime_ = nowtime_ - prevtime_;
 
-		if (!this->bgm_->IsPlaying()){
+		if (!this->bgm_->IsPlaying() && this->life_ > 0.0f){
 
 			this->SetSceneShared(true);
 
@@ -184,7 +194,8 @@ void GamePlayState::ToUITellValue(){
 	if (this->life_ <= 0.0f){
 
 		this->life_ = 0.0f;
-		this->SetSceneShared(false);
+		this->bgm_->Stop();
+		this->gameover_.Start();
 
 	}
 

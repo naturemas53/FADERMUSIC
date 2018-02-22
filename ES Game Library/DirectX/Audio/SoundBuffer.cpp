@@ -269,16 +269,16 @@ UINT CSoundBuffer::GetLengthMSec(){
 	m_pDSBuffer->GetFormat(NULL, NULL, &size);
 	if (m_pDSBuffer->GetFormat(&format, size, NULL) != S_OK){
 
-		::OutputDebugString(TEXT("*** Error - ’·‚³Žæ“¾Ž¸”s(CSoundBuffer_GetLengthMSec_format)\n"));
+		::OutputDebugString(TEXT("*** Error - ƒtƒH[ƒ}ƒbƒgŽæ“¾Ž¸”s(CSoundBuffer_GetLengthMSec_format)\n"));
 		return 0;
 
 	}
 
-	int secbyte = (format.wBitsPerSample * format.nSamplesPerSec * format.nChannels / 8 / 1000);
+	int secbyte = (format.wBitsPerSample * format.nSamplesPerSec * format.nChannels / 8);
 
-	UINT m_time = dsbcaps.dwBufferBytes / secbyte;
+	float f_mtime = (float)dsbcaps.dwBufferBytes / (float)secbyte;
 
-	return m_time;
+	return (UINT)(f_mtime * 1000.0f);
 
 }
 
@@ -289,7 +289,7 @@ void CSoundBuffer::SetPositionMilliSec(int millisec){
 	m_pDSBuffer->GetFormat(NULL, NULL, &size);
 	if (m_pDSBuffer->GetFormat(&format, size, NULL) != S_OK){
 
-		::OutputDebugString(TEXT("*** Error - ’·‚³Žæ“¾Ž¸”s(CSoundBuffer_GetLengthMSec_format)\n"));
+		::OutputDebugString(TEXT("*** Error - ’·‚³Žæ“¾Ž¸”s(CSoundBuffer_SetPositionMilliSec_format)\n"));
 		return;
 
 	}

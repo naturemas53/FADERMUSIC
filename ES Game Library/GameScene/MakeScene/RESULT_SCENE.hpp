@@ -85,6 +85,8 @@ private:
 
 	MEDIA movie_;
 
+	SOUND bgm_;
+
 	// 関数プロトタイプ
 
 	bool IsPush();

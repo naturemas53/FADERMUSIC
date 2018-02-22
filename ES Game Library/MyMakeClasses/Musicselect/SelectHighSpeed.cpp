@@ -4,6 +4,8 @@
 SelectHighSpeed::SelectHighSpeed(){
 
 	this->sprite_ = GraphicsDevice.CreateSpriteFromFile(_T("musicselect/high_speed.png"));
+	this->plussound_ = SoundDevice.CreateSoundFromFile(_T("musicselect/sound/highspeed.wav"));
+	this->minussound_ = SoundDevice.CreateSoundFromFile(_T("musicselect/sound/lospeed.wav"));
 	this->speedcount_ = 0;
 
 }
@@ -11,6 +13,9 @@ SelectHighSpeed::SelectHighSpeed(){
 SelectHighSpeed::~SelectHighSpeed(){
 
 	GraphicsDevice.ReleaseSprite(this->sprite_);
+
+	SoundDevice.ReleaseSound(this->plussound_);
+	SoundDevice.ReleaseSound(this->minussound_);
 
 }
 
@@ -24,6 +29,8 @@ void SelectHighSpeed::PlusCount(){
 
 	}
 
+	this->plussound_->Play();
+
 }
 
 void SelectHighSpeed::MinusCount(){
@@ -35,6 +42,8 @@ void SelectHighSpeed::MinusCount(){
 		this->speedcount_ = -8;
 
 	}
+
+	this->minussound_->Play();
 
 }
 

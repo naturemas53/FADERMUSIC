@@ -6,6 +6,7 @@ MOVETIME_(100){
 
 	this->time_ = MOVETIME_;
 	this->state_ = MusicDataManager::STOP;
+	this->sound_ = SoundDevice.CreateSoundFromFile(_T("musicselect/sound/songselect.wav"));
 
 }
 
@@ -16,6 +17,8 @@ MusicDataManager::~MusicDataManager(){
 		delete data;
 
 	}
+
+	SoundDevice.ReleaseSound(this->sound_);
 
 }
 
@@ -67,6 +70,7 @@ void MusicDataManager::MoveIncrement(){
 
 	this->time_ = 0;
 	this->state_ = MusicDataManager::UP;
+	this->sound_->Play();
 
 }
 
@@ -84,6 +88,7 @@ void MusicDataManager::MoveDecrement(){
 
 	this->time_ = 0;
 	this->state_ = MusicDataManager::DOWN;
+	this->sound_->Play();
 
 }
 

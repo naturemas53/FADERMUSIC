@@ -73,7 +73,7 @@ void SelectSceneState::Draw(){
 
 	GraphicsDevice.SetBlendMode(DXGBLEND_ADD);
 	SpriteBatch.Begin();
-	SpriteBatch.Draw(*this->alpha_, pos, Color(1.0f,1.0f,1.0f,timerate));
+	SpriteBatch.Draw(*this->alpha_, pos, Color(0.5,0.5f,0.5f,timerate));
 	SpriteBatch.End();
 	GraphicsDevice.SetBlendMode(DXGBLEND_NORMAL);
 

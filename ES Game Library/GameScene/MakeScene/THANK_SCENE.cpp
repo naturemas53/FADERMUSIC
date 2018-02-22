@@ -13,6 +13,8 @@ bool THANK_SCENE::Initialize()
 	// TODO: Add your initialization logic here
 
 	this->thankyousprite_ = GraphicsDevice.CreateSpriteFromFile(_T("THANKS.png"));
+	this->bgm_ = SoundDevice.CreateSoundFromFile(_T("thankyou_bgm.wav"));
+	this->bgm_->PlayLooping();
 
 	this->time_ = 0;
 	this->nextflag_ = false;
@@ -28,6 +30,7 @@ void THANK_SCENE::Finalize()
 {
 	// TODO: Add your finalization logic here
 	GraphicsDevice.ReleaseSprite(this->thankyousprite_);
+	SoundDevice.ReleaseSound(this->bgm_);
 }
 
 /// <summary>
@@ -48,6 +51,7 @@ int THANK_SCENE::Update()
 
 	if (isfinish && this->nextflag_){
 
+		this->bgm_->Stop();
 		return GAME_SCENE(new TITLE_SCENE());
 
 	}

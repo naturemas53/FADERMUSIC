@@ -86,6 +86,9 @@ private:
 
 	MEDIA movie_;
 
+	SOUND bgm_;
+	SOUND desidese_;
+
 	// 関数プロトタイプ
 
 

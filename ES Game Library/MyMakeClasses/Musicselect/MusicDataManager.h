@@ -47,4 +47,6 @@ private:
 
 	M_ITR nowselect_;
 
+	SOUND sound_;
+
 };

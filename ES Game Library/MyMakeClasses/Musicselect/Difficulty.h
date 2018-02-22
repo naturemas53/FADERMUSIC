@@ -11,7 +11,10 @@ public:
 	~Difficulty();
 
 	void Draw();
-	void SetLevel(LEVEL level){ this->level_ = level; }
+	void SetLevel(LEVEL level){ 
+		this->level_ = level; 
+		this->sound_->Play();
+	}
 	LEVEL GetLevel(){ return this->level_; }
 
 private:
@@ -19,5 +22,7 @@ private:
 	LEVEL level_;
 
 	std::map<LEVEL,SPRITE> sprite_;
+	
+	SOUND sound_;
 
 };

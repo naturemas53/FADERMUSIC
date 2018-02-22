@@ -5,6 +5,7 @@ STARTPOS_(Vector3(1280, 360.0f, 0.0f)),
 MOVETIME_(150){
 
 	this->ranksprite_ = GraphicsDevice.CreateSpriteFromFile(_T("result/rank/result_rank_B.png"));
+	this->sound_ = SoundDevice.CreateSoundFromFile(_T("result/otherrank.wav"));
 
 	this->time_ = 0;
 
@@ -13,6 +14,7 @@ MOVETIME_(150){
 RankBDisplay::~RankBDisplay(){
 
 	GraphicsDevice.ReleaseSprite(this->ranksprite_);
+	SoundDevice.ReleaseSound(this->sound_);
 
 }
 

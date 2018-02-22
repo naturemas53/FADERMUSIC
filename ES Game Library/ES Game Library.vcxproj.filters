@@ -421,6 +421,9 @@
     <ClCompile Include="GameScene\MakeScene\MUSICSELECT_SCENE.cpp">
       <Filter>ソース ファイル\ゲームシーン</Filter>
     </ClCompile>
+    <ClCompile Include="MyMakeClasses\ShowLongSpeed.cpp">
+      <Filter>ソース ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectX\Audio\DXAudio8.hpp">
@@ -737,6 +740,12 @@
       <Filter>ヘッダー ファイル\ゲームシーン</Filter>
     </ClInclude>
     <ClInclude Include="MyMakeClasses\GameOverDisplay.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\ShowLongSpeed.h">
+      <Filter>ヘッダー ファイル\MyMakeClasses\GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMakeClasses\LONGPOINT_STRUCT.h">
       <Filter>ヘッダー ファイル\MyMakeClasses\GamePlay</Filter>
     </ClInclude>
   </ItemGroup>

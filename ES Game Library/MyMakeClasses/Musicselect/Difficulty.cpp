@@ -9,6 +9,8 @@ Difficulty::Difficulty(){
 	this->sprite_[MID] = GraphicsDevice.CreateSpriteFromFile(_T("musicselect/MID.png"));
 	this->sprite_[HIGH] = GraphicsDevice.CreateSpriteFromFile(_T("musicselect/HIGH.png"));
 
+	this->sound_ = SoundDevice.CreateSoundFromFile(_T("musicselect/sound/difficult.wav"));
+
 }
 
 Difficulty::~Difficulty(){
@@ -18,6 +20,8 @@ Difficulty::~Difficulty(){
 		GraphicsDevice.ReleaseSprite(sprite.second);
 
 	}
+
+	SoundDevice.ReleaseSound(this->sound_);
 
 }
 
@@ -29,7 +33,7 @@ void Difficulty::Draw(){
 	pos.y = 100.0f;
 	pos.x += 5.0f;
 
-	IMAGEFONT.DirectDrawImageString(pos,cellsize,Color(255,255,255),"NOW SELECT");
+	IMAGEFONT.SetImageString(pos,cellsize,Color(255,255,255),false,"NOW SELECT");
 
 	pos.y += cellsize.y;
 	SPRITE sp = this->sprite_[this->level_];

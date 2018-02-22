@@ -12,6 +12,7 @@ Context::Context(MusicDataManager* datamanagerptr, SelectHighSpeed* highspeedptr
 	PLAYSTATE.Reset();
 
 	this->state_ = &PLAYSTATE;
+	this->sound_ = SoundDevice.CreateSoundFromFile(_T("musicselect/sound/statemove.wav"));
 
 }
 Context::~Context(){
@@ -19,6 +20,8 @@ Context::~Context(){
 	PLAYSTATE.ResetDataManager();
 	HIGHSPEEDSTATE.ResetHighSpeedptr();
 	LEVELSTATE.ResetLevelManager();
+
+	SoundDevice.ReleaseSound(this->sound_);
 
 }
 

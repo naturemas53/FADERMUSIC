@@ -145,6 +145,8 @@ void FADER::LongNoteCheck(std::list<ABSTRUCT_NOTE*>::iterator top_itr, int nowti
 
 	(*top_itr)->Update(nowtime);
 
+	int size = this->notelist_.size();
+
 	int betweentime = (int)nowtime - (int)(*top_long).GetTiming();
 
 	if (top_long->IsPush()){
@@ -314,28 +316,28 @@ void FADER::NoteDraw(float animationrate, int nowtime, float highspeed){
 	top_pos.y += INNER_TOP_POS_;
 	top_pos.x += INNER_LEFT_POS_;
 
-	SpriteBatch.Begin();
 	//ƒm[ƒc‚Ì•`‰æ
 	auto itr = this->notelist_.begin();
 	while (itr != this->notelist_.end()){
 
 		if (!(*itr)->Draw(top_pos, this->INNER_SIZE_, animationrate, nowtime, highspeed, false))break;
+		//‰ÁŽZ‡¬‚Ì•`‰æ
+		(*itr)->Draw(top_pos, this->INNER_SIZE_, animationrate, nowtime, highspeed, true);
 		itr++;
 
 	}
-	SpriteBatch.End();
 
-	GraphicsDevice.SetBlendMode(DXGBLEND_ADD);
-	SpriteBatch.Begin();
-	itr = this->notelist_.begin();
-	while (itr != this->notelist_.end()){
+	//GraphicsDevice.SetBlendMode(DXGBLEND_ADD);
+	//SpriteBatch.Begin();
+	//itr = this->notelist_.begin();
+	//while (itr != this->notelist_.end()){
 
-		if (!(*itr)->Draw(top_pos, this->INNER_SIZE_, animationrate, nowtime, highspeed, true))break;
-		itr++;
+	//	if (!(*itr)->Draw(top_pos, this->INNER_SIZE_, animationrate, nowtime, highspeed, true))break;
+	//	itr++;
 
-	}
-	SpriteBatch.End();
-	GraphicsDevice.SetBlendMode(DXGBLEND_NORMAL);
+	//}
+	//SpriteBatch.End();
+	//GraphicsDevice.SetBlendMode(DXGBLEND_NORMAL);
 
 }
 
@@ -351,7 +353,15 @@ void FADER::ButtonDraw(float button_height_rate){
 	button_pos_.x -= 8.0f; //ü‚Ì‘¾‚³
 	button_pos_.y += (this->INNER_SIZE_.y - BUTTON_SIZE_ + 10.0f) * button_height_rate;//5.0f‚Íü‚Ì‘¾‚³ * 2
 
-	SpriteBatch.Draw(*this->button_sprite_, button_pos_, 1.0f);
+	Color color = Color(1.0f, 1.0f, 1.0f);
+
+	if (CONTROLL::GetInstance().StateIsDown(this->ASIGN_KEY_)){
+
+		color = Color(0.5f, 0.5f, 0.5f);
+
+	}
+
+	SpriteBatch.Draw(*this->button_sprite_, button_pos_, color);
 
 }
 

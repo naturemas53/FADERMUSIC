@@ -1,5 +1,7 @@
 #pragma once
 #include "ABSTRUCT_NOTE.h"
+#include "LONGPOINT_STRUCT.h"
+#include "ShowLongSpeed.h"
 #include <vector>
 #include <map>
 
@@ -12,19 +14,7 @@ public:
 	virtual void Update(int nowtime);
 	virtual bool Draw(Vector3 fader_top_pos, Vector2 fader_inner, float animation_rate, int nowtime, float highspeed, bool addblend);
 
-	struct LONG_POINT{
 
-		int timing;
-		float height_rate;
-
-		LONG_POINT(int timing, float height_rate){
-		
-			this->timing = timing;
-			this->height_rate = height_rate;
-		
-		}
-
-	};
 
 	void AddPoint(int timing, float height_rate);
 
@@ -47,7 +37,6 @@ public:
 
 private:
 
-	const Vector2 DIAMOND_SIZE_;
 
 	void NoteMove(int nowtime);
 	void LongXScale(int nowtime);
@@ -63,6 +52,12 @@ private:
 	const float RIGHT_POWER_MAX_;
 
 	std::vector<LONG_POINT> long_points_;
+	typedef std::vector<LONG_POINT>::iterator POINT_ITR;
+	POINT_ITR nowitr_;
+
+	ShowLongSpeed trianglemap_;
+
+	const Vector2 DIAMOND_SIZE_;
 
 	static std::map<Color_by_Name, SPRITE>* longnote_sprites_;
 	static std::map<Color_by_Name, SPRITE>* triangle_sprites_;

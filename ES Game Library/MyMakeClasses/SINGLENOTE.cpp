@@ -53,7 +53,13 @@ bool SINGLENOTE::Draw(Vector3 fader_top_pos, Vector2 fader_inner, float animatio
 
 	float pal = (addblend) ? animation_rate : 1.0f;
 
+	if (addblend)GraphicsDevice.SetBlendMode(DXGBLEND_ADD);
+
+	SpriteBatch.Begin();
 	SpriteBatch.Draw(*draw_sprite, note_displaypos, pal, Vector3_Zero, Vector3(this->WIDTH_ / 2.0f, 0.0f, 0.0f), Vector2(x_scale_rate, 1.0f));
+	SpriteBatch.End();
+
+	GraphicsDevice.SetBlendMode(DXGBLEND_NORMAL);
 
 	return true;
 }

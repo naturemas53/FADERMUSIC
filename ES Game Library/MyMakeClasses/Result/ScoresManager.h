@@ -60,6 +60,8 @@ private:
 	int count_;
 	int randomtime_;
 
+	SOUND showsound_;
+
 	//‚Æ‚è‚ ‚¦‚¸«
 	bool startdisplay_;
 

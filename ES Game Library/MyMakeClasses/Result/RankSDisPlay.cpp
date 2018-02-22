@@ -3,6 +3,7 @@
 RankSDisPlay::RankSDisPlay() : AbstructRankDisplay(Vector2(223.0f,320.0f)){
 
 	this->ranksprite_ = GraphicsDevice.CreateSpriteFromFile(_T("result/rank/result_rank_S.png"));
+	this->sound_ = SoundDevice.CreateSoundFromFile(_T("result/RankS.wav"));
 
 	this->datas_.push_back(ScaleData(0, 100.0f));
 	this->datas_.push_back(ScaleData(200, 0.3f));
@@ -17,6 +18,7 @@ RankSDisPlay::RankSDisPlay() : AbstructRankDisplay(Vector2(223.0f,320.0f)){
 RankSDisPlay::~RankSDisPlay(){
 
 	GraphicsDevice.ReleaseSprite(this->ranksprite_);
+	SoundDevice.ReleaseSound(this->sound_);
 
 }
 

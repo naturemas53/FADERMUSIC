@@ -20,6 +20,10 @@ public:
 
 		this->state_ = AbstructRankDisplay::EFFECT;
 
+		if (this->sound_ != nullptr){
+			this->sound_->Play();
+		}
+
 	};
 
 protected:
@@ -44,5 +48,7 @@ protected:
 	const Vector2 SIZE_;
 
 	SPRITE ranksprite_;
+
+	SOUND sound_;
 
 };

@@ -21,4 +21,7 @@ private:
 
 	int speedcount_;
 
+	SOUND plussound_;
+	SOUND minussound_;
+
 };

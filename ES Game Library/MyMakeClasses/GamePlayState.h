@@ -4,6 +4,7 @@
 #include "BPM_DATA_STRUCT.h"
 #include "JUDGELIST_ENUM.h"
 #include "FadeDisplay.h"
+#include "GameOverDisplay.h"
 #include <vector>
 
 class INSTRUMENT;
@@ -66,6 +67,7 @@ private:
 	JUDGECOUNT scorejudge_;
 	JUDGECOUNT accuracyjudge_;
 
+	GameOverDisplay gameover_;
 	FadeDisplay fade_;
 
 	SOUND bgm_;

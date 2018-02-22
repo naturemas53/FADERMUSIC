@@ -1,4 +1,5 @@
 #pragma once
+#include "../../ESGLib.h"
 
 class SelectSceneState;
 
@@ -19,6 +20,7 @@ public:
 	void SetState(SelectSceneState* state){
 	
 		this->state_ = state;
+		this->sound_->Play();
 	
 	};
 
@@ -27,5 +29,6 @@ public:
 private:
 
 	SelectSceneState* state_;
+	SOUND sound_;
 
 };

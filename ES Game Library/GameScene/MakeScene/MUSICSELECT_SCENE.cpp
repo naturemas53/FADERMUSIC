@@ -37,6 +37,11 @@ bool MUSICSELECT_SCENE::Initialize()
 	this->movie_ = MediaManager.CreateMediaFromFile(_T("title_movie.wmv"));
 	this->movie_->Play();
 
+	this->bgm_ = SoundDevice.CreateSoundFromFile(_T("musicselect/musicselect_bgm.wav"));
+	this->bgm_->PlayLooping();
+
+	this->desidese_ = SoundDevice.CreateSoundFromFile(_T("musicselect/sound/deside.wav"));
+
 	return this->datamanager_->Initialize();
 }
 
@@ -56,6 +61,8 @@ void MUSICSELECT_SCENE::Finalize()
 	GraphicsDevice.ReleaseSprite(this->stick_);
 	MediaManager.ReleaseMedia(this->movie_);
 	GraphicsDevice.ReleaseRenderTarget(this->screen_);
+	SoundDevice.ReleaseSound(this->bgm_);
+	SoundDevice.ReleaseSound(this->desidese_);
 }
 
 /// <summary>
@@ -70,6 +77,8 @@ int MUSICSELECT_SCENE::Update()
     // TODO: Add your update logic here
 
 	CONTROLL::GetInstance().Update();
+
+	IMAGEFONT.SrtingReset();
 
 	MouseState mouse = Mouse->GetState();
 
@@ -90,6 +99,8 @@ int MUSICSELECT_SCENE::Update()
 		if (context_->IsDeside()){
 
 			this->SongDeside();
+			this->bgm_->Stop();
+			this->desidese_->Play();
 
 		}
 	}
@@ -155,6 +166,7 @@ void MUSICSELECT_SCENE::Draw()
 	SpriteBatch.Draw(*this->stick_, pos);
 	SpriteBatch.End();
 
+	IMAGEFONT.DrawString(1.0f);
 
 	this->highspeed_->Draw();
 	SpriteBatch.Begin();
@@ -165,7 +177,7 @@ void MUSICSELECT_SCENE::Draw()
 
 		GraphicsDevice.SetDefaultRenderTarget();
 
-		float timerate = (float)this->time_ / 500.0f;
+		float timerate = (float)this->time_ / 100.0f;
 
 		float scale = 1.0f + timerate;
 

@@ -1836,8 +1836,9 @@ IDirect3DTexture9* CDXGraphics9::CreateTextureFromWIC(LPCTSTR inFileName,
 		   != S_OK)
 			throw TEXT("WICファクトリー生成失敗");
 
+		HRESULT result;
 		// WICデコーダー生成
-		if(pWICFactory->CreateDecoderFromFilename(inFileName, NULL, GENERIC_READ,
+		if(result = pWICFactory->CreateDecoderFromFilename(inFileName, NULL, GENERIC_READ,
 												  WICDecodeMetadataCacheOnLoad, &pWICDecoder)
 		   != S_OK)
 			throw TEXT("WICデコーダー生成失敗");

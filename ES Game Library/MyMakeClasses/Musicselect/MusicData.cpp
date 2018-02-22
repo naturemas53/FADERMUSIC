@@ -90,7 +90,7 @@ void MusicData::DataDraw(Vector3 basepos, Color color){
 	pos.x += this->HORNSIZE_.x + plusx;
 	pos.y -= 10.0f;
 
-	IMAGEFONT.DirectDrawImageString(pos, cellsize, color, this->data_.songname.c_str());
+	IMAGEFONT.SetImageString(pos, cellsize, color, false,this->data_.songname.c_str());
 
 	pos = basepos;
 	pos.y += 100.0f;
@@ -111,7 +111,8 @@ void MusicData::DataDraw(Vector3 basepos, Color color){
 	localcolor.G(0.7f);
 	localcolor.B(1.0f);
 
-	IMAGEFONT.DirectDrawImageString(Vector3(pos.x + 200.0f,pos.y - 20.0f,pos.z),cellsize,localcolor,"%d",this->data_.level.lo);
+	IMAGEFONT.SetImageString(Vector3(pos.x + 200.0f,pos.y - 20.0f,pos.z),cellsize,localcolor,false,
+		"%d",this->data_.level.lo);
 
 
 	pos.x += this->INNER_X_ / 3.0f;
@@ -128,7 +129,8 @@ void MusicData::DataDraw(Vector3 basepos, Color color){
 	localcolor.G(1.0f);
 	localcolor.B(0.5f);
 
-	IMAGEFONT.DirectDrawImageString(Vector3(pos.x + 200.0f, pos.y - 20.0f, pos.z), cellsize, localcolor, "%d", this->data_.level.mid);
+	IMAGEFONT.SetImageString(Vector3(pos.x + 200.0f, pos.y - 20.0f, pos.z), cellsize, localcolor, false,
+		"%d", this->data_.level.mid);
 
 
 	pos.x += this->INNER_X_ / 3.0f;
@@ -145,6 +147,7 @@ void MusicData::DataDraw(Vector3 basepos, Color color){
 	localcolor.G(0.5f);
 	localcolor.B(0.5f);
 
-	IMAGEFONT.DirectDrawImageString(Vector3(pos.x + 200.0f, pos.y - 20.0f, pos.z), cellsize, localcolor, "%d", this->data_.level.high);
+	IMAGEFONT.SetImageString(Vector3(pos.x + 200.0f, pos.y - 20.0f, pos.z), cellsize, localcolor,false,
+		"%d", this->data_.level.high);
 
 }

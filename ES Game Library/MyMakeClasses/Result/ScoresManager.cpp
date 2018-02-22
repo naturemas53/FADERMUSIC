@@ -16,6 +16,8 @@ RANDOMUPDATETIME_(30)
 	this->ScoreDisplaySet(score,accuracy,scorejudge);
 	this->RankSet(clearflag,accuracy);
 
+	this->showsound_ = SoundDevice.CreateSoundFromFile(_T("result/showscore.wav"));
+
 	this->count_ = 0;
 	this->randomtime_ = 0;
 
@@ -43,8 +45,6 @@ void ScoresManager::ScoreDisplaySet(int score, int accuracy, JUDGECOUNT scorejud
 }
 
 void ScoresManager::RankSet(bool clearflag,int accuracy){
-
-	
 
 	if (!clearflag){
 
@@ -91,6 +91,8 @@ ScoresManager::~ScoresManager(){
 
 	delete this->rank_;
 
+	SoundDevice.ReleaseSound(this->showsound_);
+
 }
 
 int ScoresManager::Update(int elapsedtime){
@@ -114,6 +116,7 @@ int ScoresManager::Update(int elapsedtime){
 		this->count_ += elapsedtime;
 		if (this->count_ > this->SCORESHOWTIME_){
 
+			this->showsound_->Play();
 			this->ShowScore();
 
 		}

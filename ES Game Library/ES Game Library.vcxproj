@@ -223,6 +223,7 @@
     <ClCompile Include="MyMakeClasses\Result\ScoreDisplay.cpp" />
     <ClCompile Include="MyMakeClasses\Result\ScoresManager.cpp" />
     <ClCompile Include="MyMakeClasses\Result\RankFDisPlay.cpp" />
+    <ClCompile Include="MyMakeClasses\ShowLongSpeed.cpp" />
     <ClCompile Include="MyMakeClasses\SINGLENOTE.cpp" />
     <ClCompile Include="MyMakeClasses\UI.cpp" />
     <ClCompile Include="StdAfx.cpp">
@@ -316,6 +317,7 @@
     <ClInclude Include="MyMakeClasses\JUDGELIST_ENUM.h" />
     <ClInclude Include="MyMakeClasses\JUDGE_DISPLAY.h" />
     <ClInclude Include="MyMakeClasses\LONGNOTE.h" />
+    <ClInclude Include="MyMakeClasses\LONGPOINT_STRUCT.h" />
     <ClInclude Include="MyMakeClasses\Musicselect\Context.h" />
     <ClInclude Include="MyMakeClasses\Musicselect\Difficulty.h" />
     <ClInclude Include="MyMakeClasses\Musicselect\HighSpeedState.h" />
@@ -345,6 +347,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="MyMakeClasses\Result\AbstructScoreDisplay.h" />
+    <ClInclude Include="MyMakeClasses\ShowLongSpeed.h" />
     <ClInclude Include="MyMakeClasses\SINGLENOTE.h" />
     <ClInclude Include="MyMakeClasses\UI.h" />
     <ClInclude Include="StdAfx.h" />

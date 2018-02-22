@@ -1,15 +1,19 @@
 #include "GameOverDisplay.h"
 
 GameOverDisplay::GameOverDisplay():
-STATETIME_(100){
+STATETIME_(250){
 
 	this->sprite_ = GraphicsDevice.CreateSpriteFromFile(_T("GAMEOVER.png"));
+	this->sound_ = SoundDevice.CreateSoundFromFile(_T("gameover.wav"));
+	this->state_ = GameOverDisplay::WAIT;
+	this->time_ = 0;
 
 }
 
 GameOverDisplay::~GameOverDisplay(){
 
 	GraphicsDevice.ReleaseSprite(this->sprite_);
+	SoundDevice.ReleaseSound(this->sound_);
 
 }
 
@@ -24,6 +28,7 @@ int GameOverDisplay::Update(int elapsedtime){
 
 			this->time_ -= this->STATETIME_;
 			this->state_ = GameOverDisplay::SCALEUP;
+			this->sound_->Play();
 
 		}
 
@@ -35,10 +40,9 @@ int GameOverDisplay::Update(int elapsedtime){
 		if (this->time_ > this->STATETIME_){
 
 			this->time_ = this->STATETIME_;
+			return 1;
 
 		}
-
-		return 1;
 
 		break;
 
@@ -59,9 +63,13 @@ void GameOverDisplay::Draw(){
 
 	switch (this->state_){
 
+	case GameOverDisplay::WAIT:
+		pos.y = -1280.0f;
+		break;
+
 	case GameOverDisplay::MOVEDOWN:
 
-		pos.x = -1280.0f * (1.0f - timerate);
+		pos.y = -720.0f * (1.0f - timerate);
 
 		break;
 
@@ -75,7 +83,7 @@ void GameOverDisplay::Draw(){
 
 	SpriteBatch.Begin();
 
-	SpriteBatch.Draw(*this->sprite_,pos);
+	SpriteBatch.Draw(*this->sprite_,pos,Color(255,255,255));
 
 	if (this->state_ == GameOverDisplay::SCALEUP){
 

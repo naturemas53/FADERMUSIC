@@ -62,6 +62,8 @@ private:
 	int time_;
 	bool nextflag_;
 
+	SOUND bgm_;
+
 	// 関数プロトタイプ
 
 	bool IsPush();

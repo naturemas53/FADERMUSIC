@@ -6,6 +6,8 @@ MOVETIME_(150){
 
 	this->ranksprite_ = GraphicsDevice.CreateSpriteFromFile(_T("result/rank/result_rank_F.png"));
 
+	this->sound_ = nullptr;
+
 	this->time_ = 0;
 
 }
